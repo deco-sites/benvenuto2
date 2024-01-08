@@ -1,13 +1,14 @@
-import { tableMapData } from "../static/MockedTableObject.tsx";
 import { useSignal } from "@preact/signals";
 import { useState } from "preact/hooks";
+import { Runtime } from "../runtime.ts";
+import { TableMap } from "../static/MockedTableObject.tsx";
 
 export interface Props {
-  title?: string;
+  tableMap: TableMap;
 }
 
 export default function Editor({
-  title = "Editor",
+  tableMap,
 }: Props) {
   const countSignal = useSignal(0);
   const [countState, setcountState] = useState(0);
@@ -17,13 +18,13 @@ export default function Editor({
       <header class="lg:container mx-auto md:mx-16 lg:mx-auto mt-8 md:mt-12 mb-28 text-xl md:text-base flex flex-col items-center justify-center">
         <div class="mb-10 md:mb-20 flex justify-center ">
           <div class="font-bold text-3xl lg:text-6xl leading-tight lg:leading-none xl:w-5/6 text-center">
-            {title}
+            {"Editor"}
           </div>
         </div>
       </header>
 
       <div>
-        {tableMapData.tables.map((table) => (
+        {tableMap.tables.map((table) => (
           <div key={table.id}>
             <h2
               style={`position: absolute; left: ${table.x}px; top: ${

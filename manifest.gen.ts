@@ -2,27 +2,31 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
+import * as $$$0 from "./loaders/getMapFromKV.ts";
 import * as $$$$$$0 from "./sections/Editor.tsx";
 import * as $$$$$$1 from "./sections/Footer.tsx";
 import * as $$$$$$2 from "./sections/Hero.tsx";
-import * as $$$$$$3 from "./sections/ParagraphList.tsx";
-import * as $$$$$$4 from "./sections/SimpleTextList.tsx";
+import * as $$$$$$3 from "./sections/Home.tsx";
+import * as $$$$$$4 from "./sections/ParagraphList.tsx";
 import * as $$$$$$5 from "./sections/Theme/Theme.tsx";
-import * as $$$$$$$$$0 from "./actions/saveMapToKV.tsx";
+import * as $$$$$$$$$0 from "./actions/saveMapToKV.ts";
 import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
 import * as $$$$$$$$$$$1 from "./apps/site.ts";
 
 const manifest = {
+  "loaders": {
+    "deco-sites/benvenuto2/loaders/getMapFromKV.ts": $$$0,
+  },
   "sections": {
     "deco-sites/benvenuto2/sections/Editor.tsx": $$$$$$0,
     "deco-sites/benvenuto2/sections/Footer.tsx": $$$$$$1,
     "deco-sites/benvenuto2/sections/Hero.tsx": $$$$$$2,
-    "deco-sites/benvenuto2/sections/ParagraphList.tsx": $$$$$$3,
-    "deco-sites/benvenuto2/sections/SimpleTextList.tsx": $$$$$$4,
+    "deco-sites/benvenuto2/sections/Home.tsx": $$$$$$3,
+    "deco-sites/benvenuto2/sections/ParagraphList.tsx": $$$$$$4,
     "deco-sites/benvenuto2/sections/Theme/Theme.tsx": $$$$$$5,
   },
   "actions": {
-    "deco-sites/benvenuto2/actions/saveMapToKV.tsx": $$$$$$$$$0,
+    "deco-sites/benvenuto2/actions/saveMapToKV.ts": $$$$$$$$$0,
   },
   "apps": {
     "deco-sites/benvenuto2/apps/decohub.ts": $$$$$$$$$$$0,
