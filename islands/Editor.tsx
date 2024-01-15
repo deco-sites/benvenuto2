@@ -2,6 +2,7 @@ import { useSignal } from "@preact/signals";
 import { useState } from "preact/hooks";
 import { Runtime } from "../runtime.ts";
 import { TableMap } from "../static/MockedTableObject.tsx";
+import  GenericTable  from "../components/GenericTable.tsx";
 
 export interface Props {
   tableMap: TableMap;
@@ -24,28 +25,7 @@ export default function Editor({
       </header>
 
       <div>
-        {tableMap.tables.map((table) => (
-          <div key={table.id}>
-            <h2
-              style={`position: absolute; left: ${table.x}px; top: ${
-                table.y - 30
-              }px;`}
-            >
-              Table: {table.label}
-            </h2>
-
-            <img
-              src="/tables/greenTable.png"
-              alt={`Table ${table.label}`}
-              style={`position: absolute; left: ${table.x}px; top: ${table.y}px; transform: rotate(-${table.rotation}deg);`}
-            />
-            {
-              /*<div>
-              {table.places.map((place) => <p key={place.id}>{place.label}</p>)}
-        </div>*/
-            }
-          </div>
-        ))}
+        {tableMap.tables.map((table) => <GenericTable tableInfo={table} />)}
       </div>
 
       {/*Signal*/}

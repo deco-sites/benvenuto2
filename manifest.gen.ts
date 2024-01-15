@@ -9,7 +9,8 @@ import * as $$$$$$2 from "./sections/Hero.tsx";
 import * as $$$$$$3 from "./sections/Home.tsx";
 import * as $$$$$$4 from "./sections/ParagraphList.tsx";
 import * as $$$$$$5 from "./sections/Theme/Theme.tsx";
-import * as $$$$$$$$$0 from "./actions/saveMapToKV.ts";
+import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
+import * as $$$$$$$$$1 from "./actions/actionSetMapToKV.ts";
 import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
 import * as $$$$$$$$$$$1 from "./apps/site.ts";
 
@@ -26,7 +27,8 @@ const manifest = {
     "deco-sites/benvenuto2/sections/Theme/Theme.tsx": $$$$$$5,
   },
   "actions": {
-    "deco-sites/benvenuto2/actions/saveMapToKV.ts": $$$$$$$$$0,
+    "deco-sites/benvenuto2/actions/actionGetMapFromKV.ts": $$$$$$$$$0,
+    "deco-sites/benvenuto2/actions/actionSetMapToKV.ts": $$$$$$$$$1,
   },
   "apps": {
     "deco-sites/benvenuto2/apps/decohub.ts": $$$$$$$$$$$0,

@@ -1,12 +1,15 @@
-import { TableMap, tableMapData } from "../static/MockedTableObject.tsx";
+import { TableMap } from "../static/MockedTableObject.tsx";
 
 export interface Props {
-  id?: string;
+  id: string;
 }
 
-export default function loader(
+export default async function loader(
   { id }: Props,
   _req: Request,
-): TableMap {
-  return tableMapData;
+): Promise<TableMap> {
+  const kv = await Deno.openKv();
+
+  const entry = await kv.get(["maps", "couve", id]);
+  return JSON.parse(entry.value as string) as TableMap;
 }
