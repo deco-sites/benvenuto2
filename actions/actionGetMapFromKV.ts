@@ -14,6 +14,7 @@ const action = async (
 
   const kv = await Deno.openKv();
   const entry = await kv.get(["maps", empresa, id]);
+  console.log("Pegando mapa do banco " + ["maps", empresa, id]);
 
   return JSON.parse(entry.value as string);
 };

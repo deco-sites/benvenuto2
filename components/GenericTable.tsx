@@ -1,17 +1,28 @@
-import { useSignal } from "@preact/signals";
-import { useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { Table } from "../static/MockedTableObject.tsx";
 
 export interface Props {
   tableInfo: Table;
+  updateOccupiedState: (tableId: number, newOccupiedState: boolean) => void;
 }
 
 export default function GenericTable({
   tableInfo,
+  updateOccupiedState,
 }: Props) {
-  const countSignal = useSignal(0);
-  const [isAvailable, setIsAvailable] = useState(true);
+  const [isAvailable, setIsAvailable] = useState(!tableInfo?.occupied);
   const [isSelected, setIsSelected] = useState(false);
+  const isInitialRender = useRef(true);
+
+  useEffect(() => {
+    // Skip the effect on the first render
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
+    updateOccupiedState(tableInfo.id, !isAvailable);
+  }, [isAvailable]);
 
   const handleAvailableState = () => {
     setIsAvailable(!isAvailable);

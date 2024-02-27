@@ -9,6 +9,7 @@ export interface Table {
   rotation: number
   x: number
   y: number
+  occupied: boolean
   places: Place[]
 }
 
