@@ -17,59 +17,43 @@ export default function Editor({
   const isInitialRender = useRef(true);
 
   useEffect(() => {
-    if (isInitialRender.current) {
-      console.log("primeiro render");
-      return;
-    }
-    // Create an EventSource to listen for updates
+    console.log("Realiza evento");
+
     const eventSource = new EventSource(`/sse/tables`);
     eventSource.onerror = (err) => {
       console.log("Connection Error");
       eventSource.close();
     };
-    // Handle messages received from the server
+
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("Data -------- " + data);
-      //setTableMapUpdate(data);
+      console.log("Evento table atualizada: " + JSON.stringify(data));
+      setTableMapUpdate(data);
     };
   }, []);
 
-  useEffect(() => {
-    // Skip the effect on the first render
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
-
-    console.log(
-      "Depois:",
-      JSON.stringify(tableMapUpdate),
-    );
-
-    const fetchData = async () => {
-      await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
-        empresa: "couve",
-        id: "1",
-        mapJSON: JSON.stringify(tableMapUpdate),
-      });
-    };
-
-    fetchData(); // Invoke the async function inside useEffect
-  }, [tableMapUpdate]);
+  const fetchData = async (tableMap: TableMap) => {
+    await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
+      empresa: "couve",
+      id: "1",
+      mapJSON: JSON.stringify(tableMap),
+    });
+  };
 
   const updateOccupiedState = (tableId: number, newOccupiedState: boolean) => {
-    setTableMapUpdate((prevTableMap) => {
-      console.log("Antes:", JSON.stringify(prevTableMap));
+    console.log("Table antes:", JSON.stringify(tableMapUpdate));
 
-      const updatedTables = prevTableMap.tables.map((table) => {
-        return table.id === tableId
-          ? { ...table, occupied: newOccupiedState }
-          : table;
-      });
-
-      return { ...prevTableMap, tables: updatedTables };
+    const updatedTables = tableMapUpdate.tables.map((table) => {
+      return table.id === tableId
+        ? { ...table, occupied: newOccupiedState }
+        : table;
     });
+
+    const updatedTableMap = { ...tableMapUpdate, tables: updatedTables };
+
+    fetchData(updatedTableMap);
+
+    return updatedTableMap;
   };
 
   return (
@@ -77,13 +61,13 @@ export default function Editor({
       <header class="lg:container mx-auto md:mx-16 lg:mx-auto mt-8 md:mt-12 mb-28 text-xl md:text-base flex flex-col items-center justify-center">
         <div class="mb-10 md:mb-20 flex justify-center ">
           <div class="font-bold text-3xl lg:text-6xl leading-tight lg:leading-none xl:w-5/6 text-center">
-            {tableMapUpdate?.tables?.toLocaleString}
+            {"Editor"}
           </div>
         </div>
       </header>
 
       <div>
-        {tableMap.tables.map((table) => (
+        {tableMapUpdate.tables.map((table) => (
           <GenericTable
             tableInfo={table}
             updateOccupiedState={updateOccupiedState}

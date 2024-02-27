@@ -13,19 +13,21 @@ export default function GenericTable({
   const [isAvailable, setIsAvailable] = useState(!tableInfo?.occupied);
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
+  console.log("mesa: " + tableInfo.id + ", occupied: " + tableInfo.occupied);
+  console.log("isavailible: " + isAvailable);
 
-  useEffect(() => {
-    // Skip the effect on the first render
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
-
-    updateOccupiedState(tableInfo.id, !isAvailable);
-  }, [isAvailable]);
+    // Update isAvailable state when tableInfo.occupied changes
+    useEffect(() => {
+      if (isInitialRender.current) {
+        isInitialRender.current = false;
+        return;
+      }
+      setIsAvailable(!tableInfo.occupied);
+    }, [tableInfo.occupied]);
 
   const handleAvailableState = () => {
     setIsAvailable(!isAvailable);
+    updateOccupiedState(tableInfo.id, !tableInfo.occupied);
   };
 
   const handleTableClick = () => {
