@@ -13,17 +13,15 @@ export default function GenericTable({
   const [isAvailable, setIsAvailable] = useState(!tableInfo?.occupied);
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
-  console.log("mesa: " + tableInfo.id + ", occupied: " + tableInfo.occupied);
-  console.log("isavailible: " + isAvailable);
+  const [hovered, setHovered] = useState(false);
 
-    // Update isAvailable state when tableInfo.occupied changes
-    useEffect(() => {
-      if (isInitialRender.current) {
-        isInitialRender.current = false;
-        return;
-      }
-      setIsAvailable(!tableInfo.occupied);
-    }, [tableInfo.occupied]);
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+    setIsAvailable(!tableInfo.occupied);
+  }, [tableInfo.occupied]);
 
   const handleAvailableState = () => {
     setIsAvailable(!isAvailable);
@@ -31,8 +29,26 @@ export default function GenericTable({
   };
 
   const handleTableClick = () => {
-    // Set isSelected to false when the table is clicked
     setIsSelected(!isSelected);
+  };
+
+  const getImageSource = () => {
+    let imageSource = "/tables/tableGreen.png"; // Default source
+
+    if (tableInfo.class == "models.SquareTable") {
+      imageSource = isAvailable
+        ? (hovered ? "/tables/tableLightGreen.png" : "/tables/tableGreen.png")
+        : (hovered ? "/tables/tableLightYellow.png" : "/tables/tableRed.png");
+    } else {
+      imageSource = isAvailable
+        ? (hovered
+          ? "/tables/segmentLightGreen.png"
+          : "/tables/segmentGreen.png")
+        : (hovered
+          ? "/tables/segmentLightYellow.png"
+          : "/tables/segmentRed.png");
+    }
+    return imageSource;
   };
 
   return (
@@ -46,9 +62,11 @@ export default function GenericTable({
       </h2>
 
       <img
-        src={isAvailable ? "/tables/greenTable.png" : "/tables/redTable.png"}
+        src={getImageSource()}
         alt={`Table ${tableInfo.label}`}
         style={`position: absolute; left: ${tableInfo.x}px; top: ${tableInfo.y}px; transform: rotate(-${tableInfo.rotation}deg);`}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       />
       {isSelected &&
         (
