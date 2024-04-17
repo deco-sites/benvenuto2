@@ -1,6 +1,7 @@
 //import { GzipStream } from "https://deno.land/x/compress@v0.4.4/mod.ts";
 export interface Props {
   empresa: string;
+  filial: string;
   id: string;
   mapJSON: string;
 }
@@ -11,14 +12,15 @@ const action = async (
 ): Promise<void> => {
   const {
     empresa,
+    filial,
     id,
     mapJSON,
   } = props;
 
   const kv = await Deno.openKv();
 
-  const result = await kv.set(["maps", empresa, id], mapJSON);
-  console.log("Salvando no banco " + ["maps", empresa, id] + " :", result);
+  const result = await kv.set(["maps", empresa, filial, id], mapJSON);
+  console.log("Salvando no banco " + ["maps", empresa, filial, id] + " :", result);
   return;
 };
 

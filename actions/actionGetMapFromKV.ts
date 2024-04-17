@@ -1,5 +1,6 @@
 export interface Props {
   empresa: string;
+  filial: string;
   id: string;
 }
 
@@ -9,12 +10,13 @@ const action = async (
 ): Promise<void> => {
   const {
     empresa,
+    filial,
     id,
   } = props;
 
   const kv = await Deno.openKv();
-  const entry = await kv.get(["maps", empresa, id]);
-  console.log("Pegando mapa do banco " + ["maps", empresa, id]);
+  const entry = await kv.get(["maps", empresa, filial, id]);
+  console.log("Pegando mapa do banco " + ["maps", empresa, filial, id]);
 
   return JSON.parse(entry.value as string);
 };

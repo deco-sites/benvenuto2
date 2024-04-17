@@ -52,29 +52,35 @@ export default function GenericTable({
   };
 
   return (
-    <div key={tableInfo.id} onClick={handleTableClick}>
+    <div
+      key={tableInfo.id}
+      onClick={handleTableClick}
+      class={`left: ${tableInfo.x}px; top: ${tableInfo.y}px; border-2 border-black`}
+    >
       <h2
-        style={`position: absolute; left: ${tableInfo.x}px; top: ${
-          tableInfo.y - 30
-        }px;`}
+        style={`position: absolute; left: ${tableInfo.x}%; top: ${
+          tableInfo.y - 1.5
+        }%; font-size: 0.63vw;`}
       >
         Table: {tableInfo.label}
       </h2>
-
-      <img
-        src={getImageSource()}
-        alt={`Table ${tableInfo.label}`}
-        style={`position: absolute; left: ${tableInfo.x}px; top: ${tableInfo.y}px; transform: rotate(-${tableInfo.rotation}deg);`}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      />
+      <div>
+        <img
+          src={getImageSource()}
+          alt={`Table ${tableInfo.label}`}
+          class="md:w-4/25"
+          style={`position: absolute; width: 4%; left: ${tableInfo.x}%; top: ${tableInfo.y}%; transform: rotate(-${tableInfo.rotation}deg);`}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        />
+      </div>
       {isSelected &&
         (
           <button
             onClick={handleAvailableState}
-            style={`position: absolute; left: ${tableInfo.x}px; top: ${
-              tableInfo.y + 60
-            }px;`}
+            style={`position: absolute; left: ${tableInfo.x}%; top: ${
+              tableInfo.y + 2.8
+            }%; font-size: 0.63vw;`}
           >
             {isAvailable ? "Ocupar" : "Desocupar"}
           </button>

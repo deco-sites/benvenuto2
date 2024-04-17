@@ -42,6 +42,7 @@ export default function Editor({
   const fetchData = async (tableMap: TableMap) => {
     await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
       empresa: "couve",
+      filial: "teste",
       id: "1",
       mapJSON: JSON.stringify(tableMap),
     });
@@ -64,34 +65,30 @@ export default function Editor({
   };
 
   return (
-    <div>
-      {backgroundImage && (
-        <div
-          class={`bg-cover absolute ${backgroundImage ? "h-full" : ""} ml-3`}
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            width: backgroundImageWidth,
-            height: backgroundImageHeight,
-          }}
-        >
-        </div>
-      )}
-      <header class="lg:container mx-auto md:mx-16 lg:mx-auto mt-8 md:mt-12 mb-28 text-xl md:text-base flex flex-col items-center justify-center">
-        <div class="mb-10 md:mb-20 flex justify-center ">
+    <div class="relative">
+      <header class="lg:container mx-auto md:mx-16 lg:mx-auto mt-8 md:mt-6 mb-6 text-xl md:text-base flex flex-col items-center justify-center">
+        <div class="mb-1 md:mb-1 flex justify-center ">
           <div class="font-bold text-3xl lg:text-6xl leading-tight lg:leading-none xl:w-5/6 text-center">
             {"Editor"}
           </div>
         </div>
       </header>
-
-      <div class="relative">
-        {tableMapUpdate.tables.map((table) => (
-          <GenericTable
-            tableInfo={table}
-            updateOccupiedState={updateOccupiedState}
+      {backgroundImage && (
+        <div class="w-full md:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black">
+          <img
+            src={backgroundImage}
+            alt="Your Image"
+            class={`w-full`}
           />
-        ))}
-      </div>
+
+          {tableMapUpdate.tables.map((table) => (
+            <GenericTable
+              tableInfo={table}
+              updateOccupiedState={updateOccupiedState}
+            />
+          ))}
+        </div>
+      )}
 
       {
         /*

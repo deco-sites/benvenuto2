@@ -9,7 +9,7 @@ export const handler: Handlers = {
       new ReadableStream({
         async start(controller) {
           for await (
-            const [{ value: message }] of kv.watch([["maps", "couve", "1"]])
+            const [{ value: message }] of kv.watch([["maps", "couve", "teste", "1"]])
           ) {
             controller.enqueue({
               data: message,

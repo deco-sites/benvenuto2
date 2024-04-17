@@ -10,6 +10,6 @@ export default async function loader(
 ): Promise<TableMap> {
   const kv = await Deno.openKv();
 
-  const entry = await kv.get(["maps", "couve", id]);
+  const entry = await kv.get(["maps", "couve", "teste", id]);
   return JSON.parse(entry.value as string) as TableMap;
 }
