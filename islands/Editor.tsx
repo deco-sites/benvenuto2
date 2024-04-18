@@ -4,6 +4,7 @@ import { TableMap } from "../static/MockedTableObject.tsx";
 import GenericTable from "../components/GenericTable.tsx";
 import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
+import SegmentTable from "deco-sites/benvenuto2/components/SegmentTable.tsx";
 
 export interface Props {
   tableMap: TableMap;
@@ -66,26 +67,31 @@ export default function Editor({
 
   return (
     <div class="relative">
-      <header class="lg:container mx-auto md:mx-16 lg:mx-auto mt-8 md:mt-6 mb-6 text-xl md:text-base flex flex-col items-center justify-center">
-        <div class="mb-1 md:mb-1 flex justify-center ">
-          <div class="font-bold text-3xl lg:text-6xl leading-tight lg:leading-none xl:w-5/6 text-center">
-            {"Editor"}
-          </div>
-        </div>
-      </header>
+      <div class="flex justify-center font-bold text-3xl lg:text-5xl leading-tight lg:leading-none text-center lg:mt-2 lg:mb-2 ">
+        {"Editor"}
+      </div>
       {backgroundImage && (
-        <div class="w-full md:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black">
+        <div class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black ">
           <img
             src={backgroundImage}
             alt="Your Image"
-            class={`w-full`}
+            class={`w-full `}
           />
 
           {tableMapUpdate.tables.map((table) => (
-            <GenericTable
-              tableInfo={table}
-              updateOccupiedState={updateOccupiedState}
-            />
+            table.class === "models.SquareTable"
+              ? (
+                <GenericTable
+                  tableInfo={table}
+                  updateOccupiedState={updateOccupiedState}
+                />
+              )
+              : (
+                <SegmentTable
+                  tableInfo={table}
+                  updateOccupiedState={updateOccupiedState}
+                />
+              )
           ))}
         </div>
       )}

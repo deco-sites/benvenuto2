@@ -34,20 +34,9 @@ export default function GenericTable({
 
   const getImageSource = () => {
     let imageSource = "/tables/tableGreen.png"; // Default source
-
-    if (tableInfo.class == "models.SquareTable") {
-      imageSource = isAvailable
-        ? (hovered ? "/tables/tableLightGreen.png" : "/tables/tableGreen.png")
-        : (hovered ? "/tables/tableLightYellow.png" : "/tables/tableRed.png");
-    } else {
-      imageSource = isAvailable
-        ? (hovered
-          ? "/tables/segmentLightGreen.png"
-          : "/tables/segmentGreen.png")
-        : (hovered
-          ? "/tables/segmentLightYellow.png"
-          : "/tables/segmentRed.png");
-    }
+    imageSource = isAvailable
+      ? (hovered ? "/tables/segmentLightGreen.png" : "/tables/segmentGreen.png")
+      : (hovered ? "/tables/segmentLightYellow.png" : "/tables/segmentRed.png");
     return imageSource;
   };
 
@@ -57,11 +46,11 @@ export default function GenericTable({
       onClick={handleTableClick}
     >
       <div
-        style={`width: 5%; height: auto; border: 2px solid blue; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
+        style={`width: 6%; height: auto; border: 2px solid blue; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
       >
         <p
           class="text-[1.6vw] lg:text-[0.8vw]"
-          style="width: 100%; max-width: 100%; height: 40; position: absolute; top: 20%; left: -5%; margin-block-start: 0em; margin-block-end: 0em; font-weight: 500; text-align: center; z-index: 1; pointer-events: none;"
+          style="width: 100%; max-width: 100%; height: auto; position: absolute; top: 30%; left: -5%; margin-block-start: 0em; margin-block-end: 0em; font-weight: 500; text-align: center; z-index: 1; pointer-events: none;"
         >
           0{tableInfo.label}D
         </p>
@@ -79,8 +68,8 @@ export default function GenericTable({
             onClick={handleAvailableState}
             class="text-[1.6vw] lg:text-[0.8vw]"
             style={`position: absolute; left: ${tableInfo.x}%; top: ${
-              tableInfo.y + 3.8
-            }%; height: auto;`}
+              tableInfo.y + 2.8
+            }%;`}
           >
             {isAvailable ? "Ocupar" : "Desocupar"}
           </button>
