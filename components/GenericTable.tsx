@@ -57,7 +57,7 @@ export default function GenericTable({
       onClick={handleTableClick}
     >
       <div
-        style={`width: 5%; height: auto; border: 2px solid blue; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
+        style={`width: 5%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
       >
         <p
           class="text-[1.6vw] lg:text-[0.8vw]"
