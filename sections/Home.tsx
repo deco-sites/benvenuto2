@@ -28,15 +28,15 @@ export default function Home({
       </div>
 
       <div class="flex flex-col items-center max-w-md">
-        <a href="/table" class="my-3 w-full">
+        <a href="/tablemap" class="my-3 w-full">
           <button class="px-4 py-2 bg-blue-500 text-white rounded-lg text-2xl hover:bg-blue-600 w-full">
-            Recepção
+            Salão
           </button>
         </a>
 
-        <a class="my-3 w-full">
+        <a href="/tablemapeditor" class="my-3 w-full">
           <button class="px-4 py-2 bg-green-500 text-white rounded-lg text-2xl hover:bg-green-600 w-full">
-            Salão
+            Editor
           </button>
         </a>
 

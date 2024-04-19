@@ -1,10 +1,9 @@
-import { useSignal } from "@preact/signals";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { TableMap } from "../static/MockedTableObject.tsx";
-import GenericTable from "../components/tableTypes/GenericTable.tsx";
 import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
-import SegmentTable from "../components/tableTypes/SegmentTable.tsx";
+import DraggableGenericTable from "../components/tableTypes/draggable/DraggableGenericTable.tsx";
+import DraggableSegmentTable from "../components/tableTypes/draggable/DraggableSegmentTable.tsx";
 import EditorSidebar from "deco-sites/benvenuto2/components/EditorSidebar.tsx";
 
 export interface Props {
@@ -77,13 +76,13 @@ export default function Editor({
           {tableMapUpdate?.tables.map((table) => (
             table.class === "models.SquareTable"
               ? (
-                <GenericTable
+                <DraggableGenericTable
                   tableInfo={table}
                   updateOccupiedState={updateOccupiedState}
                 />
               )
               : (
-                <SegmentTable
+                <DraggableSegmentTable
                   tableInfo={table}
                   updateOccupiedState={updateOccupiedState}
                 />

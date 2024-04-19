@@ -3,10 +3,12 @@ import { Table } from "../../../static/MockedTableObject.tsx";
 
 export interface Props {
   tableInfo: Table;
+  updateOccupiedState: (tableId: number, newOccupiedState: boolean) => void;
 }
 
-export default function DraggableGenericTable({
+export default function DraggableSegmentTable({
   tableInfo,
+  updateOccupiedState,
 }: Props) {
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
