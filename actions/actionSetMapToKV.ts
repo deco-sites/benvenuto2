@@ -18,9 +18,15 @@ const action = async (
   } = props;
 
   const kv = await Deno.openKv();
-
+  console.log(
+    "Recebido em " + ["maps", empresa, filial, id] + " o JSON: ",
+    mapJSON,
+  );
   const result = await kv.set(["maps", empresa, filial, id], mapJSON);
-  console.log("Salvando no banco " + ["maps", empresa, filial, id] + " :", result);
+  console.log(
+    "Salvando no banco " + ["maps", empresa, filial, id] + " :",
+    result,
+  );
   return;
 };
 
