@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import { Table } from "../static/MockedTableObject.tsx";
+import { Table } from "../../static/MockedTableObject.tsx";
 
 export interface Props {
   tableInfo: Table;

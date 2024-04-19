@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import { Table } from "../static/MockedTableObject.tsx";
+import { Table } from "../../static/MockedTableObject.tsx";
 
 export interface Props {
   tableInfo: Table;
@@ -39,14 +39,6 @@ export default function GenericTable({
       imageSource = isAvailable
         ? (hovered ? "/tables/tableLightGreen.png" : "/tables/tableGreen.png")
         : (hovered ? "/tables/tableLightYellow.png" : "/tables/tableRed.png");
-    } else {
-      imageSource = isAvailable
-        ? (hovered
-          ? "/tables/segmentLightGreen.png"
-          : "/tables/segmentGreen.png")
-        : (hovered
-          ? "/tables/segmentLightYellow.png"
-          : "/tables/segmentRed.png");
     }
     return imageSource;
   };
@@ -57,7 +49,7 @@ export default function GenericTable({
       onClick={handleTableClick}
     >
       <div
-        style={`width: 5%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
+        style={`width: 5%; height: auto; border: 2px solid blue; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
       >
         <p
           class="text-[1.6vw] lg:text-[0.8vw]"

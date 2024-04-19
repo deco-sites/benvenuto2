@@ -5,6 +5,7 @@
 import * as $_app from "./routes/_app.tsx";
 import * as $sse_tables from "./routes/sse/tables.ts";
 import * as $Editor from "./islands/Editor.tsx";
+import * as $MapEditor from "./islands/MapEditor.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -14,6 +15,7 @@ const manifest = {
   },
   islands: {
     "./islands/Editor.tsx": $Editor,
+    "./islands/MapEditor.tsx": $MapEditor,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
