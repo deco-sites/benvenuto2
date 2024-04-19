@@ -7,8 +7,9 @@ import * as $$$$$$0 from "./sections/Editor.tsx";
 import * as $$$$$$1 from "./sections/Footer.tsx";
 import * as $$$$$$2 from "./sections/Hero.tsx";
 import * as $$$$$$3 from "./sections/Home.tsx";
-import * as $$$$$$4 from "./sections/ParagraphList.tsx";
-import * as $$$$$$5 from "./sections/Theme/Theme.tsx";
+import * as $$$$$$4 from "./sections/MapEditor.tsx";
+import * as $$$$$$5 from "./sections/ParagraphList.tsx";
+import * as $$$$$$6 from "./sections/Theme/Theme.tsx";
 import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
 import * as $$$$$$$$$1 from "./actions/actionSetMapToKV.ts";
 import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
@@ -23,8 +24,9 @@ const manifest = {
     "deco-sites/benvenuto2/sections/Footer.tsx": $$$$$$1,
     "deco-sites/benvenuto2/sections/Hero.tsx": $$$$$$2,
     "deco-sites/benvenuto2/sections/Home.tsx": $$$$$$3,
-    "deco-sites/benvenuto2/sections/ParagraphList.tsx": $$$$$$4,
-    "deco-sites/benvenuto2/sections/Theme/Theme.tsx": $$$$$$5,
+    "deco-sites/benvenuto2/sections/MapEditor.tsx": $$$$$$4,
+    "deco-sites/benvenuto2/sections/ParagraphList.tsx": $$$$$$5,
+    "deco-sites/benvenuto2/sections/Theme/Theme.tsx": $$$$$$6,
   },
   "actions": {
     "deco-sites/benvenuto2/actions/actionGetMapFromKV.ts": $$$$$$$$$0,
