@@ -120,7 +120,12 @@
     "path": "/mapeditor",
     "sections": [
       {
-        "__resolveType": "deco-sites/benvenuto2/sections/Footer.tsx"
+        "__resolveType": "deco-sites/benvenuto2/sections/MapEditor.tsx",
+        "backgroundImage": "https://ozksgdmyrqcxcwhnbepg.supabase.co/storage/v1/object/public/assets/3509/83264d74-88ac-4a63-bae9-e155fa7cf681",
+        "tableMap": {
+          "__resolveType": "deco-sites/benvenuto2/loaders/getMapFromKV.ts",
+          "id": "1"
+        }
       }
     ],
     "__resolveType": "website/pages/Page.tsx"
