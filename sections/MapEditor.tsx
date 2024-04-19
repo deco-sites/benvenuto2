@@ -15,3 +15,4 @@ export default function MapEditor({
     <MapEditorIsland tableMap={tableMap} backgroundImage={backgroundImage} />
   );
 }
+

@@ -14,8 +14,6 @@ type Item = {
   text: string;
 };
 
-interface SidebarProps {}
-
 interface SidebarState {
   draggingItem: Item | null;
 }

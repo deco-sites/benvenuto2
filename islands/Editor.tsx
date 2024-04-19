@@ -5,7 +5,6 @@ import GenericTable from "../components/tableTypes/GenericTable.tsx";
 import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
 import SegmentTable from "../components/tableTypes/SegmentTable.tsx";
-import EditorSidebar from "deco-sites/benvenuto2/components/EditorSidebar.tsx";
 
 export interface Props {
   tableMap: TableMap;
