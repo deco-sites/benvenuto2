@@ -5,13 +5,13 @@ import { TableMap } from "../static/MockedTableObject.tsx";
 export interface Props {
   tableMap: TableMap;
   backgroundImage?: ImageWidget;
-  backgroundImageWidth?: string;
-  backgroundImageHeight?: string;
 }
 
-export default function Editor({
+export default function MapEditor({
   tableMap,
-  backgroundImage
+  backgroundImage,
 }: Props) {
-  return <MapEditorIsland tableMap={tableMap} backgroundImage={backgroundImage} />;
+  return (
+    <MapEditorIsland tableMap={tableMap} backgroundImage={backgroundImage} />
+  );
 }
