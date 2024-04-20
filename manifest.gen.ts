@@ -3,7 +3,7 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $$$0 from "./loaders/getMapFromKV.ts";
-import * as $$$$$$0 from "./sections/Editor.tsx";
+import * as $$$$$$0 from "./sections/MapManagement.tsx";
 import * as $$$$$$1 from "./sections/Footer.tsx";
 import * as $$$$$$2 from "./sections/Hero.tsx";
 import * as $$$$$$3 from "./sections/Home.tsx";

@@ -3,12 +3,12 @@ import { Table } from "../../../static/MockedTableObject.tsx";
 
 export interface Props {
   tableInfo: Table;
-  updateOccupiedState: (tableId: number, newOccupiedState: boolean) => void;
+  deleteTable: (tableId: number) => void;
 }
 
 export default function DraggableSegmentTable({
   tableInfo,
-  updateOccupiedState,
+  deleteTable,
 }: Props) {
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
@@ -25,6 +25,10 @@ export default function DraggableSegmentTable({
     setIsSelected(!isSelected);
   };
 
+  const handleDeleteTable = () => {
+    deleteTable(tableInfo.id);
+  };
+
   const getImageSource = () => {
     let imageSource = "/tables/segmentGreen.png"; // Default source
     return imageSource;
@@ -36,7 +40,7 @@ export default function DraggableSegmentTable({
       onClick={handleTableClick}
     >
       <div
-        style={`width: 5%; height: auto; border: 2px solid blue; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
+        style={`width: 5%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
       >
         <p
           class="text-[1.6vw] lg:text-[0.8vw]"
@@ -55,6 +59,7 @@ export default function DraggableSegmentTable({
       {isSelected &&
         (
           <button
+            onClick={handleDeleteTable}
             class="text-[1.6vw] lg:text-[0.8vw]"
             style={`position: absolute; left: ${tableInfo.x}%; top: ${
               tableInfo.y + 3.8

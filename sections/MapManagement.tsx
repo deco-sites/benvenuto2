@@ -1,5 +1,5 @@
 import { ImageWidget } from "apps/admin/widgets.ts";
-import EditorIsland from "../islands/Editor.tsx";
+import MapManagementIsland from "../islands/MapManagement.tsx";
 import { TableMap } from "../static/MockedTableObject.tsx";
 
 export interface Props {
@@ -11,5 +11,5 @@ export default function Editor({
   tableMap,
   backgroundImage,
 }: Props) {
-  return <EditorIsland tableMap={tableMap} backgroundImage={backgroundImage} />;
+  return <MapManagementIsland tableMap={tableMap} backgroundImage={backgroundImage} />;
 }

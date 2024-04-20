@@ -15,8 +15,6 @@ export default function Editor({
   tableMap,
   backgroundImage = "",
 }: Props) {
-  const countSignal = useSignal(0);
-  const [countState, setcountState] = useState(0);
   const [tableMapUpdate, setTableMapUpdate] = useState<TableMap>(tableMap);
   const isInitialRender = useRef(true);
 
@@ -64,7 +62,7 @@ export default function Editor({
   return (
     <div class="relative">
       <div class="flex justify-center font-bold text-3xl lg:text-5xl leading-tight lg:leading-none text-center lg:mt-2 lg:mb-2 ">
-        {"Editor"}
+        {"Map Management"}
       </div>
       {backgroundImage && (
         <div class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black ">
@@ -91,22 +89,6 @@ export default function Editor({
           ))}
         </div>
       )}
-
-      {
-        /*
-      <div class="p-2">
-        <button onClick={() => countSignal.value--}>-</button>
-        <span class="p-1">Signal: {countSignal}</span>
-        <button onClick={() => countSignal.value++}>+</button>
-      </div>
-
-      <div class="p-2">
-        <button onClick={() => setcountState(countState - 1)}>-</button>
-        <span class="p-1">useState: {countState}</span>
-        <button onClick={() => setcountState(countState + 1)}>+</button>
-      </div>
-      */
-      }
     </div>
   );
 }

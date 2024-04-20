@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import { TableMap } from "../static/MockedTableObject.tsx";
+import { Table, TableMap } from "../static/MockedTableObject.tsx";
 import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
 import DraggableGenericTable from "../components/tableTypes/draggable/DraggableGenericTable.tsx";
@@ -15,7 +15,11 @@ export default function Editor({
   tableMap,
   backgroundImage = "",
 }: Props) {
-  const [tableMapUpdate, setTableMapUpdate] = useState<TableMap>(tableMap);
+  const [tableMapSaved, setTableMapSaved] = useState<TableMap>(tableMap);
+  const [tableMapUpdate, setTableMapUpdate] = useState<TableMap>({
+    tables: [],
+  });
+  const [deletedTables, setDeletedTables] = useState<number[]>([]);
   const isInitialRender = useRef(true);
 
   useEffect(() => {
@@ -29,10 +33,52 @@ export default function Editor({
 
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
+
+      // Filter out tables with IDs listed in deletedTables
+      const tableMapSavedFiltered = data.tables.filter((table: Table) =>
+        !deletedTables.includes(table.id)
+      );
+
       console.log("Evento table atualizada: " + JSON.stringify(data));
-      setTableMapUpdate(data);
+      // Update tableMapSaved with the filtered tables
+      setTableMapSaved({ tables: tableMapSavedFiltered });
     };
   }, []);
+
+  const OnDropAddTable = (table: Table) => {
+    console.log("Adicionada Table:", table.id, table.class, table.label);
+
+    tableMapUpdate.tables.push(table);
+  };
+
+  const HandleDeleteTable = (tableId: number) => {
+    const tableToDeleteUpdated = tableMapUpdate.tables.find((table) =>
+      table.id === tableId
+    );
+    if (tableToDeleteUpdated) {
+      const updatedTables = tableMapUpdate.tables.filter((table) =>
+        table.id !== tableId
+      );
+      setTableMapUpdate({ tables: updatedTables });
+    } else {
+      setDeletedTables((
+        prevDeletedTables,
+      ) => [...prevDeletedTables, tableId]);
+      const savedTables = tableMapSaved.tables.filter((table) =>
+        table.id !== tableId
+      );
+      setTableMapSaved({ tables: savedTables });
+    }
+  };
+
+  const HandleSaveNewMap = () => {
+    const newTableMap: TableMap = {
+      tables: [...tableMapUpdate.tables, ...tableMapSaved.tables],
+    };
+
+    console.log("Salva Table:", JSON.stringify(newTableMap));
+    fetchData(newTableMap);
+  };
 
   const fetchData = async (tableMap: TableMap) => {
     await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
@@ -43,26 +89,10 @@ export default function Editor({
     });
   };
 
-  const updateOccupiedState = (tableId: number, newOccupiedState: boolean) => {
-    console.log("Table antes:", JSON.stringify(tableMapUpdate));
-
-    const updatedTables = tableMapUpdate.tables.map((table) => {
-      return table.id === tableId
-        ? { ...table, occupied: newOccupiedState }
-        : table;
-    });
-
-    const updatedTableMap = { ...tableMapUpdate, tables: updatedTables };
-
-    fetchData(updatedTableMap);
-
-    return updatedTableMap;
-  };
-
   return (
     <div class="relative">
       <div class="flex justify-center font-bold text-3xl lg:text-5xl leading-tight lg:leading-none text-center lg:mt-2 lg:mb-2 ">
-        {"Editor"}
+        {"Map Editor"}
       </div>
       <EditorSidebar />
       {backgroundImage && (
@@ -73,18 +103,18 @@ export default function Editor({
             class={`w-full `}
           />
 
-          {tableMapUpdate?.tables.map((table) => (
+          {tableMapSaved?.tables.map((table) => (
             table.class === "models.SquareTable"
               ? (
                 <DraggableGenericTable
                   tableInfo={table}
-                  updateOccupiedState={updateOccupiedState}
+                  deleteTable={HandleDeleteTable}
                 />
               )
               : (
                 <DraggableSegmentTable
                   tableInfo={table}
-                  updateOccupiedState={updateOccupiedState}
+                  deleteTable={HandleDeleteTable}
                 />
               )
           ))}
