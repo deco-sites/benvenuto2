@@ -106,14 +106,12 @@ export default function Editor({
       updatedTables.push(newItem);
       setTableMapUpdate({ tables: updatedTables });
     } else if (draggedItem !== null) {
-      console.log("Dragged");
       const newItem: Table = {
         ...draggedItem,
         x: calculateCoordinates(event, "x"),
         y: calculateCoordinates(event, "y"),
       };
       filterTable(newItem);
-      //updatedTables.push(newItem);
     }
     console.log("Novas mesas:", JSON.stringify(updatedTables));
   }

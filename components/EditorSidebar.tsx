@@ -1,22 +1,11 @@
-import { useSignal } from "@preact/signals";
-import { useEffect, useRef, useState } from "preact/hooks";
-import { TableMap } from "../static/MockedTableObject.tsx";
-import GenericTable from "./tableTypes/GenericTable.tsx";
-import { Runtime } from "../runtime.ts";
-import type { ImageWidget } from "apps/admin/widgets.ts";
-import SegmentTable from "./tableTypes/SegmentTable.tsx";
-import { Component, h } from "preact";
-
-// Defining the type for the items
-type Item = {
-  id: number;
-  model: string;
-  imageUrl: string;
-  text: string;
-};
-
 export default function EditorSidebar() {
-  // Data of the items
+  type Item = {
+    id: number;
+    model: string;
+    imageUrl: string;
+    text: string;
+  };
+
   const items: Item[] = [
     {
       id: 1,
@@ -30,42 +19,6 @@ export default function EditorSidebar() {
       imageUrl: "/tables/segmentGreen.png",
       text: "Item 2",
     },
-    {
-      id: 3,
-      model: "models.SquareTable",
-      imageUrl: "/tables/tableGreen.png",
-      text: "Item 3",
-    },
-    {
-      id: 4,
-      model: "models.RoundTable",
-      imageUrl: "/tables/segmentGreen.png",
-      text: "Item 4",
-    },
-    {
-      id: 5,
-      model: "models.SquareTable",
-      imageUrl: "/tables/tableGreen.png",
-      text: "Item 5",
-    },
-    {
-      id: 6,
-      model: "models.RoundTable",
-      imageUrl: "/tables/segmentGreen.png",
-      text: "Item 6",
-    },
-    {
-      id: 7,
-      model: "models.SquareTable",
-      imageUrl: "/tables/tableGreen.png",
-      text: "Item 7",
-    },
-    {
-      id: 8,
-      model: "models.RoundTable",
-      imageUrl: "/tables/segmentGreen.png",
-      text: "Item 8",
-    },
   ];
 
   const handleDragStart = (e: DragEvent, item: Item) => {
@@ -74,14 +27,15 @@ export default function EditorSidebar() {
 
   return (
     <div
-      className="absolute left-0 w-100 h-[50vh] bg-gray-200 overflow-y-auto"
+      className="absolute left-0 w-[6%] lg:w-[3.2%] h-[10%]  bg-gray-300 overflow-y-auto "
+      style="z-index: 2"
       onDragOver={(event) => event.preventDefault()}
     >
-      <div className="h-[50vh]">
+      <div className="h-[10%]">
         {items.map((item) => (
           <div
             key={item.id}
-            className="flex items-center p-2"
+            className="flex items-center p-1 pt-2 pb-3"
           >
             <img
               src={item.imageUrl}
