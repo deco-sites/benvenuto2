@@ -3,11 +3,11 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $$$0 from "./loaders/getMapFromKV.ts";
-import * as $$$$$$0 from "./sections/MapManagement.tsx";
-import * as $$$$$$1 from "./sections/Footer.tsx";
-import * as $$$$$$2 from "./sections/Hero.tsx";
-import * as $$$$$$3 from "./sections/Home.tsx";
-import * as $$$$$$4 from "./sections/MapEditor.tsx";
+import * as $$$$$$0 from "./sections/Footer.tsx";
+import * as $$$$$$1 from "./sections/Hero.tsx";
+import * as $$$$$$2 from "./sections/Home.tsx";
+import * as $$$$$$3 from "./sections/MapEditor.tsx";
+import * as $$$$$$4 from "./sections/MapManagement.tsx";
 import * as $$$$$$5 from "./sections/ParagraphList.tsx";
 import * as $$$$$$6 from "./sections/Theme/Theme.tsx";
 import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
@@ -20,11 +20,11 @@ const manifest = {
     "deco-sites/benvenuto2/loaders/getMapFromKV.ts": $$$0,
   },
   "sections": {
-    "deco-sites/benvenuto2/sections/Editor.tsx": $$$$$$0,
-    "deco-sites/benvenuto2/sections/Footer.tsx": $$$$$$1,
-    "deco-sites/benvenuto2/sections/Hero.tsx": $$$$$$2,
-    "deco-sites/benvenuto2/sections/Home.tsx": $$$$$$3,
-    "deco-sites/benvenuto2/sections/MapEditor.tsx": $$$$$$4,
+    "deco-sites/benvenuto2/sections/Footer.tsx": $$$$$$0,
+    "deco-sites/benvenuto2/sections/Hero.tsx": $$$$$$1,
+    "deco-sites/benvenuto2/sections/Home.tsx": $$$$$$2,
+    "deco-sites/benvenuto2/sections/MapEditor.tsx": $$$$$$3,
+    "deco-sites/benvenuto2/sections/MapManagement.tsx": $$$$$$4,
     "deco-sites/benvenuto2/sections/ParagraphList.tsx": $$$$$$5,
     "deco-sites/benvenuto2/sections/Theme/Theme.tsx": $$$$$$6,
   },

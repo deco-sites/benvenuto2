@@ -10,59 +10,71 @@ import { Component, h } from "preact";
 // Defining the type for the items
 type Item = {
   id: number;
+  model: string;
   imageUrl: string;
   text: string;
 };
 
-interface SidebarState {
-  draggingItem: Item | null;
-}
-
 export default function EditorSidebar() {
   // Data of the items
   const items: Item[] = [
-    { id: 1, imageUrl: "/tables/tableGreen.png", text: "Item 1" },
-    { id: 2, imageUrl: "/tables/segmentGreen.png", text: "Item 2" },
-    { id: 3, imageUrl: "https://via.placeholder.com/150", text: "Item 3" },
-    { id: 4, imageUrl: "/tables/tableGreen.png", text: "Item 1" },
-    { id: 5, imageUrl: "/tables/segmentGreen.png", text: "Item 2" },
-    { id: 6, imageUrl: "https://via.placeholder.com/150", text: "Item 3" },
-    { id: 7, imageUrl: "/tables/tableGreen.png", text: "Item 1" },
-    { id: 8, imageUrl: "/tables/segmentGreen.png", text: "Item 2" },
-    { id: 9, imageUrl: "https://via.placeholder.com/150", text: "Item 3" },
-    { id: 10, imageUrl: "/tables/tableGreen.png", text: "Item 1" },
-    { id: 11, imageUrl: "/tables/segmentGreen.png", text: "Item 2" },
-    { id: 12, imageUrl: "https://via.placeholder.com/150", text: "Item 3" },
-    // Add more items as necessary
+    {
+      id: 1,
+      model: "models.SquareTable",
+      imageUrl: "/tables/tableGreen.png",
+      text: "Item 1",
+    },
+    {
+      id: 2,
+      model: "models.RoundTable",
+      imageUrl: "/tables/segmentGreen.png",
+      text: "Item 2",
+    },
+    {
+      id: 3,
+      model: "models.SquareTable",
+      imageUrl: "/tables/tableGreen.png",
+      text: "Item 3",
+    },
+    {
+      id: 4,
+      model: "models.RoundTable",
+      imageUrl: "/tables/segmentGreen.png",
+      text: "Item 4",
+    },
+    {
+      id: 5,
+      model: "models.SquareTable",
+      imageUrl: "/tables/tableGreen.png",
+      text: "Item 5",
+    },
+    {
+      id: 6,
+      model: "models.RoundTable",
+      imageUrl: "/tables/segmentGreen.png",
+      text: "Item 6",
+    },
+    {
+      id: 7,
+      model: "models.SquareTable",
+      imageUrl: "/tables/tableGreen.png",
+      text: "Item 7",
+    },
+    {
+      id: 8,
+      model: "models.RoundTable",
+      imageUrl: "/tables/segmentGreen.png",
+      text: "Item 8",
+    },
   ];
 
-  const [draggingItem, setDraggingItem] = useState<Item | null>(null);
-
-  // Event handler for the start of dragging
-  const handleDragStart = (item: Item) => {
-    setDraggingItem(item);
-  };
-
-  // Event handler for the end of dragging
-  const handleDragEnd = () => {
-    setDraggingItem(null);
-  };
-
-  // Event handler for dropping the item
-  const handleDrop = (event: DragEvent) => {
-    event.preventDefault();
-    const { clientX, clientY } = event;
-    if (draggingItem) {
-      // Here you can insert logic to insert the image at the mouse position
-      console.log("Image inserted at", clientX, clientY);
-      setDraggingItem(null);
-    }
+  const handleDragStart = (e: DragEvent, item: Item) => {
+    e.dataTransfer?.setData("Model", item.model);
   };
 
   return (
     <div
-      className="absolute left-0 w-200 h-[50vh] bg-gray-200 overflow-y-auto"
-      onDrop={handleDrop}
+      className="absolute left-0 w-100 h-[50vh] bg-gray-200 overflow-y-auto"
       onDragOver={(event) => event.preventDefault()}
     >
       <div className="h-[50vh]">
@@ -70,36 +82,17 @@ export default function EditorSidebar() {
           <div
             key={item.id}
             className="flex items-center p-2"
-            draggable
-            onDragStart={() => handleDragStart(item)}
-            onDragEnd={handleDragEnd}
           >
-            <button
-              onClick={() => console.log(`Clicked item ${item.text}`)}
-              className="flex items-center justify-center w-12 h-12 mr-2"
-            >
-              <img
-                src={item.imageUrl}
-                alt={item.text}
-                className="w-full h-auto"
-              />
-            </button>
-            <span>{item.text}</span>
+            <img
+              src={item.imageUrl}
+              alt={item.text}
+              draggable
+              onDragStart={(e) => handleDragStart(e, item)}
+              className="w-full h-auto"
+            />
           </div>
         ))}
       </div>
-      {draggingItem && (
-        <img
-          src={draggingItem.imageUrl}
-          alt={draggingItem.text}
-          className="absolute"
-          style={{
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-      )}
     </div>
   );
 }

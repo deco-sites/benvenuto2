@@ -20,7 +20,9 @@ export default function Editor({
     tables: [],
   });
   const [deletedTables, setDeletedTables] = useState<number[]>([]);
+  const [draggedItem, setDraggedItem] = useState<Table | null>(null);
   const isInitialRender = useRef(true);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     console.log("Realiza evento");
@@ -44,12 +46,6 @@ export default function Editor({
       setTableMapSaved({ tables: tableMapSavedFiltered });
     };
   }, []);
-
-  const OnDropAddTable = (table: Table) => {
-    console.log("Adicionada Table:", table.id, table.class, table.label);
-
-    tableMapUpdate.tables.push(table);
-  };
 
   const HandleDeleteTable = (tableId: number) => {
     const tableToDeleteUpdated = tableMapUpdate.tables.find((table) =>
@@ -89,6 +85,75 @@ export default function Editor({
     });
   };
 
+  function handleOnDrop(event: DragEvent) {
+    event.preventDefault();
+
+    const model = event.dataTransfer?.getData("Model") as string;
+    const updatedTables = [...tableMapUpdate.tables];
+
+    if (model !== "") {
+      console.log("New");
+      const newItem: Table = {
+        class: model,
+        id: 50,
+        label: "XX",
+        rotation: 0,
+        x: calculateCoordinates(event, "x"),
+        y: calculateCoordinates(event, "y"),
+        occupied: false,
+        places: [],
+      };
+      updatedTables.push(newItem);
+      setTableMapUpdate({ tables: updatedTables });
+    } else if (draggedItem !== null) {
+      console.log("Dragged");
+      const newItem: Table = {
+        ...draggedItem,
+        x: calculateCoordinates(event, "x"),
+        y: calculateCoordinates(event, "y"),
+      };
+      filterTable(newItem);
+      //updatedTables.push(newItem);
+    }
+    console.log("Novas mesas:", JSON.stringify(updatedTables));
+  }
+
+  function filterTable(newItem: Table) {
+    let updatedTablesFiltered: Table[] = tableMapUpdate.tables;
+    const isUpdatedTables = tableMapUpdate.tables.some((table) =>
+      table.id === newItem.id
+    );
+    if (isUpdatedTables) {
+      updatedTablesFiltered = tableMapUpdate.tables.filter((table) =>
+        table.id !== newItem.id
+      );
+    } else {
+      const savedTablesFiltered: Table[] = tableMapSaved.tables.filter((
+        table,
+      ) => table.id !== newItem.id);
+      setTableMapSaved({ tables: savedTablesFiltered });
+    }
+    updatedTablesFiltered.push(newItem);
+    setTableMapUpdate({ tables: updatedTablesFiltered });
+  }
+
+  function calculateCoordinates(event: DragEvent, type: string): number {
+    if (type == "x") {
+      return (event.clientX -
+        containerRef.current!.getBoundingClientRect().left) /
+        containerRef.current!.offsetWidth * 100;
+    } else {
+      return (event.clientY -
+        containerRef.current!.getBoundingClientRect().top) /
+        containerRef.current!.offsetHeight * 100;
+    }
+  }
+
+  function handleDragOver(event: DragEvent) {
+    event.preventDefault();
+    console.log("over");
+  }
+
   return (
     <div class="relative">
       <div class="flex justify-center font-bold text-3xl lg:text-5xl leading-tight lg:leading-none text-center lg:mt-2 lg:mb-2 ">
@@ -96,28 +161,39 @@ export default function Editor({
       </div>
       <EditorSidebar />
       {backgroundImage && (
-        <div class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black ">
+        <div
+          class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black "
+          ref={containerRef}
+          onDrop={handleOnDrop}
+          onDragOver={handleDragOver}
+        >
           <img
             src={backgroundImage}
             alt="Your Image"
-            class={`w-full `}
+            draggable={false}
+            class={`w-full select-none`}
           />
 
-          {tableMapSaved?.tables.map((table) => (
-            table.class === "models.SquareTable"
-              ? (
-                <DraggableGenericTable
-                  tableInfo={table}
-                  deleteTable={HandleDeleteTable}
-                />
-              )
-              : (
-                <DraggableSegmentTable
-                  tableInfo={table}
-                  deleteTable={HandleDeleteTable}
-                />
-              )
-          ))}
+          {[...(tableMapSaved?.tables ?? []), ...tableMapUpdate?.tables]
+            .map((table) => (
+              table.class === "models.SquareTable"
+                ? (
+                  <DraggableGenericTable
+                    key={table.id}
+                    tableInfo={table}
+                    deleteTable={HandleDeleteTable}
+                    setDraggedItem={setDraggedItem}
+                  />
+                )
+                : (
+                  <DraggableSegmentTable
+                    key={table.id}
+                    tableInfo={table}
+                    deleteTable={HandleDeleteTable}
+                    setDraggedItem={setDraggedItem}
+                  />
+                )
+            ))}
         </div>
       )}
     </div>
