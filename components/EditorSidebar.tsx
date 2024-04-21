@@ -1,4 +1,12 @@
-export default function EditorSidebar() {
+import { Offset } from "../islands/MapEditor.tsx";
+
+export interface Props {
+  setDraggedItemOffset: (offset: Offset) => void;
+}
+
+export default function EditorSidebar({
+  setDraggedItemOffset,
+}: Props) {
   type Item = {
     id: number;
     model: string;
@@ -22,6 +30,7 @@ export default function EditorSidebar() {
   ];
 
   const handleDragStart = (e: DragEvent, item: Item) => {
+    setDraggedItemOffset({ x: e.offsetX, y: e.offsetY });
     e.dataTransfer?.setData("Model", item.model);
   };
 

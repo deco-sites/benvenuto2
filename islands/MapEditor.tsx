@@ -5,6 +5,12 @@ import type { ImageWidget } from "apps/admin/widgets.ts";
 import DraggableGenericTable from "../components/tableTypes/draggable/DraggableGenericTable.tsx";
 import DraggableSegmentTable from "../components/tableTypes/draggable/DraggableSegmentTable.tsx";
 import EditorSidebar from "deco-sites/benvenuto2/components/EditorSidebar.tsx";
+import { v1 } from "https://deno.land/std@0.223.0/uuid/mod.ts";
+
+export type Offset = {
+  x: number;
+  y: number;
+};
 
 export interface Props {
   tableMap: TableMap;
@@ -19,9 +25,10 @@ export default function Editor({
   const [tableMapUpdate, setTableMapUpdate] = useState<TableMap>({
     tables: [],
   });
-  const [deletedTables, setDeletedTables] = useState<number[]>([]);
+  const [deletedTables, setDeletedTables] = useState<string[]>([]);
   const [draggedItem, setDraggedItem] = useState<Table | null>(null);
   const isInitialRender = useRef(true);
+  const draggedItemOffset = useRef<Offset>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -47,7 +54,7 @@ export default function Editor({
     };
   }, []);
 
-  const HandleDeleteTable = (tableId: number) => {
+  const HandleDeleteTable = (tableId: string) => {
     const tableToDeleteUpdated = tableMapUpdate.tables.find((table) =>
       table.id === tableId
     );
@@ -65,6 +72,10 @@ export default function Editor({
       );
       setTableMapSaved({ tables: savedTables });
     }
+  };
+
+  const setDraggedItemOffset = (offset: Offset) => {
+    draggedItemOffset.current = offset;
   };
 
   const HandleSaveNewMap = () => {
@@ -95,7 +106,7 @@ export default function Editor({
       console.log("New");
       const newItem: Table = {
         class: model,
-        id: 50,
+        id: v1.generate() as string,
         label: "XX",
         rotation: 0,
         x: calculateCoordinates(event, "x"),
@@ -138,11 +149,13 @@ export default function Editor({
   function calculateCoordinates(event: DragEvent, type: string): number {
     if (type == "x") {
       return (event.clientX -
-        containerRef.current!.getBoundingClientRect().left) /
+        containerRef.current!.getBoundingClientRect().left -
+        draggedItemOffset.current.x) /
         containerRef.current!.offsetWidth * 100;
     } else {
       return (event.clientY -
-        containerRef.current!.getBoundingClientRect().top) /
+        containerRef.current!.getBoundingClientRect().top -
+        draggedItemOffset.current.y) /
         containerRef.current!.offsetHeight * 100;
     }
   }
@@ -157,7 +170,7 @@ export default function Editor({
       <div class="flex justify-center font-bold text-3xl lg:text-5xl leading-tight lg:leading-none text-center lg:mt-2 lg:mb-2 ">
         {"Map Editor"}
       </div>
-      <EditorSidebar />
+      <EditorSidebar setDraggedItemOffset={setDraggedItemOffset}/>
       {backgroundImage && (
         <div
           class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black "
@@ -181,6 +194,7 @@ export default function Editor({
                     tableInfo={table}
                     deleteTable={HandleDeleteTable}
                     setDraggedItem={setDraggedItem}
+                    setDraggedItemOffset={setDraggedItemOffset}
                   />
                 )
                 : (
@@ -189,6 +203,7 @@ export default function Editor({
                     tableInfo={table}
                     deleteTable={HandleDeleteTable}
                     setDraggedItem={setDraggedItem}
+                    setDraggedItemOffset={setDraggedItemOffset}
                   />
                 )
             ))}

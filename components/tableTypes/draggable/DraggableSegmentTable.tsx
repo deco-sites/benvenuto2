@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import { Table } from "../../../static/MockedTableObject.tsx";
+import {Offset} from "../../../islands/MapEditor.tsx"
 
 export interface Props {
   tableInfo: Table;
-  deleteTable: (tableId: number) => void;
+  deleteTable: (tableId: string) => void;
   setDraggedItem: (table: Table | null) => void;
+  setDraggedItemOffset: (offset: Offset) => void;
 }
 
 export default function DraggableSegmentTable({
   tableInfo,
   deleteTable,
   setDraggedItem,
+  setDraggedItemOffset,
 }: Props) {
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
@@ -37,6 +40,7 @@ export default function DraggableSegmentTable({
   };
 
   const handleDragStart = (e: DragEvent, tableInfo: Table) => {
+    setDraggedItemOffset( { x: e.offsetX, y: e.offsetY });
     setDraggedItem(tableInfo);
   };
 

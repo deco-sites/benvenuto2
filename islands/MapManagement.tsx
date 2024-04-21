@@ -43,7 +43,7 @@ export default function Editor({
     });
   };
 
-  const updateOccupiedState = (tableId: number, newOccupiedState: boolean) => {
+  const updateOccupiedState = (tableId: string, newOccupiedState: boolean) => {
     console.log("Table antes:", JSON.stringify(tableMapUpdate));
 
     const updatedTables = tableMapUpdate.tables.map((table) => {

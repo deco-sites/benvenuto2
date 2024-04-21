@@ -3,7 +3,7 @@ import { Table } from "../../static/MockedTableObject.tsx";
 
 export interface Props {
   tableInfo: Table;
-  updateOccupiedState: (tableId: number, newOccupiedState: boolean) => void;
+  updateOccupiedState: (tableId: string, newOccupiedState: boolean) => void;
 }
 
 export default function GenericTable({

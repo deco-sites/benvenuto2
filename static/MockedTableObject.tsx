@@ -4,7 +4,7 @@ export interface TableMap {
 
 export interface Table {
   class: string
-  id: number
+  id: string
   label: string
   rotation: number
   x: number
