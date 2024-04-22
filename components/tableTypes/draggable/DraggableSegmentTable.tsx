@@ -7,6 +7,7 @@ export interface Props {
   deleteTable: (tableId: string) => void;
   setDraggedItem: (table: Table | null) => void;
   setDraggedItemOffset: (offset: Offset) => void;
+  handleChangeLabel: (id: string, newLabel: string) => void;
 }
 
 export default function DraggableSegmentTable({
@@ -14,6 +15,7 @@ export default function DraggableSegmentTable({
   deleteTable,
   setDraggedItem,
   setDraggedItemOffset,
+  handleChangeLabel,
 }: Props) {
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
@@ -32,8 +34,6 @@ export default function DraggableSegmentTable({
       if (!target.closest(`#table-${tableInfo.id}`)) {
         setIsSelected(false);
         setEditLabel(false);
-        if (label != "" && label != tableInfo.label) {
-        }
       }
     }
 
@@ -42,6 +42,13 @@ export default function DraggableSegmentTable({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSelected]);
+
+  const handleLabelChange = (newLabel: string) => {
+    if (newLabel != "" && newLabel != tableInfo.label) {
+      console.log("change Label");
+      handleChangeLabel(tableInfo.id, newLabel);
+    }
+  };
 
   const handleTableClick = () => {
     setIsSelected(true);
@@ -88,6 +95,8 @@ export default function DraggableSegmentTable({
               type="text"
               placeholder={tableInfo.label}
               value={label}
+              onBlur={(e) =>
+                handleLabelChange((e.target as HTMLInputElement).value)}
               onChange={(e) => setLabel((e.target as HTMLInputElement).value)}
             />
           )
@@ -116,7 +125,7 @@ export default function DraggableSegmentTable({
             <button
               onClick={handleDeleteTable}
               class="text-[1.6vw] lg:text-[0.8vw] select-none"
-              style={`position: absolute; left: ${tableInfo.x}%; top: ${
+              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
                 tableInfo.y + 2.8
               }%; height: auto;`}
             >
@@ -125,7 +134,7 @@ export default function DraggableSegmentTable({
             <button
               onClick={() => setFocusToLabel()}
               class="text-[1.6vw] lg:text-[0.8vw] select-none"
-              style={`position: absolute; left: ${tableInfo.x}%; top: ${
+              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
                 tableInfo.y + 4
               }%; height: auto;`}
             >

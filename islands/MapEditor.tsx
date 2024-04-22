@@ -22,141 +22,109 @@ export default function Editor({
   backgroundImage = "",
 }: Props) {
   const [tableMapSaved, setTableMapSaved] = useState<TableMap>(tableMap);
-  const [tableMapUpdate, setTableMapUpdate] = useState<TableMap>({
-    tables: [],
-  });
-  const [deletedTables, setDeletedTables] = useState<string[]>([]);
   const [draggedItem, setDraggedItem] = useState<Table | null>(null);
   const isInitialRender = useRef(true);
   const draggedItemOffset = useRef<Offset>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("Realiza evento");
+    console.log("Requisita mapa no banco");
 
-    const eventSource = new EventSource(`/sse/tables`);
-    eventSource.onerror = (err) => {
-      console.log("Connection Error");
-      eventSource.close();
+    const fetchGetData = async () => {
+      try {
+        const data: TableMap = await Runtime.invoke["deco-sites/benvenuto2"]
+          .actions.actionGetMapFromKV({
+            empresa: "couve",
+            filial: "teste",
+            id: "1",
+          });
+
+        setTableMapSaved({ tables: data.tables });
+      } catch (error) {
+        console.error("Erro ao obter os dados:", error);
+      }
     };
 
-    eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-
-      // Filter out tables with IDs listed in deletedTables
-      const tableMapSavedFiltered = data.tables.filter((table: Table) =>
-        !deletedTables.includes(table.id)
-      );
-
-      console.log("Evento table atualizada: " + JSON.stringify(data));
-      // Update tableMapSaved with the filtered tables
-      setTableMapSaved({ tables: tableMapSavedFiltered });
-    };
+    fetchGetData(); // Chame a função fetchData para buscar os dados do mapa
   }, []);
 
-  const HandleDeleteTable = (tableId: string) => {
-    const tableToDeleteUpdated = tableMapUpdate.tables.find((table) =>
-      table.id === tableId
-    );
-    if (tableToDeleteUpdated) {
-      const updatedTables = tableMapUpdate.tables.filter((table) =>
-        table.id !== tableId
-      );
-      setTableMapUpdate({ tables: updatedTables });
-    } else {
-      setDeletedTables((
-        prevDeletedTables,
-      ) => [...prevDeletedTables, tableId]);
-      const savedTables = tableMapSaved.tables.filter((table) =>
-        table.id !== tableId
-      );
-      setTableMapSaved({ tables: savedTables });
-    }
-  };
-
-  const setDraggedItemOffset = (offset: Offset) => {
-    draggedItemOffset.current = offset;
-  };
-
-  const HandleSaveNewMap = () => {
-    const newTableMap: TableMap = {
-      tables: [...tableMapUpdate.tables, ...tableMapSaved.tables],
-    };
-
-    console.log("Salva Table:", JSON.stringify(newTableMap));
-    fetchData(newTableMap);
-  };
-
-  const fetchData = async (tableMap: TableMap) => {
+  const fetchSetData = async (tableMap: TableMap) => {
     await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
       empresa: "couve",
       filial: "teste",
       id: "1",
       mapJSON: JSON.stringify(tableMap),
     });
-  }; /*
+  };
+
+  const HandleSaveNewMap = () => {
+    console.log("Salva Table:", JSON.stringify(tableMapSaved));
+    fetchSetData(tableMapSaved);
+  };
+
+  const HandleDeleteTable = (tableId: string) => {
+    const savedTables = tableMapSaved.tables.filter((table) =>
+      table.id !== tableId
+    );
+    setTableMapSaved({ tables: savedTables });
+  };
+
+  const setDraggedItemOffset = (offset: Offset) => {
+    draggedItemOffset.current = offset;
+  };
+
+  
   function handleChangeLabel(id: string, newLabel: string) {
-    const updatedTables = [...tableMapUpdate.tables];
-
+    const foundTable = tableMapSaved.tables.find(table => table.id === id);
+  
+    if (foundTable) {
       const newItem: Table = {
-        ...draggedItem,
-        x: calculateCoordinates(event, "x"),
-        y: calculateCoordinates(event, "y"),
+        ...foundTable,
+        label: newLabel
       };
-      filterTable(newItem);
-
-    console.log("Novas mesas:", JSON.stringify(updatedTables));
+      filterAddTable(newItem);
+    } else {
+      console.error("Tabela não encontrada com o ID:", id);
+    }
   }
-  */
+  
 
   function handleOnDrop(event: DragEvent) {
     event.preventDefault();
 
     const model = event.dataTransfer?.getData("Model") as string;
-    const updatedTables = [...tableMapUpdate.tables];
+    const updateTable = [...tableMapSaved.tables];
 
     if (model !== "") {
       console.log("New");
       const newItem: Table = {
         class: model,
         id: v1.generate() as string,
-        label: "XX",
+        label: "xx",
         rotation: 0,
         x: calculateCoordinates(event, "x"),
         y: calculateCoordinates(event, "y"),
         occupied: false,
         places: [],
       };
-      updatedTables.push(newItem);
-      setTableMapUpdate({ tables: updatedTables });
+      updateTable.push(newItem);
+      setTableMapSaved({ tables: updateTable });
     } else if (draggedItem !== null) {
       const newItem: Table = {
         ...draggedItem,
         x: calculateCoordinates(event, "x"),
         y: calculateCoordinates(event, "y"),
       };
-      filterTable(newItem);
+      filterAddTable(newItem);
     }
-    console.log("Novas mesas:", JSON.stringify(updatedTables));
   }
 
-  function filterTable(newItem: Table) {
-    let updatedTablesFiltered: Table[] = tableMapUpdate.tables;
-    const isUpdatedTables = tableMapUpdate.tables.some((table) =>
-      table.id === newItem.id
-    );
-    if (isUpdatedTables) {
-      updatedTablesFiltered = tableMapUpdate.tables.filter((table) =>
-        table.id !== newItem.id
-      );
-    } else {
-      const savedTablesFiltered: Table[] = tableMapSaved.tables.filter((
-        table,
-      ) => table.id !== newItem.id);
-      setTableMapSaved({ tables: savedTablesFiltered });
-    }
-    updatedTablesFiltered.push(newItem);
-    setTableMapUpdate({ tables: updatedTablesFiltered });
+  function filterAddTable(newItem: Table) {
+    const savedTablesFiltered: Table[] = tableMapSaved.tables.filter((
+      table,
+    ) => table.id !== newItem.id);
+    savedTablesFiltered.push(newItem);
+    setTableMapSaved({ tables: savedTablesFiltered });
   }
 
   function calculateCoordinates(event: DragEvent, type: string): number {
@@ -198,7 +166,7 @@ export default function Editor({
             class={`w-full select-none`}
           />
 
-          {[...(tableMapSaved?.tables ?? []), ...tableMapUpdate?.tables]
+          {...(tableMapSaved?.tables ?? [])
             .map((table) => (
               table.class === "models.SquareTable"
                 ? (
@@ -208,6 +176,7 @@ export default function Editor({
                     deleteTable={HandleDeleteTable}
                     setDraggedItem={setDraggedItem}
                     setDraggedItemOffset={setDraggedItemOffset}
+                    handleChangeLabel={handleChangeLabel}
                   />
                 )
                 : (
@@ -217,6 +186,7 @@ export default function Editor({
                     deleteTable={HandleDeleteTable}
                     setDraggedItem={setDraggedItem}
                     setDraggedItemOffset={setDraggedItemOffset}
+                    handleChangeLabel={handleChangeLabel}
                   />
                 )
             ))}

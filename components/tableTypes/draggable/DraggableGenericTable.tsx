@@ -7,6 +7,7 @@ export interface Props {
   deleteTable: (tableId: string) => void;
   setDraggedItem: (table: Table | null) => void;
   setDraggedItemOffset: (offset: Offset) => void;
+  handleChangeLabel: (id: string, newLabel: string) => void;
 }
 
 export default function DraggableGenericTable({
@@ -14,12 +15,13 @@ export default function DraggableGenericTable({
   deleteTable,
   setDraggedItem,
   setDraggedItemOffset,
+  handleChangeLabel,
 }: Props) {
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
   const [hovered, setHovered] = useState(false);
   const [editLabel, setEditLabel] = useState(false);
-  const [label, setLabel] = useState("");
+  const [label, setLabel] = useState(tableInfo.label);
 
   useEffect(() => {
     if (isInitialRender.current) {
@@ -33,10 +35,6 @@ export default function DraggableGenericTable({
       if (!target.closest(`#table-${tableInfo.id}`)) {
         setIsSelected(false);
         setEditLabel(false);
-        if(label!="" && label!=tableInfo.label){
-          
-        }
-
       }
     }
 
@@ -45,6 +43,12 @@ export default function DraggableGenericTable({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSelected]);
+
+  const handleLabelChange = (newLabel: string) => {
+    if (newLabel != "" && newLabel != tableInfo.label) {
+      handleChangeLabel(tableInfo.id, newLabel);
+    }
+  };
 
   const handleTableClick = () => {
     setIsSelected(true);
@@ -91,6 +95,8 @@ export default function DraggableGenericTable({
               type="text"
               placeholder={tableInfo.label}
               value={label}
+              onBlur={(e) =>
+                handleLabelChange((e.target as HTMLInputElement).value)}
               onChange={(e) => setLabel((e.target as HTMLInputElement).value)}
             />
           )
@@ -119,7 +125,7 @@ export default function DraggableGenericTable({
             <button
               onClick={handleDeleteTable}
               class="text-[1.6vw] lg:text-[0.8vw] select-none"
-              style={`position: absolute; left: ${tableInfo.x}%; top: ${
+              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
                 tableInfo.y + 3.8
               }%; height: auto;`}
             >
@@ -128,7 +134,7 @@ export default function DraggableGenericTable({
             <button
               onClick={() => setFocusToLabel()}
               class="text-[1.6vw] lg:text-[0.8vw] select-none"
-              style={`position: absolute; left: ${tableInfo.x}%; top: ${
+              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
                 tableInfo.y + 5
               }%; height: auto;`}
             >

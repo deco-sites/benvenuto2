@@ -1,3 +1,5 @@
+import { TableMap } from "deco-sites/benvenuto2/static/MockedTableObject.tsx";
+
 export interface Props {
   empresa: string;
   filial: string;
@@ -7,7 +9,7 @@ export interface Props {
 const action = async (
   props: Props,
   _req: Request,
-): Promise<void> => {
+): Promise<TableMap> => {
   const {
     empresa,
     filial,
