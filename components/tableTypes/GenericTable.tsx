@@ -49,13 +49,13 @@ export default function GenericTable({
       onClick={handleTableClick}
     >
       <div
-        style={`width: 5%; height: auto; border: 2px solid blue; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
+        style={`width: 5%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
       >
         <p
           class="text-[1.6vw] lg:text-[0.8vw]"
           style="width: 100%; max-width: 100%; height: 40; position: absolute; top: 20%; left: -5%; margin-block-start: 0em; margin-block-end: 0em; font-weight: 500; text-align: center; z-index: 1; pointer-events: none;"
         >
-          0{tableInfo.label}D
+          {tableInfo.label}
         </p>
         <img
           src={getImageSource()}

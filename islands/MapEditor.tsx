@@ -94,7 +94,20 @@ export default function Editor({
       id: "1",
       mapJSON: JSON.stringify(tableMap),
     });
-  };
+  }; /*
+  function handleChangeLabel(id: string, newLabel: string) {
+    const updatedTables = [...tableMapUpdate.tables];
+
+      const newItem: Table = {
+        ...draggedItem,
+        x: calculateCoordinates(event, "x"),
+        y: calculateCoordinates(event, "y"),
+      };
+      filterTable(newItem);
+
+    console.log("Novas mesas:", JSON.stringify(updatedTables));
+  }
+  */
 
   function handleOnDrop(event: DragEvent) {
     event.preventDefault();
@@ -170,7 +183,7 @@ export default function Editor({
       <div class="flex justify-center font-bold text-3xl lg:text-5xl leading-tight lg:leading-none text-center lg:mt-2 lg:mb-2 ">
         {"Map Editor"}
       </div>
-      <EditorSidebar setDraggedItemOffset={setDraggedItemOffset}/>
+      <EditorSidebar setDraggedItemOffset={setDraggedItemOffset} />
       {backgroundImage && (
         <div
           class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black "
