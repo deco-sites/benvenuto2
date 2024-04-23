@@ -14,14 +14,39 @@ export default function GenericTable({
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
   const [hovered, setHovered] = useState(false);
+  const [changeLabelOrientation, setChangeLabelOrientation] = useState(false);
 
   useEffect(() => {
     if (isInitialRender.current) {
       isInitialRender.current = false;
       return;
     }
+    setIsSelected(false);
     setIsAvailable(!tableInfo.occupied);
   }, [tableInfo.occupied]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+      if (!target.closest(`#table-${tableInfo.id}`)) {
+        console.log("clica fora");
+        setIsSelected(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSelected]);
+
+  useEffect(() => {
+    if (tableInfo.rotation >= 110 || tableInfo.rotation <= -80) {
+      setChangeLabelOrientation(true);
+    } else {
+      setChangeLabelOrientation(false);
+    }
+  }, [tableInfo]);
 
   const handleAvailableState = () => {
     setIsAvailable(!isAvailable);
@@ -29,35 +54,47 @@ export default function GenericTable({
   };
 
   const handleTableClick = () => {
-    setIsSelected(!isSelected);
+    setIsSelected(true);
   };
 
   const getImageSource = () => {
     let imageSource = "/tables/tableGreen.png"; // Default source
     imageSource = isAvailable
-      ? (hovered ? "/tables/segmentLightGreen.png" : "/tables/segmentGreen.png")
-      : (hovered ? "/tables/segmentLightYellow.png" : "/tables/segmentRed.png");
+      ? (isSelected || hovered
+        ? "/tables/segmentLightGreen.png"
+        : "/tables/segmentGreen.png")
+      : (isSelected || hovered
+        ? "/tables/segmentLightYellow.png"
+        : "/tables/segmentRed.png");
     return imageSource;
   };
 
   return (
     <div
+      id={`table-${tableInfo.id}`}
       key={tableInfo.id}
       onClick={handleTableClick}
     >
       <div
-        style={`width: 6%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;`}
+        style={`width: 5.2%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%; transform: rotate(${tableInfo.rotation}deg);`}
       >
         <p
-          class="text-[1.6vw] lg:text-[0.8vw]"
-          style="width: 100%; max-width: 100%; height: auto; position: absolute; top: 30%; left: -5%; margin-block-start: 0em; margin-block-end: 0em; font-weight: 500; text-align: center; z-index: 1; pointer-events: none;"
+          class="text-[1.6vw] lg:text-[0.8vw] select-none"
+          style={`width: 100%; max-width: 100%; height: auto; position: absolute; top: ${
+            changeLabelOrientation ? "35" : "30"
+          }%; left: -5%; 
+          ${
+            changeLabelOrientation ? "transform: scale(-1, -1)" : "none"
+          }; margin-block-start: 0em; margin-block-end: 0em; font-weight: 500; text-align: center; z-index: 1; pointer-events: none;`}
         >
           {tableInfo.label}
         </p>
         <img
           src={getImageSource()}
           alt={`Table ${tableInfo.label}`}
-          style={`width: 100%; max-width: 100%; height: auto; transform: rotate(-${tableInfo.rotation}deg);`}
+          class="select-none"
+          style={`width: 100%; max-width: 100%; height: auto; `}
+          draggable={false}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         />
@@ -66,9 +103,9 @@ export default function GenericTable({
         (
           <button
             onClick={handleAvailableState}
-            class="text-[1.6vw] lg:text-[0.8vw]"
+            class="text-[1.6vw] lg:text-[0.8vw] select-none"
             style={`position: absolute; left: ${tableInfo.x}%; top: ${
-              tableInfo.y + 2.8
+              tableInfo.y + 2.6
             }%;`}
           >
             {isAvailable ? "Ocupar" : "Desocupar"}

@@ -73,21 +73,33 @@ export default function Editor({
     draggedItemOffset.current = offset;
   };
 
-  
   function handleChangeLabel(id: string, newLabel: string) {
-    const foundTable = tableMapSaved.tables.find(table => table.id === id);
-  
+    const foundTable = tableMapSaved.tables.find((table) => table.id === id);
+
     if (foundTable) {
       const newItem: Table = {
         ...foundTable,
-        label: newLabel
+        label: newLabel,
       };
       filterAddTable(newItem);
     } else {
       console.error("Tabela não encontrada com o ID:", id);
     }
   }
-  
+
+  function handleChangeRotation(id: string, angle: number) {
+    const foundTable = tableMapSaved.tables.find((table) => table.id === id);
+
+    if (foundTable) {
+      const newItem: Table = {
+        ...foundTable,
+        rotation: angle,
+      };
+      filterAddTable(newItem);
+    } else {
+      console.error("Tabela não encontrada com o ID:", id);
+    }
+  }
 
   function handleOnDrop(event: DragEvent) {
     event.preventDefault();
@@ -124,6 +136,7 @@ export default function Editor({
       table,
     ) => table.id !== newItem.id);
     savedTablesFiltered.push(newItem);
+    console.log(newItem);
     setTableMapSaved({ tables: savedTablesFiltered });
   }
 
@@ -143,13 +156,21 @@ export default function Editor({
 
   function handleDragOver(event: DragEvent) {
     event.preventDefault();
-    console.log("over");
+    //console.log("over");
   }
 
   return (
     <div class="relative">
       <div class="flex justify-center font-bold text-3xl lg:text-5xl leading-tight lg:leading-none text-center lg:mt-2 lg:mb-2 ">
         {"Map Editor"}
+      </div>
+      <div class="absolute top-0 right-0 mt-1 mr-2">
+        <button
+          class="px-4 py-2 bg-blue-500 text-white rounded"
+          onClick={HandleSaveNewMap}
+        >
+          Save
+        </button>
       </div>
       <EditorSidebar setDraggedItemOffset={setDraggedItemOffset} />
       {backgroundImage && (
@@ -163,7 +184,7 @@ export default function Editor({
             src={backgroundImage}
             alt="Your Image"
             draggable={false}
-            class={`w-full select-none`}
+            class={`w-full select-none pointer-events-none user-drag-none`}
           />
 
           {...(tableMapSaved?.tables ?? [])
@@ -177,6 +198,7 @@ export default function Editor({
                     setDraggedItem={setDraggedItem}
                     setDraggedItemOffset={setDraggedItemOffset}
                     handleChangeLabel={handleChangeLabel}
+                    handleChangeRotation={handleChangeRotation}
                   />
                 )
                 : (
@@ -187,6 +209,7 @@ export default function Editor({
                     setDraggedItem={setDraggedItem}
                     setDraggedItemOffset={setDraggedItemOffset}
                     handleChangeLabel={handleChangeLabel}
+                    handleChangeRotation={handleChangeRotation}
                   />
                 )
             ))}

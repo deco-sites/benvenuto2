@@ -69,7 +69,7 @@ export default function Editor({
           <img
             src={backgroundImage}
             alt="Your Image"
-            class={`w-full `}
+            class={`w-full select-none pointer-events-none user-drag-none`}
           />
 
           {tableMapUpdate?.tables.map((table) => (
