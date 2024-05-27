@@ -45,7 +45,7 @@ export default function Editor({
       }
     };
 
-    fetchGetData(); // Chame a função fetchData para buscar os dados do mapa
+    fetchGetData(); //Buscar os dados do mapa
   }, []);
 
   const fetchSetData = async (tableMap: TableMap) => {
@@ -175,6 +175,7 @@ export default function Editor({
       <EditorSidebar setDraggedItemOffset={setDraggedItemOffset} />
       {backgroundImage && (
         <div
+          id="img-div"
           class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black "
           ref={containerRef}
           onDrop={handleOnDrop}

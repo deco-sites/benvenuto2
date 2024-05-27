@@ -163,23 +163,28 @@ export default function DraggableGenericTable({
   const handleDragStart = (e: DragEvent, tableInfo: Table) => {
     setDraggedItemOffset({ x: e.offsetX, y: e.offsetY });
     setDraggedItem(tableInfo);
-    /*console.log(rotationAngle);
+    /*
+    console.log(rotationAngle);
+
+    const targetImg = document.getElementById("img-div") as HTMLElement;
 
     const targetElement = containerRef.current as HTMLElement;
 
     const crt = targetElement.cloneNode(true) as HTMLElement;
+    const specificImg = crt.querySelector("img") as HTMLElement;
 
-    crt.style.backgroundColor = "red";
+    //crt.style.backgroundColor = "red";
     crt.style.zIndex = "5";
-    //crt.style.transform = `rotate(-${90}deg)`;
-    crt.style.borderStyle = "solid"; // Set the border style
-    crt.style.borderColor = "blue";
-    crt.style.borderWidth = "5px";
+    //crt.style.width = "5%";
+    specificImg.style.transform = `rotate(${rotationAngle}deg)`;
+   // crt.style.borderStyle = "solid"; // Set the border style
+   // crt.style.borderColor = "blue";
+    //crt.style.borderWidth = "1px";
     crt.style.position = "absolute";
-    crt.style.width = "2.5%";
+
     crt.style.top = "200px";
     crt.style.left = "100px";
-    document.body.appendChild(crt);
+    targetImg.appendChild(crt);
 
     console.log("id", crt.id);
     console.log("color", crt.style.color);
@@ -212,6 +217,7 @@ export default function DraggableGenericTable({
       onClick={handleTableClick}
     >
       <div
+        id={`table-${tableInfo.id}-inner`}
         ref={containerRef}
         style={`width: 5%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%; transform: rotate(${
           editRotation
@@ -287,7 +293,7 @@ export default function DraggableGenericTable({
           id={tableInfo.label}
           src={getImageSource()}
           alt={`Table ${tableInfo.label}`}
-          style={`width: 100%; max-width: 100%; height: auto; transform: rotate(${0}deg);`}
+          style={`width: 100%; max-width: 100%; height: auto;);`}
           onMouseEnter={() => !editLabel && setHovered(true)}
           onMouseLeave={() => !editLabel && setHovered(false)}
           draggable
