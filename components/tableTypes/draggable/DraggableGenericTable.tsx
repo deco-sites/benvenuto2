@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import { Table } from "../../../static/MockedTableObject.tsx";
 import { Offset } from "../../../islands/MapEditor.tsx";
+import SliderComponent from "./SliderComponent.tsx";
 
 enum LabelOrientation {
   Left = "left",
@@ -38,61 +39,28 @@ export default function DraggableGenericTable({
 
   const [label, setLabel] = useState(tableInfo.label);
   const [rotationAngle, setRotationAngle] = useState(tableInfo.rotation);
-  const prevRotationAngleRef = useRef(rotationAngle);
+  const [rotation, setRotation] = useState(tableInfo.rotation);
+  const [showSlider, setShowSlider] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const updateRotation = (event: MouseEvent) => {
-      if (containerRef.current) {
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const centerX = containerRect.left + containerRect.width / 2;
-        const centerY = containerRect.top + containerRect.height / 2;
-
-        const dx = event.clientX - centerX;
-        const dy = event.clientY - centerY;
-
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
-        const initialRotation = tableInfo.rotation || 0;
-
-        const newAngle = angle;
-        const prevAngle = prevRotationAngleRef.current;
-        //console.log("current:", newAngle, "previous:", prevAngle);
-
-        // Calculate the absolute difference between newAngle and prevAngle
-        let diff = Math.abs(newAngle - prevAngle);
-        console.log(newAngle);
-        // If the difference is more than 180 degrees, adjust it to be the smaller angle
-        if (diff > 180) {
-          diff = 360 - diff;
-        }
-
-        // Check if the adjusted difference is still greater than or equal to 30 degrees
-        if (diff >= 1) {
-          setRotationAngle(angle);
-          prevRotationAngleRef.current = angle;
-          if (
-            newAngle >= 60 && newAngle <= 120
-          ) {
-            setChangeLabelOrientation(LabelOrientation.Left);
-          } else if (newAngle <= -60 && newAngle >= -120) {
-            setChangeLabelOrientation(LabelOrientation.Right);
-          } else {
-            setChangeLabelOrientation(LabelOrientation.Top);
-          }
-        }
-      }
-    };
-    if (editRotation) {
-      document.addEventListener("mousemove", updateRotation);
-    } else if (tableInfo.rotation != rotationAngle) {
-      handleChangeRotation(tableInfo.id, rotationAngle);
+    if (
+      rotation >= 45 && rotation <= 135
+    ) {
+      setChangeLabelOrientation(LabelOrientation.Left);
+    } else if (rotation >= 225 && rotation <= 315) {
+      setChangeLabelOrientation(LabelOrientation.Right);
+    } else {
+      setChangeLabelOrientation(LabelOrientation.Top);
     }
+  }, [rotation]);
 
-    return () => {
-      document.removeEventListener("mousemove", updateRotation);
-    };
+  useEffect(() => {
+    if (tableInfo.rotation != rotation) {
+      console.log(tableInfo.label, tableInfo.rotation, rotation);
+      handleChangeRotation(tableInfo.id, rotation);
+    }
   }, [editRotation]);
 
   useEffect(() => {
@@ -108,6 +76,7 @@ export default function DraggableGenericTable({
         setIsSelected(false);
         setEditLabel(false);
         setEditRotation(false);
+        setShowSlider(false);
       }
     }
 
@@ -123,20 +92,8 @@ export default function DraggableGenericTable({
     }
   }, [editLabel]);
 
-  useEffect(() => {
-    if (
-      tableInfo.rotation >= 60 && tableInfo.rotation <= 120
-    ) {
-      setChangeLabelOrientation(LabelOrientation.Left);
-    } else if (tableInfo.rotation <= -60 && tableInfo.rotation >= -120) {
-      setChangeLabelOrientation(LabelOrientation.Right);
-    } else {
-      setChangeLabelOrientation(LabelOrientation.Top);
-    }
-  }, []);
-
   const handleLabelChange = (newLabel: string) => {
-    if (newLabel != "" && newLabel != tableInfo.label) {
+    if (newLabel != tableInfo.label) {
       handleChangeLabel(tableInfo.id, newLabel);
     }
   };
@@ -164,7 +121,7 @@ export default function DraggableGenericTable({
     setDraggedItemOffset({ x: e.offsetX, y: e.offsetY });
     setDraggedItem(tableInfo);
     /*
-    console.log(rotationAngle);
+    console.log(rotation);
 
     const targetImg = document.getElementById("img-div") as HTMLElement;
 
@@ -206,9 +163,15 @@ export default function DraggableGenericTable({
     setEditLabel(true);
   }
 
-  function setRotateState() {
+  const setRotateState = () => {
+    setShowSlider(true);
     setEditRotation(true);
-  }
+  };
+
+  const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newRotation = Number((event.target as HTMLInputElement).value);
+    setRotation(newRotation);
+  };
 
   return (
     <div
@@ -221,9 +184,9 @@ export default function DraggableGenericTable({
         ref={containerRef}
         style={`width: 5%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%; transform: rotate(${
           editRotation
-            ? rotationAngle
-            : (tableInfo.rotation != rotationAngle)
-            ? rotationAngle
+            ? rotation
+            : (tableInfo.rotation != rotation)
+            ? rotation
             : tableInfo.rotation
         }deg);`}
       >
@@ -231,7 +194,7 @@ export default function DraggableGenericTable({
           ? (
             <input
               id="labelInput"
-              class="text-[1.6vw] lg:text-[0.8vw] select-none"
+              class="text-[1.6vw] lg:text-[0.8vw] select-none rounded-md"
               style={`width: 100%; max-width: 100%; height: 40; position: absolute; top: ${
                 changeLabelOrientation === LabelOrientation.Left
                   ? "30"
@@ -303,36 +266,49 @@ export default function DraggableGenericTable({
       </div>
       {(isSelected && !editLabel && !editRotation) &&
         (
-          <>
-            <button
-              onClick={handleDeleteTable}
-              class="text-[1.6vw] lg:text-[0.8vw] select-none"
-              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
-                tableInfo.y + 3.8
-              }%; height: auto;`}
-            >
-              {"Excluir"}
-            </button>
+          <div
+            class="text-[1.6vw] lg:text-[0.8vw] flex flex-col pt-[0.35rem] pb-[0.35rem] pl-1 pr-1 bg-white rounded-md shadow-md"
+            style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
+              tableInfo.y + 3.8
+            }%;`}
+          >
             <button
               onClick={() => setFocusToLabel()}
-              class="text-[1.6vw] lg:text-[0.8vw] select-none"
-              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
-                tableInfo.y + 5.2
-              }%; height: auto;`}
+              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
+              style="height: auto;"
             >
+              <span class="mr-2">✏️</span>
               {"Renomear"}
             </button>
+
             <button
-              onClick={() => setRotateState()}
-              class="text-[1.6vw] lg:text-[0.8vw] select-none "
-              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
-                tableInfo.y + 6.6
-              }%; height: auto;`}
+              onClick={setRotateState}
+              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
+              style="height: auto;"
             >
-              {"Rotacionar"}
+              <span class="mr-2">🔄</span>
+              Rotacionar
             </button>
-          </>
+
+            <button
+              onClick={handleDeleteTable}
+              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
+              style="height: auto;"
+            >
+              <span class="mr-2">🗑️</span>
+              {"Deletar"}
+            </button>
+          </div>
         )}
+      {showSlider && (
+        <SliderComponent
+          rotation={rotation}
+          handleSliderChange={handleSliderChange}
+          tableInfo={tableInfo}
+          offsetX={0}
+          offsetY={0}
+        />
+      )}
     </div>
   );
 }

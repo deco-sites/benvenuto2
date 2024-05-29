@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import { Table } from "../../../static/MockedTableObject.tsx";
 import { Offset } from "../../../islands/MapEditor.tsx";
+import SliderComponent from "./SliderComponent.tsx";
 
 export interface Props {
   tableInfo: Table;
@@ -26,59 +27,24 @@ export default function DraggableSegmentTable({
   const [editRotation, setEditRotation] = useState(false);
   const [changeLabelOrientation, setChangeLabelOrientation] = useState(false);
   const [label, setLabel] = useState(tableInfo.label);
-  const [rotationAngle, setRotationAngle] = useState(tableInfo.rotation);
-  const prevRotationAngleRef = useRef(rotationAngle);
+  const [rotation, setRotation] = useState(tableInfo.rotation);
+  const [showSlider, setShowSlider] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const updateRotation = (event: MouseEvent) => {
-      if (containerRef.current) {
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const centerX = containerRect.left + containerRect.width / 2;
-        const centerY = containerRect.top + containerRect.height / 2;
-
-        const dx = event.clientX - centerX;
-        const dy = event.clientY - centerY;
-
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
-        // Offset the rotation by the initial rotation of the component
-        const initialRotation = tableInfo.rotation || 0;
-
-        const newAngle = angle;
-        const prevAngle = prevRotationAngleRef.current;
-        //console.log("current:", newAngle, "previous:", prevAngle);
-
-        // Calculate the absolute difference between newAngle and prevAngle
-        let diff = Math.abs(newAngle - prevAngle);
-
-        // If the difference is more than 180 degrees, adjust it to be the smaller angle
-        if (diff > 180) {
-          diff = 360 - diff;
-        }
-        //console.log(newAngle);
-        // Check if the adjusted difference is still greater than or equal to 30 degrees
-        if (diff >= 1) {
-          setRotationAngle(angle - 20);
-          prevRotationAngleRef.current = angle - 20;
-          if (newAngle >= 110 || newAngle <= -80) {
-            setChangeLabelOrientation(true);
-          } else {
-            setChangeLabelOrientation(false);
-          }
-        }
-      }
-    };
-    if (editRotation) {
-      document.addEventListener("mousemove", updateRotation);
-    } else if (tableInfo.rotation != rotationAngle) {
-      handleChangeRotation(tableInfo.id, rotationAngle);
+    if (rotation >= 95 && rotation <= 265) {
+      setChangeLabelOrientation(true);
+    } else {
+      setChangeLabelOrientation(false);
     }
+  }, [rotation]);
 
-    return () => {
-      document.removeEventListener("mousemove", updateRotation);
-    };
+  useEffect(() => {
+    if (tableInfo.rotation != rotation) {
+      console.log(tableInfo.label, tableInfo.rotation, rotation);
+      handleChangeRotation(tableInfo.id, rotation);
+    }
   }, [editRotation]);
 
   useEffect(() => {
@@ -93,6 +59,7 @@ export default function DraggableSegmentTable({
         setIsSelected(false);
         setEditLabel(false);
         setEditRotation(false);
+        setShowSlider(false);
       }
     }
 
@@ -107,14 +74,6 @@ export default function DraggableSegmentTable({
       (document.getElementById("labelInput") as HTMLInputElement)?.focus();
     }
   }, [editLabel]);
-
-  useEffect(() => {
-    if (tableInfo.rotation >= 110 || tableInfo.rotation <= -80) {
-      setChangeLabelOrientation(true);
-    } else {
-      setChangeLabelOrientation(false);
-    }
-  }, []);
 
   const handleLabelChange = (newLabel: string) => {
     if (newLabel != "" && newLabel != tableInfo.label) {
@@ -151,9 +110,14 @@ export default function DraggableSegmentTable({
   function setFocusToLabel() {
     setEditLabel(true);
   }
-  function setRotateState() {
+  const setRotateState = () => {
+    setShowSlider(true);
     setEditRotation(true);
-  }
+  };
+  const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newRotation = Number((event.target as HTMLInputElement).value);
+    setRotation(newRotation);
+  };
 
   return (
     <div
@@ -165,9 +129,9 @@ export default function DraggableSegmentTable({
         ref={containerRef}
         style={`width: 5.2%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;  transform: rotate(${
           editRotation
-            ? rotationAngle
-            : (tableInfo.rotation != rotationAngle)
-            ? rotationAngle
+            ? rotation
+            : (tableInfo.rotation != rotation)
+            ? rotation
             : tableInfo.rotation
         }deg);`}
       >
@@ -175,7 +139,7 @@ export default function DraggableSegmentTable({
           ? (
             <input
               id="labelInput"
-              class="text-[1.6vw] lg:text-[0.8vw] select-none"
+              class="text-[1.6vw] lg:text-[0.8vw] select-none rounded-md"
               style={`width: 100%; max-width: 100%; height: 40; position: absolute; top: 30%; left: -5%; margin-block-start: 0em; margin-block-end: 0em; font-weight: 500; text-align: center; z-index: 1; ${
                 changeLabelOrientation ? "transform: scale(-1, -1)" : "none"
               };`}
@@ -211,36 +175,49 @@ export default function DraggableSegmentTable({
       </div>
       {(isSelected && !editLabel && !editRotation) &&
         (
-          <>
-            <button
-              onClick={handleDeleteTable}
-              class="text-[1.6vw] lg:text-[0.8vw] select-none "
-              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
-                tableInfo.y + 2.6
-              }%; height: auto; `}
-            >
-              {"Excluir"}
-            </button>
+          <div
+            class="text-[1.6vw] lg:text-[0.8vw] flex flex-col pt-[0.35rem] pb-[0.35rem] pl-1 pr-1 bg-white rounded-md shadow-md"
+            style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
+              tableInfo.y + 2.6
+            }%;`}
+          >
             <button
               onClick={() => setFocusToLabel()}
-              class="text-[1.6vw] lg:text-[0.8vw] select-none"
-              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
-                tableInfo.y + 4.0
-              }%; height: auto;`}
+              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
+              style="height: auto;"
             >
+              <span class="mr-2">✏️</span>
               {"Renomear"}
             </button>
+
             <button
-              onClick={() => setRotateState()}
-              class="text-[1.6vw] lg:text-[0.8vw] select-none"
-              style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
-                tableInfo.y + 5.4
-              }%; height: auto;`}
+              onClick={setRotateState}
+              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
+              style="height: auto;"
             >
-              {"Rotacionar"}
+              <span class="mr-2">🔄</span>
+              Rotacionar
             </button>
-          </>
+
+            <button
+              onClick={handleDeleteTable}
+              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
+              style="height: auto;"
+            >
+              <span class="mr-2">🗑️</span>
+              {"Deletar"}
+            </button>
+          </div>
         )}
+      {showSlider && (
+        <SliderComponent
+          rotation={rotation}
+          handleSliderChange={handleSliderChange}
+          tableInfo={tableInfo}
+          offsetX={0}
+          offsetY={-1}
+        />
+      )}
     </div>
   );
 }

@@ -36,7 +36,7 @@ export default function EditorSidebar({
 
   return (
     <div
-      className="absolute left-0 w-[6%] lg:w-[2.9%] h-[10%]  bg-gray-300 overflow-y-auto "
+      className="absolute left-0 w-[6%] lg:w-[2.9%] h-[9%] top-[45px] bg-gray-200 overflow-y-auto shadow-xl border-solid border-2 border-gray-400 rounded-md"
       style="z-index: 3"
       onDragOver={(event) => event.preventDefault()}
     >
