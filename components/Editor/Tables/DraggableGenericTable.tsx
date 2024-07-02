@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { Table } from "../../../static/MockedTableObject.tsx";
 import { Offset } from "../../../islands/MapEditor.tsx";
 import SliderComponent from "./SliderComponent.tsx";
+import EditorTableOptions from "./EditorTableOptions.tsx";
+//import BorderColorSharpIcon from '@mui/icons-material/BorderColorSharp';
 
 enum LabelOrientation {
   Left = "left",
@@ -16,6 +18,7 @@ export interface Props {
   setDraggedItemOffset: (offset: Offset) => void;
   handleChangeLabel: (id: string, newLabel: string) => void;
   handleChangeRotation: (id: string, angle: number) => void;
+  calculateCoordinates(event: DragEvent, type: string): number;
 }
 
 export default function DraggableGenericTable({
@@ -25,12 +28,15 @@ export default function DraggableGenericTable({
   setDraggedItemOffset,
   handleChangeLabel,
   handleChangeRotation,
+  calculateCoordinates,
 }: Props) {
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
   const [hovered, setHovered] = useState(false);
   const [editLabel, setEditLabel] = useState(false);
   const [editRotation, setEditRotation] = useState(false);
+  const [position, setPosition] = useState({ x: tableInfo.x, y: tableInfo.y });
+  const isDragged = useRef(false);
   const [changeLabelOrientation, setChangeLabelOrientation] = useState<
     LabelOrientation
   >(
@@ -118,10 +124,14 @@ export default function DraggableGenericTable({
   };
 
   const handleDragStart = (e: DragEvent, tableInfo: Table) => {
-    setDraggedItemOffset({ x: e.offsetX, y: e.offsetY });
+
+
+    const offX = containerRef.current?.offsetWidth ?? 0;
+    const offY = containerRef.current?.offsetHeight ?? 0;
+
+    setDraggedItemOffset({ x: offX/2, y: offY/2 });
     setDraggedItem(tableInfo);
-    /*
-    console.log(rotation);
+
 
     const targetImg = document.getElementById("img-div") as HTMLElement;
 
@@ -130,33 +140,37 @@ export default function DraggableGenericTable({
     const crt = targetElement.cloneNode(true) as HTMLElement;
     const specificImg = crt.querySelector("img") as HTMLElement;
 
-    //crt.style.backgroundColor = "red";
-    crt.style.zIndex = "5";
-    //crt.style.width = "5%";
-    specificImg.style.transform = `rotate(${rotationAngle}deg)`;
-   // crt.style.borderStyle = "solid"; // Set the border style
-   // crt.style.borderColor = "blue";
-    //crt.style.borderWidth = "1px";
+
+    crt.style.zIndex = "-5";
+    crt.style.width = "0%";
+    specificImg.style.transform = `rotate(${rotation}deg)`;
+    specificImg.style.display = "hidden";
+    crt.style.borderStyle = "solid"; // Set the border style
+    crt.style.borderColor = "blue";
+    crt.style.borderWidth = "1px";
     crt.style.position = "absolute";
+    crt.style.display = "hidden";
 
-    crt.style.top = "200px";
-    crt.style.left = "100px";
-    targetImg.appendChild(crt);
+    crt.style.top = "-2000px";
+    crt.style.left = "-2000px";
+    targetImg.appendChild(crt);   
 
-    console.log("id", crt.id);
-    console.log("color", crt.style.color);
-    console.log("transform", crt.style.transform);
-    console.log("width", crt.style.width);
-    console.log("height", crt.style.height);
-    console.log("border", crt.style.borderStyle);
-    console.log("borderColor", crt.style.borderColor);
-    console.log("borderWidth", crt.style.borderWidth);
+    e.dataTransfer?.setDragImage(crt, 0, 0);
 
-    e.dataTransfer?.setDragImage(crt, e.offsetX, e.offsetY);*/
+    setTimeout(() => {
+      targetImg.removeChild(crt);
+    }, 0);
   };
 
   function handleDragEnd() {
     setDraggedItem(null);
+  }
+
+  function handleOnDrag(e: DragEvent) {
+    //console.log(calculateCoordinates(e, "x"));
+    const newX = calculateCoordinates(e, "x");
+    const newY =calculateCoordinates(e, "y");
+    setPosition({ x: newX, y: newY });
   }
 
   function setFocusToLabel() {
@@ -182,7 +196,7 @@ export default function DraggableGenericTable({
       <div
         id={`table-${tableInfo.id}-inner`}
         ref={containerRef}
-        style={`width: 5%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%; transform: rotate(${
+        style={`width: 5%; height: auto; position: absolute; top: ${position.y}%; left: ${position.x}%; transform: rotate(${
           editRotation
             ? rotation
             : (tableInfo.rotation != rotation)
@@ -194,7 +208,7 @@ export default function DraggableGenericTable({
           ? (
             <input
               id="labelInput"
-              class="text-[1.6vw] lg:text-[0.8vw] select-none rounded-md"
+              class="text-[1.6vw] lg:text-[0.8vw] select-none lg:rounded-md rounded-sm"
               style={`width: 100%; max-width: 100%; height: 40; position: absolute; top: ${
                 changeLabelOrientation === LabelOrientation.Left
                   ? "30"
@@ -256,49 +270,25 @@ export default function DraggableGenericTable({
           id={tableInfo.label}
           src={getImageSource()}
           alt={`Table ${tableInfo.label}`}
+          draggable
+          onDragStart={(e) => handleDragStart(e, tableInfo)}
+          onDrag={(e) => handleOnDrag(e)}
+          onDragEnd={() => handleDragEnd()}
           style={`width: 100%; max-width: 100%; height: auto;);`}
           onMouseEnter={() => !editLabel && setHovered(true)}
           onMouseLeave={() => !editLabel && setHovered(false)}
-          draggable
-          onDragStart={(e) => handleDragStart(e, tableInfo)}
-          onDragEnd={() => handleDragEnd()}
         />
       </div>
       {(isSelected && !editLabel && !editRotation) &&
         (
-          <div
-            class="text-[1.6vw] lg:text-[0.8vw] flex flex-col pt-[0.35rem] pb-[0.35rem] pl-1 pr-1 bg-white rounded-md shadow-md"
-            style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
-              tableInfo.y + 3.8
-            }%;`}
-          >
-            <button
-              onClick={() => setFocusToLabel()}
-              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
-              style="height: auto;"
-            >
-              <span class="mr-2">✏️</span>
-              {"Renomear"}
-            </button>
-
-            <button
-              onClick={setRotateState}
-              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
-              style="height: auto;"
-            >
-              <span class="mr-2">🔄</span>
-              Rotacionar
-            </button>
-
-            <button
-              onClick={handleDeleteTable}
-              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
-              style="height: auto;"
-            >
-              <span class="mr-2">🗑️</span>
-              {"Deletar"}
-            </button>
-          </div>
+          <EditorTableOptions
+            setFocusToLabel={setFocusToLabel}
+            setRotateState={setRotateState}
+            handleDeleteTable={handleDeleteTable}
+            tableInfo={tableInfo}
+            offsetX={0}
+            offsetY={0.5}
+          />
         )}
       {showSlider && (
         <SliderComponent

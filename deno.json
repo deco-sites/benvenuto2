@@ -12,7 +12,8 @@
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.0",
     "std/": "https://deno.land/std@0.208.0/",
     "partytown/": "https://denopkg.com/deco-cx/partytown@0.4.8/",
-    "daisyui": "npm:daisyui@4.4.19"
+    "daisyui": "npm:daisyui@4.4.19",
+    "$mui": "https://esm.sh/@mui/material@5.8.7?alias=react:preact/compat,react/jsx-runtime:preact/compat/jsx-runtime&deps=preact@10.8.1?dts"
   },
   "tasks": {
     "start": "deno task bundle && deno run -A --unstable-kv --watch=tailwind.css,sections/,functions/,loaders/,actions/,workflows/,accounts/,.env dev.ts",

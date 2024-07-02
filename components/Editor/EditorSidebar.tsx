@@ -1,4 +1,4 @@
-import { Offset } from "../islands/MapEditor.tsx";
+import { Offset } from "../../islands/MapEditor.tsx";
 
 export interface Props {
   setDraggedItemOffset: (offset: Offset) => void;
@@ -36,7 +36,7 @@ export default function EditorSidebar({
 
   return (
     <div
-      className="absolute left-0 w-[6%] lg:w-[2.9%] h-[9%] top-[45px] bg-gray-200 overflow-y-auto shadow-xl border-solid border-2 border-gray-400 rounded-md"
+      className="absolute left-0 w-[7%] lg:w-[3.3%] h-auto top-[48px] bg-white overflow-y-auto  border-solid border-r-2 border-b-2 border-gray-300 rounded-br-md z-10"
       style="z-index: 3"
       onDragOver={(event) => event.preventDefault()}
     >
@@ -51,7 +51,7 @@ export default function EditorSidebar({
               alt={item.text}
               draggable
               onDragStart={(e) => handleDragStart(e, item)}
-              className="w-full h-auto"
+              className="w-full h-auto py-1 px-1 hover:bg-gray-200 hover:rounded"
             />
           </div>
         ))}

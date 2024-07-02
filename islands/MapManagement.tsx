@@ -1,10 +1,11 @@
 import { useSignal } from "@preact/signals";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { TableMap } from "../static/MockedTableObject.tsx";
-import GenericTable from "../components/tableTypes/GenericTable.tsx";
+import GenericTable from "../components/TableMap/Tables/GenericTable.tsx";
 import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
-import SegmentTable from "../components/tableTypes/SegmentTable.tsx";
+import SegmentTable from "../components/TableMap/Tables/SegmentTable.tsx";
+import TableMapTopBar from '../components/TableMap/ManagementTopBar.tsx';
 
 export interface Props {
   tableMap: TableMap;
@@ -61,9 +62,7 @@ export default function Editor({
 
   return (
     <div class="relative">
-      <div class="flex justify-center font-bold text-3xl lg:text-5xl leading-tight lg:leading-none text-center lg:mt-2 lg:mb-2 ">
-        {"Map Management"}
-      </div>
+      <TableMapTopBar/>
       {backgroundImage && (
         <div class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black ">
           <img

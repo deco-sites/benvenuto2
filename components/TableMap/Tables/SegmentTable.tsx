@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import { Table } from "../../static/MockedTableObject.tsx";
-
-enum LabelOrientation {
-  Left = "left",
-  Right = "right",
-  Top = "top",
-}
+import { Table } from "../../../static/MockedTableObject.tsx";
+import MapTableOptions from "./ManagementTableOptions.tsx";
 
 export interface Props {
   tableInfo: Table;
@@ -20,11 +15,7 @@ export default function GenericTable({
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
   const [hovered, setHovered] = useState(false);
-  const [changeLabelOrientation, setChangeLabelOrientation] = useState<
-    LabelOrientation
-  >(
-    LabelOrientation.Top,
-  );
+  const [changeLabelOrientation, setChangeLabelOrientation] = useState(false);
 
   useEffect(() => {
     if (isInitialRender.current) {
@@ -51,14 +42,10 @@ export default function GenericTable({
   }, [isSelected]);
 
   useEffect(() => {
-    if (
-      tableInfo.rotation >= 60 && tableInfo.rotation <= 120
-    ) {
-      setChangeLabelOrientation(LabelOrientation.Left);
-    } else if (tableInfo.rotation <= -60 && tableInfo.rotation >= -120) {
-      setChangeLabelOrientation(LabelOrientation.Right);
+    if (tableInfo.rotation >= 95 && tableInfo.rotation <= 265) {
+      setChangeLabelOrientation(true);
     } else {
-      setChangeLabelOrientation(LabelOrientation.Top);
+      setChangeLabelOrientation(false);
     }
   }, [tableInfo]);
 
@@ -73,16 +60,13 @@ export default function GenericTable({
 
   const getImageSource = () => {
     let imageSource = "/tables/tableGreen.png"; // Default source
-
-    if (tableInfo.class == "models.SquareTable") {
-      imageSource = isAvailable
-        ? (isSelected || hovered
-          ? "/tables/tableLightGreen.png"
-          : "/tables/tableGreen.png")
-        : (isSelected || hovered
-          ? "/tables/tableLightYellow.png"
-          : "/tables/tableRed.png");
-    }
+    imageSource = isAvailable
+      ? (isSelected || hovered
+        ? "/tables/segmentLightGreen.png"
+        : "/tables/segmentGreen.png")
+      : (isSelected || hovered
+        ? "/tables/segmentLightYellow.png"
+        : "/tables/segmentRed.png");
     return imageSource;
   };
 
@@ -93,29 +77,15 @@ export default function GenericTable({
       onClick={handleTableClick}
     >
       <div
-        style={`width: 5%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%; transform: rotate(${tableInfo.rotation}deg`}
+        style={`width: 5.2%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%; transform: rotate(${tableInfo.rotation}deg);`}
       >
         <p
           class="text-[1.6vw] lg:text-[0.8vw] select-none"
-          style={`width: 100%; max-width: 100%; height: 40; position: absolute; top: ${
-            changeLabelOrientation === LabelOrientation.Left
-              ? "30"
-              : changeLabelOrientation === LabelOrientation.Right
-              ? "30"
-              : "20"
-          }%; left: ${
-            changeLabelOrientation === LabelOrientation.Left
-              ? "-10"
-              : changeLabelOrientation === LabelOrientation.Right
-              ? "0"
-              : "-5"
-          }%; 
-          transform:${
-            changeLabelOrientation === LabelOrientation.Left
-              ? "rotate(-90deg)"
-              : changeLabelOrientation === LabelOrientation.Right
-              ? "rotate(90deg)"
-              : "none"
+          style={`width: 100%; max-width: 100%; height: auto; position: absolute; top: ${
+            changeLabelOrientation ? "35" : "30"
+          }%; left: -5%; 
+          ${
+            changeLabelOrientation ? "transform: scale(-1, -1)" : "none"
           }; margin-block-start: 0em; margin-block-end: 0em; font-weight: 500; text-align: center; z-index: 1; pointer-events: none;`}
         >
           {tableInfo.label}
@@ -124,7 +94,7 @@ export default function GenericTable({
           src={getImageSource()}
           alt={`Table ${tableInfo.label}`}
           class="select-none"
-          style={`width: 100%; max-width: 100%; height: auto; );`}
+          style={`width: 100%; max-width: 100%; height: auto; `}
           draggable={false}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
@@ -132,15 +102,13 @@ export default function GenericTable({
       </div>
       {isSelected &&
         (
-          <button
-            onClick={handleAvailableState}
-            class="text-[1.6vw] lg:text-[0.8vw] select-none"
-            style={`position: absolute; left: ${tableInfo.x}%; top: ${
-              tableInfo.y + 3.8
-            }%; height: auto;`}
-          >
-            {isAvailable ? "Ocupar" : "Desocupar"}
-          </button>
+          <MapTableOptions
+            handleAvailableState={handleAvailableState}
+            isAvailable={isAvailable}
+            tableInfo={tableInfo}
+            offsetX={0}
+            offsetY={-0.5}
+          />
         )}
     </div>
   );

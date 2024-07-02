@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { Table, TableMap } from "../static/MockedTableObject.tsx";
 import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
-import DraggableGenericTable from "../components/tableTypes/draggable/DraggableGenericTable.tsx";
-import DraggableSegmentTable from "../components/tableTypes/draggable/DraggableSegmentTable.tsx";
-import EditorSidebar from "deco-sites/benvenuto2/components/EditorSidebar.tsx";
+import DraggableGenericTable from "../components/Editor/Tables/DraggableGenericTable.tsx";
+import DraggableSegmentTable from "../components/Editor/Tables/DraggableSegmentTable.tsx";
+import EditorSidebar from "../components/Editor/EditorSidebar.tsx";
+import EditorTopBar from "../components/Editor/EditorTopBar.tsx";
+
 import { v1 } from "https://deno.land/std@0.223.0/uuid/mod.ts";
 
 export type Offset = {
@@ -26,6 +28,7 @@ export default function Editor({
   const isInitialRender = useRef(true);
   const draggedItemOffset = useRef<Offset>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const [sideBar, setSideBar] = useState(true);
 
   useEffect(() => {
     console.log("Requisita mapa no banco");
@@ -141,11 +144,12 @@ export default function Editor({
   }
 
   function calculateCoordinates(event: DragEvent, type: string): number {
+ 
     if (type == "x") {
       return (event.clientX -
         containerRef.current!.getBoundingClientRect().left -
         draggedItemOffset.current.x) /
-        containerRef.current!.offsetWidth * 100;
+        containerRef.current!.offsetWidth * 100.0;
     } else {
       return (event.clientY -
         containerRef.current!.getBoundingClientRect().top -
@@ -161,18 +165,14 @@ export default function Editor({
 
   return (
     <div class="relative">
-      <div class="flex justify-center font-bold text-3xl lg:text-5xl leading-tight lg:leading-none text-center lg:mt-2 lg:mb-2 ">
-        {"Map Editor"}
-      </div>
-      <div class="absolute top-0 right-0 mt-1 mr-2 ">
-        <button
-          class="px-4 py-1 bg-blue-500 text-white rounded h-8"
-          onClick={HandleSaveNewMap}
-        >
-          Save
-        </button>
-      </div>
-      <EditorSidebar setDraggedItemOffset={setDraggedItemOffset} />
+      <EditorTopBar
+        HandleSaveNewMap={HandleSaveNewMap}
+        setSideBar={setSideBar}
+        sideBar={sideBar}
+      />
+
+      {sideBar && <EditorSidebar setDraggedItemOffset={setDraggedItemOffset} />}
+
       {backgroundImage && (
         <div
           id="img-div"
@@ -200,6 +200,7 @@ export default function Editor({
                     setDraggedItemOffset={setDraggedItemOffset}
                     handleChangeLabel={handleChangeLabel}
                     handleChangeRotation={handleChangeRotation}
+                    calculateCoordinates={calculateCoordinates}
                   />
                 )
                 : (

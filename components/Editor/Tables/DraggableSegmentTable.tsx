@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { Table } from "../../../static/MockedTableObject.tsx";
 import { Offset } from "../../../islands/MapEditor.tsx";
 import SliderComponent from "./SliderComponent.tsx";
+import EditorTableOptions from "./EditorTableOptions.tsx";
 
 export interface Props {
   tableInfo: Table;
@@ -139,7 +140,7 @@ export default function DraggableSegmentTable({
           ? (
             <input
               id="labelInput"
-              class="text-[1.6vw] lg:text-[0.8vw] select-none rounded-md"
+              class="text-[1.6vw] lg:text-[0.8vw] select-none lg:rounded-md rounded-sm"
               style={`width: 100%; max-width: 100%; height: 40; position: absolute; top: 30%; left: -5%; margin-block-start: 0em; margin-block-end: 0em; font-weight: 500; text-align: center; z-index: 1; ${
                 changeLabelOrientation ? "transform: scale(-1, -1)" : "none"
               };`}
@@ -175,39 +176,14 @@ export default function DraggableSegmentTable({
       </div>
       {(isSelected && !editLabel && !editRotation) &&
         (
-          <div
-            class="text-[1.6vw] lg:text-[0.8vw] flex flex-col pt-[0.35rem] pb-[0.35rem] pl-1 pr-1 bg-white rounded-md shadow-md"
-            style={`z-index: 2; position: absolute; left: ${tableInfo.x}%; top: ${
-              tableInfo.y + 2.6
-            }%;`}
-          >
-            <button
-              onClick={() => setFocusToLabel()}
-              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
-              style="height: auto;"
-            >
-              <span class="mr-2">✏️</span>
-              {"Renomear"}
-            </button>
-
-            <button
-              onClick={setRotateState}
-              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
-              style="height: auto;"
-            >
-              <span class="mr-2">🔄</span>
-              Rotacionar
-            </button>
-
-            <button
-              onClick={handleDeleteTable}
-              class=" select-none p-1 flex items-center rounded hover:bg-gray-200"
-              style="height: auto;"
-            >
-              <span class="mr-2">🗑️</span>
-              {"Deletar"}
-            </button>
-          </div>
+          <EditorTableOptions
+            setFocusToLabel={setFocusToLabel}
+            setRotateState={setRotateState}
+            handleDeleteTable={handleDeleteTable}
+            tableInfo={tableInfo}
+            offsetX={0}
+            offsetY={-0.3}
+          />
         )}
       {showSlider && (
         <SliderComponent
