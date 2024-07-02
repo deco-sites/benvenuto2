@@ -13,7 +13,7 @@ const SliderComponent: React.FC<SliderComponentProps> = (
 ) => {
   return (
     <div
-      className="w-[11%] text-[1.6vw] lg:text-[0.8vw] select-none flex flex-col items-center justify-center bg-white rounded-md shadow-md"
+      className="w-[11%] text-[1.6vw] lg:text-[0.8vw] select-none flex flex-col items-center justify-center bg-white rounded-sm lg:rounded-md shadow-md"
       style={{
         zIndex: 2,
         aspectRatio: "1/0.450",

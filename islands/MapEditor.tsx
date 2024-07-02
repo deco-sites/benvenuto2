@@ -51,6 +51,10 @@ export default function Editor({
     fetchGetData(); //Buscar os dados do mapa
   }, []);
 
+  useEffect(() => {
+    filterAddTable(draggedItem);
+  }, [draggedItem]);
+
   const fetchSetData = async (tableMap: TableMap) => {
     await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
       empresa: "couve",
@@ -103,12 +107,18 @@ export default function Editor({
       console.error("Tabela não encontrada com o ID:", id);
     }
   }
+  function clamp(value: number, min: number = 0, max: number = 100): number {
+    return Math.max(min, Math.min(max, value));
+  }
 
   function handleOnDrop(event: DragEvent) {
     event.preventDefault();
 
     const model = event.dataTransfer?.getData("Model") as string;
     const updateTable = [...tableMapSaved.tables];
+
+    const xPercentage = calculateCoordinates(event, "x");
+    const yPercentage = calculateCoordinates(event, "y");
 
     if (model !== "") {
       console.log("New");
@@ -117,8 +127,8 @@ export default function Editor({
         id: v1.generate() as string,
         label: "xx",
         rotation: 0,
-        x: calculateCoordinates(event, "x"),
-        y: calculateCoordinates(event, "y"),
+        x: xPercentage,
+        y: yPercentage,
         occupied: false,
         places: [],
       };
@@ -127,34 +137,45 @@ export default function Editor({
     } else if (draggedItem !== null) {
       const newItem: Table = {
         ...draggedItem,
-        x: calculateCoordinates(event, "x"),
-        y: calculateCoordinates(event, "y"),
+        x: xPercentage,
+        y: yPercentage,
       };
       filterAddTable(newItem);
     }
   }
 
-  function filterAddTable(newItem: Table) {
-    const savedTablesFiltered: Table[] = tableMapSaved.tables.filter((
-      table,
-    ) => table.id !== newItem.id);
-    savedTablesFiltered.push(newItem);
-    console.log(newItem);
-    setTableMapSaved({ tables: savedTablesFiltered });
+  function filterAddTable(newItem: Table | null) {
+    if (newItem) {
+      const savedTablesFiltered: Table[] = tableMapSaved.tables.filter((
+        table,
+      ) => table.id !== newItem.id);
+      savedTablesFiltered.push(newItem);
+      console.log(newItem);
+      setTableMapSaved({ tables: savedTablesFiltered });
+    }
   }
 
   function calculateCoordinates(event: DragEvent, type: string): number {
- 
     if (type == "x") {
-      return (event.clientX -
-        containerRef.current!.getBoundingClientRect().left -
-        draggedItemOffset.current.x) /
-        containerRef.current!.offsetWidth * 100.0;
+      const xPercentage = clamp(
+        (event.clientX -
+          containerRef.current!.getBoundingClientRect().left -
+          draggedItemOffset.current.x) /
+          containerRef.current!.offsetWidth * 100.0,
+        0,
+        100,
+      );
+      return xPercentage;
     } else {
-      return (event.clientY -
-        containerRef.current!.getBoundingClientRect().top -
-        draggedItemOffset.current.y) /
-        containerRef.current!.offsetHeight * 100;
+      const yPercentage = clamp(
+        (event.clientY -
+          containerRef.current!.getBoundingClientRect().top -
+          draggedItemOffset.current.y) /
+          containerRef.current!.offsetHeight * 100,
+        0,
+        100,
+      );
+      return yPercentage;
     }
   }
 
@@ -212,6 +233,7 @@ export default function Editor({
                     setDraggedItemOffset={setDraggedItemOffset}
                     handleChangeLabel={handleChangeLabel}
                     handleChangeRotation={handleChangeRotation}
+                    calculateCoordinates={calculateCoordinates}
                   />
                 )
             ))}

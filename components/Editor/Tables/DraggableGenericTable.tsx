@@ -36,7 +36,7 @@ export default function DraggableGenericTable({
   const [editLabel, setEditLabel] = useState(false);
   const [editRotation, setEditRotation] = useState(false);
   const [position, setPosition] = useState({ x: tableInfo.x, y: tableInfo.y });
-  const isDragged = useRef(false);
+  const isDragging = useRef(false);
   const [changeLabelOrientation, setChangeLabelOrientation] = useState<
     LabelOrientation
   >(
@@ -105,7 +105,7 @@ export default function DraggableGenericTable({
   };
 
   const handleTableClick = () => {
-    setIsSelected(true);
+    setIsSelected(!isSelected);
   };
 
   const handleDeleteTable = () => {
@@ -124,14 +124,15 @@ export default function DraggableGenericTable({
   };
 
   const handleDragStart = (e: DragEvent, tableInfo: Table) => {
-
-
+    isDragging.current = true;
     const offX = containerRef.current?.offsetWidth ?? 0;
     const offY = containerRef.current?.offsetHeight ?? 0;
 
-    setDraggedItemOffset({ x: offX/2, y: offY/2 });
+    setDraggedItemOffset({ x: offX / 2, y: (offY + 20) / 2 });
     setDraggedItem(tableInfo);
-
+    setIsSelected(false);
+    setShowSlider(false);
+    setEditRotation(false);
 
     const targetImg = document.getElementById("img-div") as HTMLElement;
 
@@ -140,42 +141,37 @@ export default function DraggableGenericTable({
     const crt = targetElement.cloneNode(true) as HTMLElement;
     const specificImg = crt.querySelector("img") as HTMLElement;
 
-
-    crt.style.zIndex = "-5";
-    crt.style.width = "0%";
-    specificImg.style.transform = `rotate(${rotation}deg)`;
+    specificImg.style.zIndex = "-5";
+    specificImg.style.width = "1%";
+    specificImg.style.position = "absolute";
     specificImg.style.display = "hidden";
-    crt.style.borderStyle = "solid"; // Set the border style
-    crt.style.borderColor = "blue";
-    crt.style.borderWidth = "1px";
-    crt.style.position = "absolute";
-    crt.style.display = "hidden";
 
-    crt.style.top = "-2000px";
-    crt.style.left = "-2000px";
-    targetImg.appendChild(crt);   
+    specificImg.style.top = "-6000px";
+    specificImg.style.left = "-6000px";
+    targetImg.appendChild(specificImg);
 
-    e.dataTransfer?.setDragImage(crt, 0, 0);
+    e.dataTransfer?.setDragImage(specificImg, 9000, 0);
 
     setTimeout(() => {
-      targetImg.removeChild(crt);
+      targetImg.removeChild(specificImg);
     }, 0);
   };
 
   function handleDragEnd() {
     setDraggedItem(null);
+    isDragging.current = false;
   }
 
   function handleOnDrag(e: DragEvent) {
-    //console.log(calculateCoordinates(e, "x"));
     const newX = calculateCoordinates(e, "x");
-    const newY =calculateCoordinates(e, "y");
+    const newY = calculateCoordinates(e, "y");
     setPosition({ x: newX, y: newY });
   }
 
-  function setFocusToLabel() {
-    setEditLabel(true);
-  }
+  const setLabelValue = (e: Event) => {
+    setLabel((e.target as HTMLInputElement).value);
+    handleLabelChange((e.target as HTMLInputElement).value);
+  };
 
   const setRotateState = () => {
     setShowSlider(true);
@@ -191,10 +187,8 @@ export default function DraggableGenericTable({
     <div
       id={`table-${tableInfo.id}`}
       key={tableInfo.id}
-      onClick={handleTableClick}
     >
       <div
-        id={`table-${tableInfo.id}-inner`}
         ref={containerRef}
         style={`width: 5%; height: auto; position: absolute; top: ${position.y}%; left: ${position.x}%; transform: rotate(${
           editRotation
@@ -233,9 +227,8 @@ export default function DraggableGenericTable({
               type="text"
               placeholder={tableInfo.label}
               value={label}
-              onBlur={(e) =>
-                handleLabelChange((e.target as HTMLInputElement).value)}
-              onChange={(e) => setLabel((e.target as HTMLInputElement).value)}
+              onBlur={() => setEditLabel(false)}
+              onChange={(e) => setLabelValue(e)}
             />
           )
           : (
@@ -266,23 +259,30 @@ export default function DraggableGenericTable({
               {tableInfo.label}
             </p>
           )}
-        <img
-          id={tableInfo.label}
-          src={getImageSource()}
-          alt={`Table ${tableInfo.label}`}
+        <div
           draggable
           onDragStart={(e) => handleDragStart(e, tableInfo)}
           onDrag={(e) => handleOnDrag(e)}
           onDragEnd={() => handleDragEnd()}
-          style={`width: 100%; max-width: 100%; height: auto;);`}
           onMouseEnter={() => !editLabel && setHovered(true)}
           onMouseLeave={() => !editLabel && setHovered(false)}
-        />
+          onClick={handleTableClick}
+        >
+          <img
+            id={tableInfo.label}
+            src={getImageSource()}
+            alt={`Table ${tableInfo.label}`}
+            class={`w-full select-none pointer-events-none user-drag-none`}
+          />
+        </div>
       </div>
       {(isSelected && !editLabel && !editRotation) &&
         (
           <EditorTableOptions
-            setFocusToLabel={setFocusToLabel}
+            setFocusToLabel={() => {
+              setEditLabel(true);
+              setIsSelected(false);
+            }}
             setRotateState={setRotateState}
             handleDeleteTable={handleDeleteTable}
             tableInfo={tableInfo}

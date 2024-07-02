@@ -11,6 +11,7 @@ export interface Props {
   setDraggedItemOffset: (offset: Offset) => void;
   handleChangeLabel: (id: string, newLabel: string) => void;
   handleChangeRotation: (id: string, angle: number) => void;
+  calculateCoordinates(event: DragEvent, type: string): number;
 }
 
 export default function DraggableSegmentTable({
@@ -20,12 +21,15 @@ export default function DraggableSegmentTable({
   setDraggedItemOffset,
   handleChangeLabel,
   handleChangeRotation,
+  calculateCoordinates,
 }: Props) {
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
   const [hovered, setHovered] = useState(false);
   const [editLabel, setEditLabel] = useState(false);
   const [editRotation, setEditRotation] = useState(false);
+  const [position, setPosition] = useState({ x: tableInfo.x, y: tableInfo.y });
+  const isDragging = useRef(false);
   const [changeLabelOrientation, setChangeLabelOrientation] = useState(false);
   const [label, setLabel] = useState(tableInfo.label);
   const [rotation, setRotation] = useState(tableInfo.rotation);
@@ -77,14 +81,13 @@ export default function DraggableSegmentTable({
   }, [editLabel]);
 
   const handleLabelChange = (newLabel: string) => {
-    if (newLabel != "" && newLabel != tableInfo.label) {
-      console.log("change Label");
+    if (newLabel != tableInfo.label) {
       handleChangeLabel(tableInfo.id, newLabel);
     }
   };
 
   const handleTableClick = () => {
-    setIsSelected(true);
+    setIsSelected(!isSelected);
   };
 
   const handleDeleteTable = () => {
@@ -100,17 +103,55 @@ export default function DraggableSegmentTable({
   };
 
   const handleDragStart = (e: DragEvent, tableInfo: Table) => {
-    setDraggedItemOffset({ x: e.offsetX, y: e.offsetY });
+    isDragging.current = true;
+    const offX = containerRef.current?.offsetWidth ?? 0;
+    const offY = containerRef.current?.offsetHeight ?? 0;
+
+    setDraggedItemOffset({ x: offX / 2, y: (offY + 20) / 2 });
     setDraggedItem(tableInfo);
+    setIsSelected(false);
+    setShowSlider(false);
+    setEditRotation(false);
+
+    const targetImg = document.getElementById("img-div") as HTMLElement;
+
+    const targetElement = containerRef.current as HTMLElement;
+
+    const crt = targetElement.cloneNode(true) as HTMLElement;
+    const specificImg = crt.querySelector("img") as HTMLElement;
+
+    specificImg.style.zIndex = "-5";
+    specificImg.style.width = "1%";
+    specificImg.style.position = "absolute";
+    specificImg.style.display = "hidden";
+
+    specificImg.style.top = "-6000px";
+    specificImg.style.left = "-6000px";
+    targetImg.appendChild(specificImg);
+
+    e.dataTransfer?.setDragImage(specificImg, 9000, 0);
+
+    setTimeout(() => {
+      targetImg.removeChild(specificImg);
+    }, 0);
   };
 
   function handleDragEnd() {
     setDraggedItem(null);
+    isDragging.current = false;
   }
 
-  function setFocusToLabel() {
-    setEditLabel(true);
+  function handleOnDrag(e: DragEvent) {
+    const newX = calculateCoordinates(e, "x");
+    const newY = calculateCoordinates(e, "y");
+    setPosition({ x: newX, y: newY });
   }
+
+  const setLabelValue = (e: Event) => {
+    setLabel((e.target as HTMLInputElement).value);
+    handleLabelChange((e.target as HTMLInputElement).value);
+  };
+
   const setRotateState = () => {
     setShowSlider(true);
     setEditRotation(true);
@@ -124,11 +165,10 @@ export default function DraggableSegmentTable({
     <div
       id={`table-${tableInfo.id}`}
       key={tableInfo.id}
-      onClick={handleTableClick}
     >
       <div
         ref={containerRef}
-        style={`width: 5.2%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%;  transform: rotate(${
+        style={`width: 5.2%; height: auto; position: absolute; top: ${position.y}%; left: ${position.x}%;  transform: rotate(${
           editRotation
             ? rotation
             : (tableInfo.rotation != rotation)
@@ -147,9 +187,8 @@ export default function DraggableSegmentTable({
               type="text"
               placeholder={tableInfo.label}
               value={label}
-              onBlur={(e) =>
-                handleLabelChange((e.target as HTMLInputElement).value)}
-              onChange={(e) => setLabel((e.target as HTMLInputElement).value)}
+              onBlur={() => setEditLabel(false)}
+              onChange={(e) => setLabelValue(e)}
             />
           )
           : (
@@ -163,21 +202,30 @@ export default function DraggableSegmentTable({
               {tableInfo.label}
             </p>
           )}
-        <img
-          src={getImageSource()}
-          alt={`Table ${tableInfo.label}`}
-          style={`width: 100%; max-width: 100%; height: auto; transform: rotate(${0}deg);`}
-          onMouseEnter={() => !editLabel && setHovered(true)}
-          onMouseLeave={() => !editLabel && setHovered(false)}
+        <div
           draggable
           onDragStart={(e) => handleDragStart(e, tableInfo)}
+          onDrag={(e) => handleOnDrag(e)}
           onDragEnd={() => handleDragEnd()}
-        />
+          onMouseEnter={() => !editLabel && setHovered(true)}
+          onMouseLeave={() => !editLabel && setHovered(false)}
+          onClick={handleTableClick}
+        >
+          <img
+            id={tableInfo.label}
+            src={getImageSource()}
+            alt={`Table ${tableInfo.label}`}
+            class={`w-full select-none pointer-events-none user-drag-none`}
+          />
+        </div>
       </div>
       {(isSelected && !editLabel && !editRotation) &&
         (
           <EditorTableOptions
-            setFocusToLabel={setFocusToLabel}
+            setFocusToLabel={() => {
+              setEditLabel(true);
+              setIsSelected(false);
+            }}
             setRotateState={setRotateState}
             handleDeleteTable={handleDeleteTable}
             tableInfo={tableInfo}
