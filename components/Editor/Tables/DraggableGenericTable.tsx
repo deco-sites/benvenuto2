@@ -21,6 +21,7 @@ export interface Props {
   handleChangeRotation: (id: string, angle: number) => void;
   calculateCoordinates(event: DragEvent, type: string): number;
   calculateTouchCoordinates(event: TouchEvent, type: string): number;
+  handleTouchDrop(event: TouchEvent): void;
 }
 
 export default function DraggableGenericTable({
@@ -33,6 +34,7 @@ export default function DraggableGenericTable({
   handleChangeRotation,
   calculateCoordinates,
   calculateTouchCoordinates,
+  handleTouchDrop,
 }: Props) {
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
@@ -179,7 +181,7 @@ export default function DraggableGenericTable({
     const offX = containerRef.current?.offsetWidth ?? 0;
     const offY = containerRef.current?.offsetHeight ?? 0;
 
-    setDraggedItemOffset({ x: offX / 2, y: offY / 1.2 });
+    setDraggedItemOffset({ x: offX / 2, y: offY });
     setDraggedItem(tableInfo);
     if (!editRotation) {
       setMoveUpDraggedTable(true);
@@ -193,6 +195,12 @@ export default function DraggableGenericTable({
     const newX = calculateTouchCoordinates(e, "x");
     const newY = calculateTouchCoordinates(e, "y");
     setPosition({ x: newX, y: newY });
+  }
+
+  function handleTouchDragEnd(event: TouchEvent) {
+    setDraggedItem(null);
+    setMoveUpDraggedTable(false);
+    handleTouchDrop(event);
   }
 
   return (
@@ -275,7 +283,7 @@ export default function DraggableGenericTable({
           draggable
           onTouchStart={() => handleTouchStart(tableInfo)}
           onTouchMove={(e) => handleTouchMove(e)}
-          onTouchEnd={handleDragEnd}
+          onTouchEnd={(e) => handleTouchDragEnd(e)}
           onDragStart={(e) => handleDragStart(e, tableInfo)}
           onDrag={(e) => handleOnDrag(e)}
           onDragEnd={() => handleDragEnd()}

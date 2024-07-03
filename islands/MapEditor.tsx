@@ -152,6 +152,26 @@ export default function Editor({
       }
     }
   }
+  function handleTouchDrop(event: TouchEvent) {
+    event.preventDefault();
+    const xPercentage = calculateTouchCoordinates(event, "x");
+    const yPercentage = calculateTouchCoordinates(event, "y");
+
+    if (draggedItem !== null) {
+      const foundTable = tableMapSaved.tables.find((table) =>
+        table.id === draggedItem.id
+      );
+
+      if (foundTable) {
+        const newItem: Table = {
+          ...foundTable,
+          x: xPercentage,
+          y: yPercentage,
+        };
+        filterAddTable(newItem);
+      }
+    }
+  }
 
   function filterAddTable(newItem: Table | null) {
     if (newItem) {
@@ -171,7 +191,7 @@ export default function Editor({
         table,
       ) => table.id !== id);
       savedTablesFiltered.push(foundTable);
-      console.log("moveup: ", foundTable)
+      console.log("moveup: ", foundTable);
       setTableMapSaved({ tables: savedTablesFiltered });
     } else {
       console.error("Tabela não encontrada com o ID:", id);
@@ -271,6 +291,7 @@ export default function Editor({
                     calculateCoordinates={calculateCoordinates}
                     calculateTouchCoordinates={calculateTouchCoordinates}
                     setMoveUpDraggedTable={setMoveUpDraggedTable}
+                    handleTouchDrop={handleTouchDrop}
                   />
                 )
                 : (
@@ -285,6 +306,7 @@ export default function Editor({
                     calculateCoordinates={calculateCoordinates}
                     calculateTouchCoordinates={calculateTouchCoordinates}
                     setMoveUpDraggedTable={setMoveUpDraggedTable}
+                    handleTouchDrop={handleTouchDrop}
                   />
                 )
             ))}
