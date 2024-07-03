@@ -9,9 +9,11 @@ export interface Props {
   deleteTable: (tableId: string) => void;
   setDraggedItem: (table: Table | null) => void;
   setDraggedItemOffset: (offset: Offset) => void;
+  setMoveUpDraggedTable: (value: boolean) => void;
   handleChangeLabel: (id: string, newLabel: string) => void;
   handleChangeRotation: (id: string, angle: number) => void;
   calculateCoordinates(event: DragEvent, type: string): number;
+  calculateTouchCoordinates(event: TouchEvent, type: string): number;
 }
 
 export default function DraggableSegmentTable({
@@ -19,9 +21,11 @@ export default function DraggableSegmentTable({
   deleteTable,
   setDraggedItem,
   setDraggedItemOffset,
+  setMoveUpDraggedTable,
   handleChangeLabel,
   handleChangeRotation,
   calculateCoordinates,
+  calculateTouchCoordinates,
 }: Props) {
   const [isSelected, setIsSelected] = useState(false);
   const isInitialRender = useRef(true);
@@ -29,7 +33,6 @@ export default function DraggableSegmentTable({
   const [editLabel, setEditLabel] = useState(false);
   const [editRotation, setEditRotation] = useState(false);
   const [position, setPosition] = useState({ x: tableInfo.x, y: tableInfo.y });
-  const isDragging = useRef(false);
   const [changeLabelOrientation, setChangeLabelOrientation] = useState(false);
   const [label, setLabel] = useState(tableInfo.label);
   const [rotation, setRotation] = useState(tableInfo.rotation);
@@ -102,51 +105,6 @@ export default function DraggableSegmentTable({
     return imageSource;
   };
 
-  const handleDragStart = (e: DragEvent, tableInfo: Table) => {
-    isDragging.current = true;
-    const offX = containerRef.current?.offsetWidth ?? 0;
-    const offY = containerRef.current?.offsetHeight ?? 0;
-
-    setDraggedItemOffset({ x: offX / 2, y: (offY + 20) / 2 });
-    setDraggedItem(tableInfo);
-    setIsSelected(false);
-    setShowSlider(false);
-    setEditRotation(false);
-
-    const targetImg = document.getElementById("img-div") as HTMLElement;
-
-    const targetElement = containerRef.current as HTMLElement;
-
-    const crt = targetElement.cloneNode(true) as HTMLElement;
-    const specificImg = crt.querySelector("img") as HTMLElement;
-
-    specificImg.style.zIndex = "-5";
-    specificImg.style.width = "1%";
-    specificImg.style.position = "absolute";
-    specificImg.style.display = "hidden";
-
-    specificImg.style.top = "-6000px";
-    specificImg.style.left = "-6000px";
-    targetImg.appendChild(specificImg);
-
-    e.dataTransfer?.setDragImage(specificImg, 9000, 0);
-
-    setTimeout(() => {
-      targetImg.removeChild(specificImg);
-    }, 0);
-  };
-
-  function handleDragEnd() {
-    setDraggedItem(null);
-    isDragging.current = false;
-  }
-
-  function handleOnDrag(e: DragEvent) {
-    const newX = calculateCoordinates(e, "x");
-    const newY = calculateCoordinates(e, "y");
-    setPosition({ x: newX, y: newY });
-  }
-
   const setLabelValue = (e: Event) => {
     setLabel((e.target as HTMLInputElement).value);
     handleLabelChange((e.target as HTMLInputElement).value);
@@ -156,10 +114,65 @@ export default function DraggableSegmentTable({
     setShowSlider(true);
     setEditRotation(true);
   };
+
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newRotation = Number((event.target as HTMLInputElement).value);
     setRotation(newRotation);
   };
+
+  const handleDragStart = (e: DragEvent, tableInfo: Table) => {
+    const offX = containerRef.current?.offsetWidth ?? 0;
+    const offY = containerRef.current?.offsetHeight ?? 0;
+
+    setDraggedItemOffset({ x: offX / 2, y: offY / 1.2 });
+    setDraggedItem(tableInfo);
+    if (!editRotation) {
+      setMoveUpDraggedTable(true);
+    }
+    setIsSelected(false);
+    setShowSlider(false);
+    setEditRotation(false);
+
+    const crt = (containerRef.current as HTMLElement).cloneNode(
+      true,
+    ) as HTMLElement;
+    crt.style.position = "absolute";
+    crt.style.top = "-6000px";
+    crt.style.left = "-6000px";
+
+    e.dataTransfer?.setDragImage(crt, 0, -9000);
+  };
+
+  function handleOnDrag(e: DragEvent) {
+    const newX = calculateCoordinates(e, "x");
+    const newY = calculateCoordinates(e, "y");
+    setPosition({ x: newX, y: newY });
+  }
+
+  function handleDragEnd() {
+    setDraggedItem(null);
+    setMoveUpDraggedTable(false);
+  }
+
+  const handleTouchStart = (tableInfo: Table) => {
+    const offX = containerRef.current?.offsetWidth ?? 0;
+    const offY = containerRef.current?.offsetHeight ?? 0;
+
+    setDraggedItemOffset({ x: offX / 2, y: offY / 1.2 });
+    setDraggedItem(tableInfo);
+    if (!editRotation) {
+      setMoveUpDraggedTable(true);
+    }
+    setIsSelected(false);
+    setShowSlider(false);
+    setEditRotation(false);
+  };
+
+  function handleTouchMove(e: TouchEvent) {
+    const newX = calculateTouchCoordinates(e, "x");
+    const newY = calculateTouchCoordinates(e, "y");
+    setPosition({ x: newX, y: newY });
+  }
 
   return (
     <div
@@ -204,12 +217,16 @@ export default function DraggableSegmentTable({
           )}
         <div
           draggable
+          onTouchStart={() => handleTouchStart(tableInfo)}
+          onTouchMove={(e) => handleTouchMove(e)}
+          onTouchEnd={handleDragEnd}
           onDragStart={(e) => handleDragStart(e, tableInfo)}
           onDrag={(e) => handleOnDrag(e)}
           onDragEnd={() => handleDragEnd()}
           onMouseEnter={() => !editLabel && setHovered(true)}
           onMouseLeave={() => !editLabel && setHovered(false)}
           onClick={handleTableClick}
+          class={`cursor-move touch-none`}
         >
           <img
             id={tableInfo.label}

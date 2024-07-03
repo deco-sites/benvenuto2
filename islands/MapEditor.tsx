@@ -26,6 +26,7 @@ export default function Editor({
   const [tableMapSaved, setTableMapSaved] = useState<TableMap>(tableMap);
   const [draggedItem, setDraggedItem] = useState<Table | null>(null);
   const isInitialRender = useRef(true);
+  const [moveUpDraggedTable, setMoveUpDraggedTable] = useState(false);
   const draggedItemOffset = useRef<Offset>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [sideBar, setSideBar] = useState(true);
@@ -52,8 +53,10 @@ export default function Editor({
   }, []);
 
   useEffect(() => {
-    filterAddTable(draggedItem);
-  }, [draggedItem]);
+    if (draggedItem && moveUpDraggedTable) {
+      moveUpTable(draggedItem?.id);
+    }
+  }, [moveUpDraggedTable]);
 
   const fetchSetData = async (tableMap: TableMap) => {
     await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
@@ -135,12 +138,18 @@ export default function Editor({
       updateTable.push(newItem);
       setTableMapSaved({ tables: updateTable });
     } else if (draggedItem !== null) {
-      const newItem: Table = {
-        ...draggedItem,
-        x: xPercentage,
-        y: yPercentage,
-      };
-      filterAddTable(newItem);
+      const foundTable = tableMapSaved.tables.find((table) =>
+        table.id === draggedItem.id
+      );
+
+      if (foundTable) {
+        const newItem: Table = {
+          ...foundTable,
+          x: xPercentage,
+          y: yPercentage,
+        };
+        filterAddTable(newItem);
+      }
     }
   }
 
@@ -152,6 +161,20 @@ export default function Editor({
       savedTablesFiltered.push(newItem);
       console.log(newItem);
       setTableMapSaved({ tables: savedTablesFiltered });
+    }
+  }
+
+  function moveUpTable(id: string) {
+    const foundTable = tableMapSaved.tables.find((table) => table.id === id);
+    if (foundTable) {
+      const savedTablesFiltered: Table[] = tableMapSaved.tables.filter((
+        table,
+      ) => table.id !== id);
+      savedTablesFiltered.push(foundTable);
+      console.log("moveup: ", foundTable)
+      setTableMapSaved({ tables: savedTablesFiltered });
+    } else {
+      console.error("Tabela não encontrada com o ID:", id);
     }
   }
 
@@ -178,6 +201,30 @@ export default function Editor({
       return yPercentage;
     }
   }
+  function calculateTouchCoordinates(event: TouchEvent, type: string): number {
+    const touch = event.touches[0];
+    if (type == "x") {
+      const xPercentage = clamp(
+        (touch.clientX -
+          containerRef.current!.getBoundingClientRect().left -
+          draggedItemOffset.current.x) /
+          containerRef.current!.offsetWidth * 100.0,
+        0,
+        100,
+      );
+      return xPercentage;
+    } else {
+      const yPercentage = clamp(
+        (touch.clientY -
+          containerRef.current!.getBoundingClientRect().top -
+          draggedItemOffset.current.y) /
+          containerRef.current!.offsetHeight * 100,
+        0,
+        100,
+      );
+      return yPercentage;
+    }
+  }
 
   function handleDragOver(event: DragEvent) {
     event.preventDefault();
@@ -185,7 +232,7 @@ export default function Editor({
   }
 
   return (
-    <div class="relative">
+    <div class="relative select-none">
       <EditorTopBar
         HandleSaveNewMap={HandleSaveNewMap}
         setSideBar={setSideBar}
@@ -222,6 +269,8 @@ export default function Editor({
                     handleChangeLabel={handleChangeLabel}
                     handleChangeRotation={handleChangeRotation}
                     calculateCoordinates={calculateCoordinates}
+                    calculateTouchCoordinates={calculateTouchCoordinates}
+                    setMoveUpDraggedTable={setMoveUpDraggedTable}
                   />
                 )
                 : (
@@ -234,6 +283,8 @@ export default function Editor({
                     handleChangeLabel={handleChangeLabel}
                     handleChangeRotation={handleChangeRotation}
                     calculateCoordinates={calculateCoordinates}
+                    calculateTouchCoordinates={calculateTouchCoordinates}
+                    setMoveUpDraggedTable={setMoveUpDraggedTable}
                   />
                 )
             ))}

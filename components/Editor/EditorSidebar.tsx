@@ -51,7 +51,7 @@ export default function EditorSidebar({
               alt={item.text}
               draggable
               onDragStart={(e) => handleDragStart(e, item)}
-              className="w-full h-auto py-1 px-1 hover:bg-gray-200 hover:rounded"
+              className="w-full h-auto py-1 px-1 hover:bg-gray-200 hover:rounded select-none"
             />
           </div>
         ))}
