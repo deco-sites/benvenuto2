@@ -14,7 +14,7 @@ export interface Props {
   handleChangeRotation: (id: string, angle: number) => void;
   calculateCoordinates(event: DragEvent, type: string): number;
   calculateTouchCoordinates(event: TouchEvent, type: string): number;
-  handleTouchDrop(event: TouchEvent): void;
+  handleTouchDrop(positionX: number, positionY: number) : void;
 }
 
 export default function DraggableSegmentTable({
@@ -160,7 +160,7 @@ export default function DraggableSegmentTable({
     const offX = containerRef.current?.offsetWidth ?? 0;
     const offY = containerRef.current?.offsetHeight ?? 0;
 
-    setDraggedItemOffset({ x: offX / 2, y: offY + 8 });
+    setDraggedItemOffset({ x: offX / 2, y: offY + 20 });
     setDraggedItem(tableInfo);
     if (!editRotation) {
       setMoveUpDraggedTable(true);
@@ -176,9 +176,9 @@ export default function DraggableSegmentTable({
     setPosition({ x: newX, y: newY });
   }
 
-  function handleTouchDragEnd(event: TouchEvent) {
+  function handleTouchDragEnd() {
     setMoveUpDraggedTable(false);
-    handleTouchDrop(event);
+    handleTouchDrop(position.x, position.y);
   }
 
   return (
@@ -226,7 +226,7 @@ export default function DraggableSegmentTable({
           draggable
           onTouchStart={() => handleTouchStart(tableInfo)}
           onTouchMove={(e) => handleTouchMove(e)}
-          onTouchEnd={(e) => handleTouchDragEnd(e)}
+          onTouchEnd={() => handleTouchDragEnd()}
           onDragStart={(e) => handleDragStart(e, tableInfo)}
           onDrag={(e) => handleOnDrag(e)}
           onDragEnd={() => handleDragEnd()}
