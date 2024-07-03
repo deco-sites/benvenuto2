@@ -126,7 +126,7 @@ export default function DraggableSegmentTable({
     const offX = containerRef.current?.offsetWidth ?? 0;
     const offY = containerRef.current?.offsetHeight ?? 0;
 
-    setDraggedItemOffset({ x: offX / 2, y: offY });
+    setDraggedItemOffset({ x: offX / 2, y: offY / 2 });
     setDraggedItem(tableInfo);
     if (!editRotation) {
       setMoveUpDraggedTable(true);
@@ -160,7 +160,7 @@ export default function DraggableSegmentTable({
     const offX = containerRef.current?.offsetWidth ?? 0;
     const offY = containerRef.current?.offsetHeight ?? 0;
 
-    setDraggedItemOffset({ x: offX / 2, y: offY });
+    setDraggedItemOffset({ x: offX / 2, y: offY + 8 });
     setDraggedItem(tableInfo);
     if (!editRotation) {
       setMoveUpDraggedTable(true);
@@ -177,7 +177,6 @@ export default function DraggableSegmentTable({
   }
 
   function handleTouchDragEnd(event: TouchEvent) {
-    setDraggedItem(null);
     setMoveUpDraggedTable(false);
     handleTouchDrop(event);
   }

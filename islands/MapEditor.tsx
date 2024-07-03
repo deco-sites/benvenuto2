@@ -153,7 +153,7 @@ export default function Editor({
     }
   }
   function handleTouchDrop(event: TouchEvent) {
-    event.preventDefault();
+    //event.preventDefault();
     const xPercentage = calculateTouchCoordinates(event, "x");
     const yPercentage = calculateTouchCoordinates(event, "y");
 
@@ -170,6 +170,7 @@ export default function Editor({
         };
         filterAddTable(newItem);
       }
+      setDraggedItem(null);
     }
   }
 
@@ -260,11 +261,10 @@ export default function Editor({
       />
 
       {sideBar && <EditorSidebar setDraggedItemOffset={setDraggedItemOffset} />}
-
       {backgroundImage && (
         <div
           id="img-div"
-          class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black "
+          class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black touch-none"
           ref={containerRef}
           onDrop={handleOnDrop}
           onDragOver={handleDragOver}
