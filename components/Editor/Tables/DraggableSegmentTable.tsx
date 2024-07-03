@@ -160,7 +160,7 @@ export default function DraggableSegmentTable({
     const offX = containerRef.current?.offsetWidth ?? 0;
     const offY = containerRef.current?.offsetHeight ?? 0;
 
-    setDraggedItemOffset({ x: offX / 2, y: offY * 1.4 });
+    setDraggedItemOffset({ x: offX / 2, y: offY * 2.2 });
     setDraggedItem(tableInfo);
     if (!editRotation) {
       setMoveUpDraggedTable(true);
