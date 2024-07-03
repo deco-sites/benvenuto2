@@ -263,7 +263,7 @@ export default function Editor({
       {backgroundImage && (
         <div
           id="img-div"
-          class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black touch-none"
+          class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black"
           ref={containerRef}
           onDrop={handleOnDrop}
           onDragOver={handleDragOver}
