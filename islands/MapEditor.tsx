@@ -153,7 +153,7 @@ export default function Editor({
     }
   }
   function handleTouchDrop(event: TouchEvent) {
-    //event.preventDefault();
+    event.preventDefault();
     const xPercentage = calculateTouchCoordinates(event, "x");
     const yPercentage = calculateTouchCoordinates(event, "y");
 
