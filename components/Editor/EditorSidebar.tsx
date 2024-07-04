@@ -44,15 +44,17 @@ export default function EditorSidebar({
   const handleTouchStart = (item: Item) => {
     setDraggedItemOffset({ x: 0, y: 0 });
     setSideBarItemModel(item.model);
+    console.log("Touch Start:", item.model)
   };
   const handleTouchMove = (touchEvent: TouchEvent) => {
     const newX = calculateTouchCoordinates(touchEvent, "x");
     const newY = calculateTouchCoordinates(touchEvent, "y");
-
     setPosition({ x: newX, y: newY });
+    console.log("Touch Move:", newX, newY)
   };
 
   const handleTouchEnd = () => {
+    console.log("Touch End:", position.x, position.y)
     handleTouchDrop(position.x, position.y);
   };
 

@@ -159,7 +159,7 @@ export default function Editor({
   }
   function handleTouchDrop(xPercentage: number, yPercentage: number) {
     if (sideBarItemModel.current !== "") {
-      console.log("New");
+      console.log("New Touch", sideBarItemModel.current, xPercentage, yPercentage);
       const newItem: Table = {
         class: sideBarItemModel.current,
         id: v1.generate() as string,
@@ -196,7 +196,7 @@ export default function Editor({
         table,
       ) => table.id !== newItem.id);
       savedTablesFiltered.push(newItem);
-      console.log(newItem);
+      console.log("Update", newItem);
       setTableMapSaved({ tables: savedTablesFiltered });
     }
   }
@@ -208,7 +208,6 @@ export default function Editor({
         table,
       ) => table.id !== id);
       savedTablesFiltered.push(foundTable);
-      console.log("moveup: ", foundTable);
       setTableMapSaved({ tables: savedTablesFiltered });
     } else {
       console.error("Tabela não encontrada com o ID:", id);
