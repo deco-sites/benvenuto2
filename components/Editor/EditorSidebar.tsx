@@ -74,7 +74,7 @@ export default function EditorSidebar({
               draggable
               onDragStart={(e) => handleDragStart(e, item)}
               onTouchStart={() => handleTouchStart(item)}
-              onTouchMove={() => handleTouchMove}
+              onTouchMove={(e) => handleTouchMove(e)}
               onTouchEnd={handleTouchEnd}
               className="w-full h-auto py-1 px-1 hover:bg-gray-200 hover:rounded touch-none"
             >
