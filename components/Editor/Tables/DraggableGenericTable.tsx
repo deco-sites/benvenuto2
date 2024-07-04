@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import { Table } from "../../../static/MockedTableObject.tsx";
-import { Offset } from "../../../islands/MapEditor.tsx";
+import { PositionXY } from "../../../islands/MapEditor.tsx";
 import SliderComponent from "./SliderComponent.tsx";
 import EditorTableOptions from "./EditorTableOptions.tsx";
 //import BorderColorSharpIcon from '@mui/icons-material/BorderColorSharp';
@@ -15,7 +15,7 @@ export interface Props {
   tableInfo: Table;
   deleteTable: (tableId: string) => void;
   setDraggedItem: (table: Table | null) => void;
-  setDraggedItemOffset: (offset: Offset) => void;
+  setDraggedItemOffset: (offset: PositionXY) => void;
   setMoveUpDraggedTable: (value: boolean) => void;
   handleChangeLabel: (id: string, newLabel: string) => void;
   handleChangeRotation: (id: string, angle: number) => void;
@@ -118,13 +118,12 @@ export default function DraggableGenericTable({
   };
 
   const getImageSource = () => {
-    let imageSource = "/tables/tableGreen.png"; // Default source
+    let imageSource = ""; // Default source
 
-    if (tableInfo.class == "models.SquareTable") {
-      imageSource = isSelected || hovered
-        ? "/tables/tableLightGreen.png"
-        : "/tables/tableGreen.png";
-    }
+    imageSource = isSelected || hovered
+      ? "/tables/tableLightGreen.png"
+      : "/tables/tableGreen.png";
+
     return imageSource;
   };
 

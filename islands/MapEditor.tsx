@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { Table, TableMap } from "../static/MockedTableObject.tsx";
 import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
+import DraggableImagePreview from "../components/Editor/Tables/DraggableImagePreview.tsx";
 import DraggableGenericTable from "../components/Editor/Tables/DraggableGenericTable.tsx";
 import DraggableSegmentTable from "../components/Editor/Tables/DraggableSegmentTable.tsx";
 import EditorSidebar from "../components/Editor/EditorSidebar.tsx";
@@ -9,7 +10,7 @@ import EditorTopBar from "../components/Editor/EditorTopBar.tsx";
 
 import { v1 } from "https://deno.land/std@0.223.0/uuid/mod.ts";
 
-export type Offset = {
+export type PositionXY = {
   x: number;
   y: number;
 };
@@ -27,8 +28,9 @@ export default function Editor({
   const [draggedItem, setDraggedItem] = useState<Table | null>(null);
   const isInitialRender = useRef(true);
   const [moveUpDraggedTable, setMoveUpDraggedTable] = useState(false);
-  const draggedItemOffset = useRef<Offset>({ x: 0, y: 0 });
-  const sideBarItemModel = useRef<string>("");
+  const draggedItemOffset = useRef<PositionXY>({ x: 0, y: 0 });
+  const [sideBarItemModel, setSideBarItemModel] = useState<string>("");
+  const [imagePreviewPosition, setImagePreviewPosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const [sideBar, setSideBar] = useState(true);
 
@@ -80,12 +82,8 @@ export default function Editor({
     setTableMapSaved({ tables: savedTables });
   };
 
-  const setDraggedItemOffset = (offset: Offset) => {
+  const setDraggedItemOffset = (offset: PositionXY) => {
     draggedItemOffset.current = offset;
-  };
-
-  const setSideBarItemModel = (model: string) => {
-    sideBarItemModel.current = model;
   };
 
   function handleChangeLabel(id: string, newLabel: string) {
@@ -158,10 +156,15 @@ export default function Editor({
     }
   }
   function handleTouchDrop(xPercentage: number, yPercentage: number) {
-    if (sideBarItemModel.current !== "") {
-      console.log("New Touch", sideBarItemModel.current, xPercentage, yPercentage);
+    if (sideBarItemModel !== "") {
+      console.log(
+        "New Touch",
+        sideBarItemModel,
+        xPercentage,
+        yPercentage,
+      );
       const newItem: Table = {
-        class: sideBarItemModel.current,
+        class: sideBarItemModel,
         id: v1.generate() as string,
         label: "xx",
         rotation: 0,
@@ -170,6 +173,7 @@ export default function Editor({
         occupied: false,
         places: [],
       };
+      setSideBarItemModel("");
       const updateTable = [...tableMapSaved.tables];
       updateTable.push(newItem);
       setTableMapSaved({ tables: updateTable });
@@ -281,6 +285,7 @@ export default function Editor({
           setSideBarItemModel={setSideBarItemModel}
           calculateTouchCoordinates={calculateTouchCoordinates}
           handleTouchDrop={handleTouchDrop}
+          setImagePreviewPosition = {setImagePreviewPosition}
         />
       )}
       {backgroundImage && (
@@ -297,7 +302,7 @@ export default function Editor({
             draggable={false}
             class={`w-full select-none pointer-events-none user-drag-none`}
           />
-
+          <DraggableImagePreview sideBarItemModel={sideBarItemModel} imagePreviewPosition ={imagePreviewPosition}/>
           {...(tableMapSaved?.tables ?? [])
             .map((table) => (
               table.class === "models.SquareTable"

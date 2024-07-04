@@ -1,11 +1,12 @@
-import { Offset } from "../../islands/MapEditor.tsx";
+import { PositionXY } from "../../islands/MapEditor.tsx";
 import { useState } from "preact/hooks";
 
 export interface Props {
-  setDraggedItemOffset: (offset: Offset) => void;
+  setDraggedItemOffset: (offset: PositionXY) => void;
   setSideBarItemModel: (model: string) => void;
   calculateTouchCoordinates(event: TouchEvent, type: string): number;
   handleTouchDrop(xPercentage: number, yPercentage: number): void;
+  setImagePreviewPosition: (offset: PositionXY) => void;
 }
 
 export default function EditorSidebar({
@@ -13,6 +14,7 @@ export default function EditorSidebar({
   setSideBarItemModel,
   calculateTouchCoordinates,
   handleTouchDrop,
+  setImagePreviewPosition,
 }: Props) {
   type Item = {
     id: number;
@@ -44,17 +46,18 @@ export default function EditorSidebar({
   const handleTouchStart = (item: Item) => {
     setDraggedItemOffset({ x: 0, y: 0 });
     setSideBarItemModel(item.model);
-    console.log("Touch Start:", item.model)
+    console.log("Touch Start:", item.model);
   };
   const handleTouchMove = (touchEvent: TouchEvent) => {
     const newX = calculateTouchCoordinates(touchEvent, "x");
     const newY = calculateTouchCoordinates(touchEvent, "y");
+    setImagePreviewPosition({ x: newX, y: newY });
     setPosition({ x: newX, y: newY });
-    console.log("Touch Move:", newX, newY)
+    console.log("Touch Move:", newX, newY);
   };
 
   const handleTouchEnd = () => {
-    console.log("Touch End:", position.x, position.y)
+    console.log("Touch End:", position.x, position.y);
     handleTouchDrop(position.x, position.y);
   };
 
