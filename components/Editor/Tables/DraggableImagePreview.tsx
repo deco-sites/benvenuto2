@@ -17,14 +17,14 @@ export default function DraggableGenericTable({
 
     if (sideBarItemModel == "models.SquareTable") {
       imageSource = "/tables/tableGreen.png";
-    } else if (sideBarItemModel == "models.SegmentTable") {
+    } else if (sideBarItemModel == "models.RoundTable") {
       imageSource = "/tables/segmentGreen.png";
     }
     return imageSource;
   };
 
   const getWidth = () => {
-    let width = 1; 
+    let width = 1;
 
     if (sideBarItemModel == "models.SquareTable") {
       width = 5;
@@ -48,7 +48,9 @@ export default function DraggableGenericTable({
     <div
       ref={containerRef}
       class={`touch-none`}
-      style={`width: ${getWidth()}%; height: auto; position: absolute; top: ${imagePreviewPosition.y}%; left: ${imagePreviewPosition.x}%;`}
+      style={`width: ${getWidth()}%; height: auto; position: absolute; top: ${
+        sideBarItemModel != "" ? imagePreviewPosition.y : -9999
+      }%; left: ${imagePreviewPosition.x}%;`}
     >
       <img
         src={getImageSource()}
