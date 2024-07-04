@@ -8,10 +8,9 @@ export interface Props {
 
 export default function DraggableGenericTable({
   sideBarItemModel,
-  imagePreviewPosition
+  imagePreviewPosition,
 }: Props) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-
 
   const getImageSource = () => {
     let imageSource = "/tables/tableGreen.png"; // Default source
@@ -36,16 +35,14 @@ export default function DraggableGenericTable({
   };
 
   return (
-    <div>
-      <div
-        style={`width: ${getWidth()}%; height: auto; touch-none position: absolute; top: ${imagePreviewPosition.y}%; left: ${imagePreviewPosition.x}%;`}
-      >
-        <img
-          src={getImageSource()}
-          alt={`New Table`}
-          class={`w-full select-none pointer-events-none user-drag-none`}
-        />
-      </div>
+    <div
+      style={`width: ${getWidth()}%; height: auto; touch-none position: absolute; top: ${imagePreviewPosition.y}%; left: ${imagePreviewPosition.x}%;`}
+    >
+      <img
+        src={getImageSource()}
+        alt={`New Table`}
+        class={`w-full select-none pointer-events-none user-drag-none`}
+      />
     </div>
   );
 }
