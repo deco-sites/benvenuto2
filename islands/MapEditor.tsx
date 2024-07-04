@@ -281,6 +281,7 @@ export default function Editor({
           setDraggedItemOffset={setDraggedItemOffset}
           setSideBarItemModel={setSideBarItemModel}
           calculateTouchCoordinates={calculateTouchCoordinates}
+          handleTouchDrop={handleTouchDrop}
         />
       )}
       {backgroundImage && (
