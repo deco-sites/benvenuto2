@@ -36,7 +36,8 @@ export default function DraggableGenericTable({
 
   return (
     <div
-      style={`width: ${getWidth()}%; height: auto; touch-none position: absolute; top: ${imagePreviewPosition.y}%; left: ${imagePreviewPosition.x}%;`}
+      class={`touch-none`}
+      style={`width: ${getWidth()}%; height: auto; position: absolute; top: ${imagePreviewPosition.y}%; left: ${imagePreviewPosition.x}%;`}
     >
       <img
         src={getImageSource()}
