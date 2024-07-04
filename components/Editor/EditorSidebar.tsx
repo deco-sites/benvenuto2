@@ -68,16 +68,18 @@ export default function EditorSidebar({
             key={item.id}
             className="flex items-center p-1 pt-2 pb-3"
           >
-            <div>
+            <div
+              draggable
+              onDragStart={(e) => handleDragStart(e, item)}
+              onTouchStart={() => handleTouchStart(item)}
+              onTouchMove={() => handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              className="w-full h-auto py-1 px-1 hover:bg-gray-200 hover:rounded touch-none"
+            >
               <img
                 src={item.imageUrl}
                 alt={item.text}
-                draggable
-                onDragStart={(e) => handleDragStart(e, item)}
-                onTouchStart={() => handleTouchStart(item)}
-                onTouchMove={() => handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-                className="w-full h-auto py-1 px-1 hover:bg-gray-200 hover:rounded select-none user-drag-none touch-none"
+                className="w-full h-auto select-none pointer-events-none user-drag-none"
               />
             </div>
           </div>
