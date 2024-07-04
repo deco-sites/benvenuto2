@@ -61,7 +61,7 @@ export default function Editor({
   };
 
   return (
-    <div class="relative">
+    <div class="relative select-none">
       <TableMapTopBar/>
       {backgroundImage && (
         <div class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black ">

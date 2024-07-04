@@ -28,6 +28,7 @@ export default function Editor({
   const isInitialRender = useRef(true);
   const [moveUpDraggedTable, setMoveUpDraggedTable] = useState(false);
   const draggedItemOffset = useRef<Offset>({ x: 0, y: 0 });
+  const sideBarItemModel = useRef<string>("");
   const containerRef = useRef<HTMLDivElement>(null);
   const [sideBar, setSideBar] = useState(true);
 
@@ -83,6 +84,10 @@ export default function Editor({
     draggedItemOffset.current = offset;
   };
 
+  const setSideBarItemModel = (model: string) => {
+    sideBarItemModel.current = model;
+  };
+
   function handleChangeLabel(id: string, newLabel: string) {
     const foundTable = tableMapSaved.tables.find((table) => table.id === id);
 
@@ -118,7 +123,6 @@ export default function Editor({
     event.preventDefault();
 
     const model = event.dataTransfer?.getData("Model") as string;
-    const updateTable = [...tableMapSaved.tables];
 
     const xPercentage = calculateCoordinates(event, "x");
     const yPercentage = calculateCoordinates(event, "y");
@@ -135,6 +139,7 @@ export default function Editor({
         occupied: false,
         places: [],
       };
+      const updateTable = [...tableMapSaved.tables];
       updateTable.push(newItem);
       setTableMapSaved({ tables: updateTable });
     } else if (draggedItem !== null) {
@@ -152,11 +157,23 @@ export default function Editor({
       }
     }
   }
-  function handleTouchDrop(positionX: number, positionY: number) {
-    const xPercentage = positionX;
-    const yPercentage = positionY;
-
-    if (draggedItem !== null) {
+  function handleTouchDrop(xPercentage: number, yPercentage: number) {
+    if (sideBarItemModel.current !== "") {
+      console.log("New");
+      const newItem: Table = {
+        class: sideBarItemModel.current,
+        id: v1.generate() as string,
+        label: "xx",
+        rotation: 0,
+        x: xPercentage,
+        y: yPercentage,
+        occupied: false,
+        places: [],
+      };
+      const updateTable = [...tableMapSaved.tables];
+      updateTable.push(newItem);
+      setTableMapSaved({ tables: updateTable });
+    } else if (draggedItem !== null) {
       const foundTable = tableMapSaved.tables.find((table) =>
         table.id === draggedItem.id
       );
@@ -259,7 +276,13 @@ export default function Editor({
         sideBar={sideBar}
       />
 
-      {sideBar && <EditorSidebar setDraggedItemOffset={setDraggedItemOffset} />}
+      {sideBar && (
+        <EditorSidebar
+          setDraggedItemOffset={setDraggedItemOffset}
+          setSideBarItemModel={setSideBarItemModel}
+          calculateTouchCoordinates={calculateTouchCoordinates}
+        />
+      )}
       {backgroundImage && (
         <div
           id="img-div"
