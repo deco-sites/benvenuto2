@@ -6,7 +6,7 @@ export interface Props {
   setSideBarItemModel: (model: string) => void;
   calculateTouchCoordinates(event: TouchEvent, type: string): number;
   handleTouchDrop(xPercentage: number, yPercentage: number): void;
-  setImagePreviewPosition: (offset: PositionXY) => void;
+  setImagePreviewPosition: (position: PositionXY) => void;
 }
 
 export default function EditorSidebar({
