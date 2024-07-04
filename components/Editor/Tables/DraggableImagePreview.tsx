@@ -48,9 +48,7 @@ export default function DraggableGenericTable({
     <div
       ref={containerRef}
       class={`touch-none`}
-      style={`width: ${getWidth()}%; height: auto; position: absolute; top: ${
-        sideBarItemModel != "" ? imagePreviewPosition.y : -9999
-      }%; left: ${imagePreviewPosition.x}%;`}
+      style={`width: ${getWidth()}%; height: auto; position: absolute; top: ${imagePreviewPosition.y}%; left: ${imagePreviewPosition.x}%;`}
     >
       <img
         src={getImageSource()}

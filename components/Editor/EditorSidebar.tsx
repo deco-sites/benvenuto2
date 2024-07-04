@@ -58,6 +58,7 @@ export default function EditorSidebar({
 
   const handleTouchEnd = () => {
     console.log("Touch End:", position.x, position.y);
+    setImagePreviewPosition({ x: 0, y: -9999 });
     handleTouchDrop(position.x, position.y);
   };
 
