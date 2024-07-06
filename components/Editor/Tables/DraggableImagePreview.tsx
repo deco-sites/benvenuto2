@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import { PositionXY } from "deco-sites/benvenuto2/islands/MapEditor.tsx";
 import { imagePreviewPosition } from "deco-sites/benvenuto2/utils/imagePreviewPosition.ts";
 
+
 export interface Props {
   sideBarItemModel: string;
   isSideBarTouch: boolean;

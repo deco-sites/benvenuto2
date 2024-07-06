@@ -17,26 +17,26 @@ import * as $$$$$$$$$$$1 from "./apps/site.ts";
 
 const manifest = {
   "loaders": {
-    "deco-sites/benvenuto2/loaders/getMapFromKV.ts": $$$0,
+    "site/loaders/getMapFromKV.ts": $$$0,
   },
   "sections": {
-    "deco-sites/benvenuto2/sections/Footer.tsx": $$$$$$0,
-    "deco-sites/benvenuto2/sections/Hero.tsx": $$$$$$1,
-    "deco-sites/benvenuto2/sections/Home.tsx": $$$$$$2,
-    "deco-sites/benvenuto2/sections/MapEditor.tsx": $$$$$$3,
-    "deco-sites/benvenuto2/sections/MapManagement.tsx": $$$$$$4,
-    "deco-sites/benvenuto2/sections/ParagraphList.tsx": $$$$$$5,
-    "deco-sites/benvenuto2/sections/Theme/Theme.tsx": $$$$$$6,
+    "site/sections/Footer.tsx": $$$$$$0,
+    "site/sections/Hero.tsx": $$$$$$1,
+    "site/sections/Home.tsx": $$$$$$2,
+    "site/sections/MapEditor.tsx": $$$$$$3,
+    "site/sections/MapManagement.tsx": $$$$$$4,
+    "site/sections/ParagraphList.tsx": $$$$$$5,
+    "site/sections/Theme/Theme.tsx": $$$$$$6,
   },
   "actions": {
-    "deco-sites/benvenuto2/actions/actionGetMapFromKV.ts": $$$$$$$$$0,
-    "deco-sites/benvenuto2/actions/actionSetMapToKV.ts": $$$$$$$$$1,
+    "site/actions/actionGetMapFromKV.ts": $$$$$$$$$0,
+    "site/actions/actionSetMapToKV.ts": $$$$$$$$$1,
   },
   "apps": {
-    "deco-sites/benvenuto2/apps/decohub.ts": $$$$$$$$$$$0,
-    "deco-sites/benvenuto2/apps/site.ts": $$$$$$$$$$$1,
+    "site/apps/decohub.ts": $$$$$$$$$$$0,
+    "site/apps/site.ts": $$$$$$$$$$$1,
   },
-  "name": "deco-sites/benvenuto2",
+  "name": "site",
   "baseUrl": import.meta.url,
 };
 

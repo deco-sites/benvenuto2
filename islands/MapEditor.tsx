@@ -39,7 +39,7 @@ export default function Editor({
 
     const fetchGetData = async () => {
       try {
-        const data: TableMap = await Runtime.invoke["deco-sites/benvenuto2"]
+        const data: TableMap = await Runtime.invoke["site"]
           .actions.actionGetMapFromKV({
             empresa: "couve",
             filial: "teste",
@@ -74,7 +74,7 @@ export default function Editor({
   };
 
   const fetchSetData = async (tableMap: TableMap) => {
-    await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
+    await Runtime.invoke["site"].actions.actionSetMapToKV({
       empresa: "couve",
       filial: "teste",
       id: "1",

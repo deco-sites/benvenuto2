@@ -1,4 +1,4 @@
-import { TableMap } from "deco-sites/benvenuto2/static/MockedTableObject.tsx";
+import { TableMap } from "site/static/MockedTableObject.tsx";
 
 export interface Props {
   empresa: string;
