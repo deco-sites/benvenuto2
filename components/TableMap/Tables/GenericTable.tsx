@@ -69,7 +69,7 @@ export default function GenericTable({
   };
 
   const handleTableClick = () => {
-    setIsSelected(true);
+    setIsSelected(!isSelected);
   };
 
   const getImageSource = () => {
