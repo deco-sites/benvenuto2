@@ -65,7 +65,7 @@ export default function DraggableSegmentTable({
 
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement;
-      const needReset = isSelected || editLabel || editRotation || showSlider
+      const needReset = isSelected || editLabel || editRotation || showSlider;
       if (needReset && !target.closest(`#table-${tableInfo.id}`)) {
         setIsSelected(false);
         setEditLabel(false);
@@ -119,9 +119,10 @@ export default function DraggableSegmentTable({
     setEditRotation(true);
   };
 
-  const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newRotation = Number((event.target as HTMLInputElement).value);
-    setRotation(newRotation);
+  const handleSliderChange = (rotation: number) => {
+    if (rotation >= 0 && rotation <= 360) {
+      setRotation(rotation);
+    }
   };
 
   const handleDragStart = (e: DragEvent, tableInfo: Table) => {

@@ -2,7 +2,7 @@ import { Table } from "../../../static/MockedTableObject.tsx";
 
 interface SliderComponentProps {
   rotation: number;
-  handleSliderChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSliderChange: (rotationValue: number) => void;
   tableInfo: Table;
   offsetX?: number;
   offsetY?: number;
@@ -29,10 +29,27 @@ const SliderComponent: React.FC<SliderComponentProps> = (
         max="360"
         value={rotation}
         step="5"
-        onInput={handleSliderChange}
+        onInput={(e) =>
+          handleSliderChange(Number((e.target as HTMLInputElement).value))}
         className="slider"
       />
-      <p>{rotation}º</p>
+      <div class="flex items-center justify-between w-full pr-1 pl-1">
+        <button
+          onClick={() => handleSliderChange(rotation - 5)}
+          class=" select-none  lg:rounded rounded-sm hover:bg-gray-200"
+          style="height: auto;"
+        >
+          <span>⬅️</span>
+        </button>
+        <p>{rotation}º</p>
+        <button
+          onClick={() => handleSliderChange(rotation + 5)}
+          class=" select-none  lg:rounded rounded-sm hover:bg-gray-200"
+          style="height: auto;"
+        >
+          <span>➡️</span>
+        </button>
+      </div>
       <style>
         {`
           input[type="range"] {
