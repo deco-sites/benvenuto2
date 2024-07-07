@@ -65,11 +65,13 @@ export default function DraggableSegmentTable({
 
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement;
-      if (!target.closest(`#table-${tableInfo.id}`)) {
+      const needReset = isSelected || editLabel || editRotation || showSlider
+      if (needReset && !target.closest(`#table-${tableInfo.id}`)) {
         setIsSelected(false);
         setEditLabel(false);
         setEditRotation(false);
         setShowSlider(false);
+        console.log("clica fora");
       }
     }
 

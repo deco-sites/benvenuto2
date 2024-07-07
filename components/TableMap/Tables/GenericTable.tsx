@@ -39,7 +39,7 @@ export default function GenericTable({
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement;
-      if (!target.closest(`#table-${tableInfo.id}`)) {
+      if (isSelected && !target.closest(`#table-${tableInfo.id}`)) {
         console.log("clica fora");
         setIsSelected(false);
       }
@@ -64,6 +64,7 @@ export default function GenericTable({
   }, [tableInfo]);
 
   const handleAvailableState = () => {
+    setIsSelected(!isSelected);
     setIsAvailable(!isAvailable);
     updateOccupiedState(tableInfo.id, !tableInfo.occupied);
   };
@@ -91,9 +92,9 @@ export default function GenericTable({
     <div
       id={`table-${tableInfo.id}`}
       key={tableInfo.id}
-      onClick={handleTableClick}
     >
       <div
+        onClick={handleTableClick}
         style={`width: 5%; height: auto; position: absolute; top: ${tableInfo.y}%; left: ${tableInfo.x}%; transform: rotate(${tableInfo.rotation}deg`}
       >
         <p
