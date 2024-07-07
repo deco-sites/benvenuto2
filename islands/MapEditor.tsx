@@ -9,6 +9,7 @@ import EditorSidebar from "../components/Editor/EditorSidebar.tsx";
 import EditorTopBar from "../components/Editor/EditorTopBar.tsx";
 
 import { v1 } from "https://deno.land/std@0.223.0/uuid/mod.ts";
+import { useSignal } from "@preact/signals";
 
 export type PositionXY = {
   x: number;
@@ -26,13 +27,12 @@ export default function Editor({
 }: Props) {
   const [tableMapSaved, setTableMapSaved] = useState<TableMap>(tableMap);
   const [draggedItem, setDraggedItem] = useState<Table | null>(null);
-  const isInitialRender = useRef(true);
   const [moveUpDraggedTable, setMoveUpDraggedTable] = useState(false);
   const draggedItemOffset = useRef<PositionXY>({ x: 0, y: 0 });
-  const [sideBarItemModel, setSideBarItemModel] = useState<string>("");
-  const [imagePreviewPosition, setImagePreviewPosition] = useState({ x: 0, y: 0 });
+  const isSideBarTouch = useRef<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [sideBar, setSideBar] = useState(true);
+  const [sideBarItemModel, setSideBarItemModel] = useState<string>("");
 
   useEffect(() => {
     console.log("Requisita mapa no banco");
@@ -61,6 +61,18 @@ export default function Editor({
     }
   }, [moveUpDraggedTable]);
 
+  const setDraggedItemOffset = (offset: PositionXY) => {
+    draggedItemOffset.current = offset;
+  };
+/*
+  const setImagePreviewPosition = (position: PositionXY) => {
+    imagePreviewPosition.current = position;
+  };
+*/
+  const setIsSideBarTouch = (value: boolean) => {
+    isSideBarTouch.current = value;
+  };
+
   const fetchSetData = async (tableMap: TableMap) => {
     await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
       empresa: "couve",
@@ -80,10 +92,6 @@ export default function Editor({
       table.id !== tableId
     );
     setTableMapSaved({ tables: savedTables });
-  };
-
-  const setDraggedItemOffset = (offset: PositionXY) => {
-    draggedItemOffset.current = offset;
   };
 
   function handleChangeLabel(id: string, newLabel: string) {
@@ -270,7 +278,7 @@ export default function Editor({
     event.preventDefault();
     //console.log("over");
   }
-
+  console.log("over");
   return (
     <div class="relative select-none">
       <EditorTopBar
@@ -284,8 +292,9 @@ export default function Editor({
           setDraggedItemOffset={setDraggedItemOffset}
           setSideBarItemModel={setSideBarItemModel}
           calculateTouchCoordinates={calculateTouchCoordinates}
+          calculateCoordinates={calculateCoordinates}
           handleTouchDrop={handleTouchDrop}
-          setImagePreviewPosition = {setImagePreviewPosition}
+          setIsSideBarTouch={setIsSideBarTouch}
         />
       )}
       {backgroundImage && (
@@ -302,7 +311,6 @@ export default function Editor({
             draggable={false}
             class={`w-full select-none pointer-events-none user-drag-none`}
           />
-          <DraggableImagePreview sideBarItemModel={sideBarItemModel} imagePreviewPosition ={imagePreviewPosition}/>
           {...(tableMapSaved?.tables ?? [])
             .map((table) => (
               table.class === "models.SquareTable"
@@ -337,6 +345,11 @@ export default function Editor({
                   />
                 )
             ))}
+          <DraggableImagePreview
+            sideBarItemModel={sideBarItemModel}
+            setDraggedItemOffset={setDraggedItemOffset}
+            isSideBarTouch={isSideBarTouch.current}
+          />
         </div>
       )}
     </div>

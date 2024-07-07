@@ -139,8 +139,8 @@ export default function DraggableSegmentTable({
       true,
     ) as HTMLElement;
     crt.style.position = "absolute";
-    crt.style.top = "-6000px";
-    crt.style.left = "-6000px";
+    crt.style.top = "-9000px";
+    crt.style.left = "-9000px";
 
     e.dataTransfer?.setDragImage(crt, 0, -9000);
   };
@@ -162,12 +162,14 @@ export default function DraggableSegmentTable({
 
     setDraggedItemOffset({ x: offX / 2, y: offY * 2.2 });
     setDraggedItem(tableInfo);
+
     if (!editRotation) {
       setMoveUpDraggedTable(true);
     }
     setIsSelected(false);
     setShowSlider(false);
     setEditRotation(false);
+    setHovered(false);
   };
 
   function handleTouchMove(e: TouchEvent) {
