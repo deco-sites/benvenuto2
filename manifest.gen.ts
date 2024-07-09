@@ -2,6 +2,10 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
+import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
+import * as $$$$$$$$$1 from "./actions/actionSetMapToKV.ts";
+import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
+import * as $$$$$$$$$$$1 from "./apps/site.ts";
 import * as $$$0 from "./loaders/getMapFromKV.ts";
 import * as $$$$$$0 from "./sections/Footer.tsx";
 import * as $$$$$$1 from "./sections/Hero.tsx";
@@ -10,10 +14,6 @@ import * as $$$$$$3 from "./sections/MapEditor.tsx";
 import * as $$$$$$4 from "./sections/MapManagement.tsx";
 import * as $$$$$$5 from "./sections/ParagraphList.tsx";
 import * as $$$$$$6 from "./sections/Theme/Theme.tsx";
-import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
-import * as $$$$$$$$$1 from "./actions/actionSetMapToKV.ts";
-import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
-import * as $$$$$$$$$$$1 from "./apps/site.ts";
 
 const manifest = {
   "loaders": {
