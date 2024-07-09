@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import { PositionXY } from "deco-sites/benvenuto2/islands/MapEditor.tsx";
-import { imagePreviewPosition } from "deco-sites/benvenuto2/utils/imagePreviewPosition.ts";
+import { imagePreviewPosition } from "site/utils/imagePreviewPosition.ts";
+import { PositionXY } from "site/islands/MapEditor.tsx";
+
+
 
 export interface Props {
   sideBarItemModel: string;

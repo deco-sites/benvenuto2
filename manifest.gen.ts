@@ -2,6 +2,10 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
+import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
+import * as $$$$$$$$$1 from "./actions/actionSetMapToKV.ts";
+import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
+import * as $$$$$$$$$$$1 from "./apps/site.ts";
 import * as $$$0 from "./loaders/getMapFromKV.ts";
 import * as $$$$$$0 from "./sections/Footer.tsx";
 import * as $$$$$$1 from "./sections/Hero.tsx";
@@ -10,33 +14,29 @@ import * as $$$$$$3 from "./sections/MapEditor.tsx";
 import * as $$$$$$4 from "./sections/MapManagement.tsx";
 import * as $$$$$$5 from "./sections/ParagraphList.tsx";
 import * as $$$$$$6 from "./sections/Theme/Theme.tsx";
-import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
-import * as $$$$$$$$$1 from "./actions/actionSetMapToKV.ts";
-import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
-import * as $$$$$$$$$$$1 from "./apps/site.ts";
 
 const manifest = {
   "loaders": {
-    "deco-sites/benvenuto2/loaders/getMapFromKV.ts": $$$0,
+    "site/loaders/getMapFromKV.ts": $$$0,
   },
   "sections": {
-    "deco-sites/benvenuto2/sections/Footer.tsx": $$$$$$0,
-    "deco-sites/benvenuto2/sections/Hero.tsx": $$$$$$1,
-    "deco-sites/benvenuto2/sections/Home.tsx": $$$$$$2,
-    "deco-sites/benvenuto2/sections/MapEditor.tsx": $$$$$$3,
-    "deco-sites/benvenuto2/sections/MapManagement.tsx": $$$$$$4,
-    "deco-sites/benvenuto2/sections/ParagraphList.tsx": $$$$$$5,
-    "deco-sites/benvenuto2/sections/Theme/Theme.tsx": $$$$$$6,
+    "site/sections/Footer.tsx": $$$$$$0,
+    "site/sections/Hero.tsx": $$$$$$1,
+    "site/sections/Home.tsx": $$$$$$2,
+    "site/sections/MapEditor.tsx": $$$$$$3,
+    "site/sections/MapManagement.tsx": $$$$$$4,
+    "site/sections/ParagraphList.tsx": $$$$$$5,
+    "site/sections/Theme/Theme.tsx": $$$$$$6,
   },
   "actions": {
-    "deco-sites/benvenuto2/actions/actionGetMapFromKV.ts": $$$$$$$$$0,
-    "deco-sites/benvenuto2/actions/actionSetMapToKV.ts": $$$$$$$$$1,
+    "site/actions/actionGetMapFromKV.ts": $$$$$$$$$0,
+    "site/actions/actionSetMapToKV.ts": $$$$$$$$$1,
   },
   "apps": {
-    "deco-sites/benvenuto2/apps/decohub.ts": $$$$$$$$$$$0,
-    "deco-sites/benvenuto2/apps/site.ts": $$$$$$$$$$$1,
+    "site/apps/decohub.ts": $$$$$$$$$$$0,
+    "site/apps/site.ts": $$$$$$$$$$$1,
   },
-  "name": "deco-sites/benvenuto2",
+  "name": "site",
   "baseUrl": import.meta.url,
 };
 

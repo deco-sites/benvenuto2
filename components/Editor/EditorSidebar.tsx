@@ -1,6 +1,6 @@
 import { PositionXY } from "../../islands/MapEditor.tsx";
 import { useState } from "preact/hooks";
-import { imagePreviewPosition } from "deco-sites/benvenuto2/utils/imagePreviewPosition.ts";
+import { imagePreviewPosition } from "site/utils/imagePreviewPosition.ts";
 
 export interface Props {
   setDraggedItemOffset: (offset: PositionXY) => void;

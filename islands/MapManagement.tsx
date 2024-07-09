@@ -36,7 +36,7 @@ export default function Editor({
   }, []);
 
   const fetchData = async (tableMap: TableMap) => {
-    await Runtime.invoke["deco-sites/benvenuto2"].actions.actionSetMapToKV({
+    await Runtime.invoke["site"].actions.actionSetMapToKV({
       empresa: "couve",
       filial: "teste",
       id: "1",
