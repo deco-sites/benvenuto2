@@ -1,0 +1,8 @@
+{
+  "__resolveType": "site/sections/MapEditor.tsx",
+  "tableMap": {
+    "__resolveType": "site/loaders/getMapFromKV.ts",
+    "id": "1"
+  },
+  "backgroundImage": "https://ozksgdmyrqcxcwhnbepg.supabase.co/storage/v1/object/public/assets/3509/e97fac50-38a7-4a3d-be63-a3757c90c7e1"
+}
