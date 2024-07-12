@@ -8,6 +8,7 @@ import * as $$$$$$$$$$$0 from "./apps/deco/records.ts";
 import * as $$$$$$$$$$$1 from "./apps/decohub.ts";
 import * as $$$$$$$$$$$2 from "./apps/site.ts";
 import * as $$$0 from "./loaders/getMapFromKV.ts";
+import * as $$$1 from "./loaders/record.ts";
 import * as $$$$$$0 from "./sections/Footer.tsx";
 import * as $$$$$$1 from "./sections/Hero.tsx";
 import * as $$$$$$2 from "./sections/Home.tsx";
@@ -19,6 +20,7 @@ import * as $$$$$$6 from "./sections/Theme/Theme.tsx";
 const manifest = {
   "loaders": {
     "site/loaders/getMapFromKV.ts": $$$0,
+    "site/loaders/record.ts": $$$1,
   },
   "sections": {
     "site/sections/Footer.tsx": $$$$$$0,
