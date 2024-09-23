@@ -28,17 +28,7 @@ const action = async (
 
   console.log("Pegando mapa do banco " + key);
 
-  if (typeof entry === "string") {
-    const parsedEntry = JSON.parse(entry);
-    console.log("Mapa pego como JSON: ", parsedEntry);
-    return parsedEntry as TableMap; // Return the parsed JSON object
-  } else {
-    console.log(
-      "Unexpected non-string entry type, returning raw entry: ",
-      entry,
-    );
-    return entry as TableMap; // If it's already an object, return it directly
-  }
+  return entry as TableMap;
 };
 
 export default action;

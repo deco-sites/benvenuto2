@@ -23,12 +23,8 @@ const action = async (
     url: Deno.env.get("UPSTASH_REDIS_REST_URL")!,
     token: Deno.env.get("UPSTASH_REDIS_REST_TOKEN")!,
   });
-  const key = `maps_${empresa}_${filial}_${id}`;
 
-  console.log(
-    "Recebido em " + key + " o JSON: ",
-    mapJSON,
-  );
+  const key = `maps_${empresa}_${filial}_${id}`;
 
   const result = await redis.set(key, mapJSON);
 
