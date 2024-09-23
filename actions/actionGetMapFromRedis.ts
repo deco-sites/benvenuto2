@@ -27,9 +27,18 @@ const action = async (
   const entry = await redis.get(key);
 
   console.log("Pegando mapa do banco " + key);
-  console.log("Mapa pego:  " + entry);
 
-  return JSON.parse(entry as string);
+  if (typeof entry === "string") {
+    const parsedEntry = JSON.parse(entry);
+    console.log("Mapa pego como JSON: ", parsedEntry);
+    return parsedEntry as TableMap; // Return the parsed JSON object
+  } else {
+    console.log(
+      "Unexpected non-string entry type, returning raw entry: ",
+      entry,
+    );
+    return entry as TableMap; // If it's already an object, return it directly
+  }
 };
 
 export default action;
