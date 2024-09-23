@@ -5,7 +5,7 @@ import GenericTable from "../components/TableMap/Tables/GenericTable.tsx";
 import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
 import SegmentTable from "../components/TableMap/Tables/SegmentTable.tsx";
-import TableMapTopBar from '../components/TableMap/ManagementTopBar.tsx';
+import TableMapTopBar from "../components/TableMap/ManagementTopBar.tsx";
 
 export interface Props {
   tableMap: TableMap;
@@ -45,7 +45,7 @@ export default function Editor({
   };
 
   const updateOccupiedState = (tableId: string, newOccupiedState: boolean) => {
-    console.log("Table antes:", JSON.stringify(tableMapUpdate));
+    //console.log("Table antes:", JSON.stringify(tableMapUpdate));
 
     const updatedTables = tableMapUpdate.tables.map((table) => {
       return table.id === tableId
@@ -54,7 +54,7 @@ export default function Editor({
     });
 
     const updatedTableMap = { ...tableMapUpdate, tables: updatedTables };
-
+    setTableMapUpdate(updatedTableMap);
     fetchData(updatedTableMap);
 
     return updatedTableMap;
@@ -62,7 +62,7 @@ export default function Editor({
 
   return (
     <div class="relative select-none">
-      <TableMapTopBar/>
+      <TableMapTopBar />
       {backgroundImage && (
         <div class="w-full lg:w-1/2 max-w-full h-auto mx-auto relative border-2 border-black ">
           <img

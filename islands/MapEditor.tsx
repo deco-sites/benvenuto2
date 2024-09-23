@@ -64,11 +64,7 @@ export default function Editor({
   const setDraggedItemOffset = (offset: PositionXY) => {
     draggedItemOffset.current = offset;
   };
-/*
-  const setImagePreviewPosition = (position: PositionXY) => {
-    imagePreviewPosition.current = position;
-  };
-*/
+
   const setIsSideBarTouch = (value: boolean) => {
     isSideBarTouch.current = value;
   };
