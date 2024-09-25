@@ -23,15 +23,28 @@ export default function Editor({
     console.log("Realiza evento");
 
     const eventSource = new EventSource(`/sse/tables`);
-    eventSource.onerror = (err) => {
-      console.log("Connection Error");
-      eventSource.close();
+
+    eventSource.onopen = () => {
+      console.log("SSE connection established.");
     };
 
     eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log("Evento table atualizada: " + JSON.stringify(data));
-      setTableMapUpdate(data);
+      try {
+        const data = JSON.parse(event.data);
+        console.log("Evento table atualizada: " + JSON.stringify(data));
+        setTableMapUpdate(data);
+      } catch (error) {
+        console.error("Error parsing data:", error);
+      }
+    };
+
+    eventSource.onerror = (err) => {
+      console.error("SSE Connection Error:", err);
+    };
+
+    return () => {
+      console.log("Closing SSE connection.");
+      eventSource.close();
     };
   }, []);
 

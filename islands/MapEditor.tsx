@@ -35,7 +35,7 @@ export default function Editor({
   const [sideBarItemModel, setSideBarItemModel] = useState<string>("");
 
   useEffect(() => {
-    console.log("Requisita mapa no banco");
+    console.log("Requisita mapa do banco");
 
     const fetchGetData = async () => {
       try {
