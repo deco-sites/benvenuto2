@@ -19,6 +19,8 @@ const action = async (
     mapJSON,
   } = props;
 
+  const CHANNEL_NAME = "tablemap_couve_channel";
+
   const redis = new Redis({
     url: Deno.env.get("UPSTASH_REDIS_REST_URL")!,
     token: Deno.env.get("UPSTASH_REDIS_REST_TOKEN")!,
@@ -26,7 +28,9 @@ const action = async (
 
   const key = `maps_${empresa}_${filial}_${id}`;
 
-  const result = await redis.set(key, mapJSON);
+  await redis.set(key, mapJSON);
+
+  const result = await redis.publish(CHANNEL_NAME, mapJSON);
 
   console.log(
     "Salvando no banco " + key + " :",

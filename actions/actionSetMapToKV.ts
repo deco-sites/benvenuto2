@@ -7,7 +7,7 @@ export interface Props {
   mapJSON: string;
 }
 
-const DATABASE_ID = "2f0c2673-1eb4-407c-a605-b6914df02ae1";
+const DATABASE_ID = "f08a462c-3847-4b91-b3bf-be75e67f2ab6";
 
 const action = async (
   props: Props,

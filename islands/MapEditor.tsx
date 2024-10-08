@@ -40,7 +40,7 @@ export default function Editor({
     const fetchGetData = async () => {
       try {
         const data: TableMap = await Runtime.invoke["site"]
-          .actions.actionGetMapFromKV({
+          .actions.actionGetMapFromRedis({
             empresa: "couve",
             filial: "teste",
             id: "1",
@@ -70,7 +70,7 @@ export default function Editor({
   };
 
   const fetchSetData = async (tableMap: TableMap) => {
-    await Runtime.invoke["site"].actions.actionSetMapToKV({
+    await Runtime.invoke["site"].actions.actionSetMapToRedis({
       empresa: "couve",
       filial: "teste",
       id: "1",

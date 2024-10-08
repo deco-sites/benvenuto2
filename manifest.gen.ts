@@ -3,10 +3,13 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
-import * as $$$$$$$$$1 from "./actions/actionSetMapToKV.ts";
+import * as $$$$$$$$$1 from "./actions/actionGetMapFromRedis.ts";
+import * as $$$$$$$$$2 from "./actions/actionSetMapToKV.ts";
+import * as $$$$$$$$$3 from "./actions/actionSetMapToRedis.ts";
 import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
 import * as $$$$$$$$$$$1 from "./apps/site.ts";
 import * as $$$0 from "./loaders/getMapFromKV.ts";
+import * as $$$1 from "./loaders/loaderGetMapFromRedis.ts";
 import * as $$$$$$0 from "./sections/Footer.tsx";
 import * as $$$$$$1 from "./sections/Hero.tsx";
 import * as $$$$$$2 from "./sections/Home.tsx";
@@ -18,6 +21,7 @@ import * as $$$$$$6 from "./sections/Theme/Theme.tsx";
 const manifest = {
   "loaders": {
     "site/loaders/getMapFromKV.ts": $$$0,
+    "site/loaders/loaderGetMapFromRedis.ts": $$$1,
   },
   "sections": {
     "site/sections/Footer.tsx": $$$$$$0,
@@ -30,7 +34,9 @@ const manifest = {
   },
   "actions": {
     "site/actions/actionGetMapFromKV.ts": $$$$$$$$$0,
-    "site/actions/actionSetMapToKV.ts": $$$$$$$$$1,
+    "site/actions/actionGetMapFromRedis.ts": $$$$$$$$$1,
+    "site/actions/actionSetMapToKV.ts": $$$$$$$$$2,
+    "site/actions/actionSetMapToRedis.ts": $$$$$$$$$3,
   },
   "apps": {
     "site/apps/decohub.ts": $$$$$$$$$$$0,

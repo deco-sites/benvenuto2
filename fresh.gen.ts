@@ -3,7 +3,7 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $_app from "./routes/_app.tsx";
-import * as $sse_tables from "./routes/sse/tables.ts";
+import * as $sse_tablesredis from "./routes/sse/tablesredis.ts";
 import * as $MapEditor from "./islands/MapEditor.tsx";
 import * as $MapManagement from "./islands/MapManagement.tsx";
 import { type Manifest } from "$fresh/server.ts";
@@ -11,7 +11,7 @@ import { type Manifest } from "$fresh/server.ts";
 const manifest = {
   routes: {
     "./routes/_app.tsx": $_app,
-    "./routes/sse/tables.ts": $sse_tables,
+    "./routes/sse/tablesredis.ts": $sse_tablesredis,
   },
   islands: {
     "./islands/MapEditor.tsx": $MapEditor,

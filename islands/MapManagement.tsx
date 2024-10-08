@@ -22,7 +22,7 @@ export default function Editor({
   useEffect(() => {
     console.log("Realiza evento");
 
-    const eventSource = new EventSource(`/sse/tables`);
+    const eventSource = new EventSource(`/sse/tablesredis`);
 
     eventSource.onopen = () => {
       console.log("SSE connection established.");
@@ -30,8 +30,9 @@ export default function Editor({
 
     eventSource.onmessage = (event) => {
       try {
+        console.log("Evento table atualizada1: " + event.data);
         const data = JSON.parse(event.data);
-        console.log("Evento table atualizada: " + JSON.stringify(data));
+        console.log("Evento table atualizada2: " + JSON.stringify(data));
         setTableMapUpdate(data);
       } catch (error) {
         console.error("Error parsing data:", error);
@@ -49,7 +50,7 @@ export default function Editor({
   }, []);
 
   const fetchData = async (tableMap: TableMap) => {
-    await Runtime.invoke["site"].actions.actionSetMapToKV({
+    await Runtime.invoke["site"].actions.actionSetMapToRedis({
       empresa: "couve",
       filial: "teste",
       id: "1",
