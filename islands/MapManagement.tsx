@@ -1,77 +1,76 @@
-import { useSignal } from "@preact/signals";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { TableMap } from "../static/MockedTableObject.tsx";
 import GenericTable from "../components/TableMap/Tables/GenericTable.tsx";
-import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
 import SegmentTable from "../components/TableMap/Tables/SegmentTable.tsx";
 import TableMapTopBar from "../components/TableMap/ManagementTopBar.tsx";
+import { actors } from "@deco/actors/proxy";
+import type { ActorTable } from "../actors/ActorTable.ts";
 
 export interface Props {
-  tableMap: TableMap;
   backgroundImage?: ImageWidget;
 }
 
 export default function Editor({
-  tableMap,
   backgroundImage = "",
 }: Props) {
-  const [tableMapUpdate, setTableMapUpdate] = useState<TableMap>(tableMap);
-  const isInitialRender = useRef(true);
+  const [tableMapUpdate, setTableMapUpdate] = useState<TableMap>({
+    tables: [],
+  });
+
+  const actorKey = {
+    empresa: "couve",
+    filial: "teste",
+    id: "1",
+  };
+
+  const tableMaps = actors.proxy<ActorTable>("ActorTable").id(
+    `maps_${actorKey.empresa}_${actorKey.filial}_${actorKey.id}`,
+  );
 
   useEffect(() => {
-    console.log("Realiza evento");
-
-    const eventSource = new EventSource(`/sse/tablesredis`);
-
-    eventSource.onopen = () => {
-      console.log("SSE connection established.");
-    };
-
-    eventSource.onmessage = (event) => {
+    const fetchTableMap = async () => {
       try {
-        console.log("Evento table atualizada1: " + event.data);
-        const data = JSON.parse(event.data);
-        console.log("Evento table atualizada2: " + JSON.stringify(data));
-        setTableMapUpdate(data);
+        const tableMap = await tableMaps.getTableMap();
+        console.log("Get:", typeof tableMap, tableMap);
+        setTableMapUpdate(tableMap);
       } catch (error) {
-        console.error("Error parsing data:", error);
+        console.error("Erro ao buscar o mapa de tabelas:", error);
       }
     };
 
-    eventSource.onerror = (err) => {
-      console.error("SSE Connection Error:", err);
-    };
+    fetchTableMap();
+  }, []);
 
-    return () => {
-      console.log("Closing SSE connection.");
-      eventSource.close();
+  useEffect(() => {
+    console.log("Realiza evento");
+    const watchTableMaps = async () => {
+      for await (const event of await tableMaps.watch()) {
+        console.log("Evento:", event);
+        setTableMapUpdate(event); // Update count on new event
+      }
     };
+    watchTableMaps();
   }, []);
 
   const fetchData = async (tableMap: TableMap) => {
-    await Runtime.invoke["site"].actions.actionSetMapToRedis({
-      empresa: "couve",
-      filial: "teste",
-      id: "1",
-      mapJSON: JSON.stringify(tableMap),
-    });
+    console.log("save:", tableMap);
+    await tableMaps.saveTableMap(tableMap);
   };
 
   const updateOccupiedState = (tableId: string, newOccupiedState: boolean) => {
     //console.log("Table antes:", JSON.stringify(tableMapUpdate));
 
-    const updatedTables = tableMapUpdate.tables.map((table) => {
+    const updatedTables = tableMapUpdate?.tables.map((table) => {
       return table.id === tableId
         ? { ...table, occupied: newOccupiedState }
         : table;
     });
-
-    const updatedTableMap = { ...tableMapUpdate, tables: updatedTables };
-    setTableMapUpdate(updatedTableMap);
-    fetchData(updatedTableMap);
-
-    return updatedTableMap;
+    if (updatedTables) {
+      const updatedTableMap = { ...tableMapUpdate, tables: updatedTables };
+      setTableMapUpdate(updatedTableMap);
+      fetchData(updatedTableMap);
+    }
   };
 
   return (

@@ -2,14 +2,17 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
-import * as $$$$$$$$$1 from "./actions/actionGetMapFromRedis.ts";
-import * as $$$$$$$$$2 from "./actions/actionSetMapToKV.ts";
-import * as $$$$$$$$$3 from "./actions/actionSetMapToRedis.ts";
+import * as $$$$$$$$$0 from "./actions/actionGetMapFromActor.ts";
+import * as $$$$$$$$$1 from "./actions/actionGetMapFromKV.ts";
+import * as $$$$$$$$$2 from "./actions/actionGetMapFromRedis.ts";
+import * as $$$$$$$$$3 from "./actions/actionSetMapToActor.ts";
+import * as $$$$$$$$$4 from "./actions/actionSetMapToKV.ts";
+import * as $$$$$$$$$5 from "./actions/actionSetMapToRedis.ts";
 import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
 import * as $$$$$$$$$$$1 from "./apps/site.ts";
-import * as $$$0 from "./loaders/getMapFromKV.ts";
-import * as $$$1 from "./loaders/loaderGetMapFromRedis.ts";
+import * as $$$0 from "./loaders/loaderGetMapFromActors.ts";
+import * as $$$1 from "./loaders/loaderGetMapFromKV.ts";
+import * as $$$2 from "./loaders/loaderGetMapFromRedis.ts";
 import * as $$$$$$0 from "./sections/Footer.tsx";
 import * as $$$$$$1 from "./sections/Hero.tsx";
 import * as $$$$$$2 from "./sections/Home.tsx";
@@ -20,8 +23,9 @@ import * as $$$$$$6 from "./sections/Theme/Theme.tsx";
 
 const manifest = {
   "loaders": {
-    "site/loaders/getMapFromKV.ts": $$$0,
-    "site/loaders/loaderGetMapFromRedis.ts": $$$1,
+    "site/loaders/loaderGetMapFromActors.ts": $$$0,
+    "site/loaders/loaderGetMapFromKV.ts": $$$1,
+    "site/loaders/loaderGetMapFromRedis.ts": $$$2,
   },
   "sections": {
     "site/sections/Footer.tsx": $$$$$$0,
@@ -33,10 +37,12 @@ const manifest = {
     "site/sections/Theme/Theme.tsx": $$$$$$6,
   },
   "actions": {
-    "site/actions/actionGetMapFromKV.ts": $$$$$$$$$0,
-    "site/actions/actionGetMapFromRedis.ts": $$$$$$$$$1,
-    "site/actions/actionSetMapToKV.ts": $$$$$$$$$2,
-    "site/actions/actionSetMapToRedis.ts": $$$$$$$$$3,
+    "site/actions/actionGetMapFromActor.ts": $$$$$$$$$0,
+    "site/actions/actionGetMapFromKV.ts": $$$$$$$$$1,
+    "site/actions/actionGetMapFromRedis.ts": $$$$$$$$$2,
+    "site/actions/actionSetMapToActor.ts": $$$$$$$$$3,
+    "site/actions/actionSetMapToKV.ts": $$$$$$$$$4,
+    "site/actions/actionSetMapToRedis.ts": $$$$$$$$$5,
   },
   "apps": {
     "site/apps/decohub.ts": $$$$$$$$$$$0,

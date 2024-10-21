@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import { Table, TableMap } from "../static/MockedTableObject.tsx";
-import { Runtime } from "../runtime.ts";
 import type { ImageWidget } from "apps/admin/widgets.ts";
 import DraggableImagePreview from "../components/Editor/Tables/DraggableImagePreview.tsx";
 import DraggableGenericTable from "../components/Editor/Tables/DraggableGenericTable.tsx";
@@ -9,7 +8,8 @@ import EditorSidebar from "../components/Editor/EditorSidebar.tsx";
 import EditorTopBar from "../components/Editor/EditorTopBar.tsx";
 
 import { v1 } from "https://deno.land/std@0.223.0/uuid/mod.ts";
-import { useSignal } from "@preact/signals";
+import { actors } from "@deco/actors/proxy";
+import type { ActorTable } from "../actors/ActorTable.ts";
 
 export type PositionXY = {
   x: number;
@@ -17,15 +17,13 @@ export type PositionXY = {
 };
 
 export interface Props {
-  tableMap: TableMap;
   backgroundImage?: ImageWidget;
 }
 
 export default function Editor({
-  tableMap,
   backgroundImage = "",
 }: Props) {
-  const [tableMapSaved, setTableMapSaved] = useState<TableMap>(tableMap);
+  const [tableMapSaved, setTableMapSaved] = useState<TableMap>({ tables: [] });
   const [draggedItem, setDraggedItem] = useState<Table | null>(null);
   const [moveUpDraggedTable, setMoveUpDraggedTable] = useState(false);
   const draggedItemOffset = useRef<PositionXY>({ x: 0, y: 0 });
@@ -34,25 +32,28 @@ export default function Editor({
   const [sideBar, setSideBar] = useState(true);
   const [sideBarItemModel, setSideBarItemModel] = useState<string>("");
 
+  const actorKey = {
+    empresa: "couve",
+    filial: "teste",
+    id: "1",
+  };
+
+  const tableMaps = actors.proxy<ActorTable>("ActorTable").id(
+    `maps_${actorKey.empresa}_${actorKey.filial}_${actorKey.id}`,
+  );
+
   useEffect(() => {
     console.log("Requisita mapa do banco");
-
     const fetchGetData = async () => {
       try {
-        const data: TableMap = await Runtime.invoke["site"]
-          .actions.actionGetMapFromRedis({
-            empresa: "couve",
-            filial: "teste",
-            id: "1",
-          });
-
-        setTableMapSaved({ tables: data.tables });
+        const tableMap = await tableMaps.getTableMap();
+        setTableMapSaved({ tables: tableMap.tables });
       } catch (error) {
-        console.error("Erro ao obter os dados:", error);
+        console.error("Erro ao requisitar o mapa de mesas:", error);
       }
     };
 
-    fetchGetData(); //Buscar os dados do mapa
+    fetchGetData();
   }, []);
 
   useEffect(() => {
@@ -70,12 +71,7 @@ export default function Editor({
   };
 
   const fetchSetData = async (tableMap: TableMap) => {
-    await Runtime.invoke["site"].actions.actionSetMapToRedis({
-      empresa: "couve",
-      filial: "teste",
-      id: "1",
-      mapJSON: JSON.stringify(tableMap),
-    });
+    await tableMaps.saveTableMap(tableMap);
   };
 
   const HandleSaveNewMap = () => {
