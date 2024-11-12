@@ -3,17 +3,25 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $_app from "./routes/_app.tsx";
+import * as $login_index from "./routes/login/index.tsx";
+import * as $register_index from "./routes/register/index.tsx";
 import * as $MapEditor from "./islands/MapEditor.tsx";
 import * as $MapManagement from "./islands/MapManagement.tsx";
+import * as $auth_LoginPage from "./islands/auth/LoginPage.tsx";
+import * as $auth_RegisterPage from "./islands/auth/RegisterPage.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
     "./routes/_app.tsx": $_app,
+    "./routes/login/index.tsx": $login_index,
+    "./routes/register/index.tsx": $register_index,
   },
   islands: {
     "./islands/MapEditor.tsx": $MapEditor,
     "./islands/MapManagement.tsx": $MapManagement,
+    "./islands/auth/LoginPage.tsx": $auth_LoginPage,
+    "./islands/auth/RegisterPage.tsx": $auth_RegisterPage,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

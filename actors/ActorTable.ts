@@ -18,14 +18,12 @@ export class ActorTable {
     }
 
     async saveTableMap(newTable: TableMap): Promise<void> {
-        //console.log("SET:", typeof (this.tableMap));
         this.tableMap = newTable;
         await this.state.storage.put("table_map", newTable);
         this.watchTarget.notify(newTable);
     }
 
     getTableMap(): TableMap {
-        //console.log("GET:", typeof (this.tableMap));
         return this.tableMap;
     }
 

@@ -49,7 +49,6 @@ export default function DraggableGenericTable({
   );
 
   const [label, setLabel] = useState(tableInfo.label);
-  const [rotationAngle, setRotationAngle] = useState(tableInfo.rotation);
   const [rotation, setRotation] = useState(tableInfo.rotation);
   const [showSlider, setShowSlider] = useState(false);
 

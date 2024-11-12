@@ -10,6 +10,7 @@
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.1",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.0",
     "@upstash/redis": "https://esm.sh/@upstash/redis@1.34.0",
+    "axiod": "https://deno.land/x/axiod@0.26.2/mod.ts",
     "apps/": "https://denopkg.com/deco-cx/apps@0.59.12/",
     "daisyui": "npm:daisyui@4.4.19",
     "deco/": "https://denopkg.com/deco-cx/deco@1.101.14/",

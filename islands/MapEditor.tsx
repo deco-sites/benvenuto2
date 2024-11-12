@@ -272,7 +272,7 @@ export default function Editor({
   }
   console.log("over");
   return (
-    <div class="relative select-none">
+    <div class="relative select-none bg-gray-100">
       <EditorTopBar
         HandleSaveNewMap={HandleSaveNewMap}
         setSideBar={setSideBar}
