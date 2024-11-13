@@ -1,0 +1,35 @@
+{
+  "seo": {
+    "type": "website",
+    "titleTemplate": "%s | Deco.cx",
+    "descriptionTemplate": "%s | Deco.cx"
+  },
+  "global": [],
+  "routes": [
+    {
+      "__resolveType": "website/loaders/pages.ts"
+    }
+  ],
+  "caching": {
+    "directives": []
+  },
+  "redis": {},
+  "__resolveType": "site/apps/site.ts",
+  "upstashRedis": {
+    "token": {
+      "__resolveType": "website/loaders/secret.ts",
+      "name": "UPSTASH_REDIS_REST_TOKEN"
+    },
+    "url": "https://lucky-starfish-59488.upstash.io"
+  },
+  "firstByteThresholdMS": false,
+  "abTesting": {
+    "replaces": [],
+    "includeScriptsToHead": {
+      "includes": []
+    }
+  },
+  "flavor": {
+    "framework": "fresh"
+  }
+}
