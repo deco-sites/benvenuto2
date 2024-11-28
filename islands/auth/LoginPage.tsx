@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import axiod from "axiod";
 export default function LoginPage() {
   const [userData, setUserData] = useState({
@@ -7,11 +7,16 @@ export default function LoginPage() {
   });
   const [authError, setAuthError] = useState(false);
 
+  useEffect(() => {
+    localStorage.removeItem("userInfo");
+  }, []);
+
   const submitHandler = async () => {
     try {
       const response = await axiod.post("/api/auth/login", userData);
       if (response.status === 200) {
-        localStorage.setItem("token", JSON.stringify(response.data.token));
+        localStorage.setItem("userInfo", JSON.stringify(response.data.payload));
+        console.log(JSON.stringify(response.data.payload));
         window.location.href = "/";
       }
     } catch (error) {
@@ -19,10 +24,17 @@ export default function LoginPage() {
       setAuthError(true);
     }
   };
+
   return (
     <div class="flex flex-col justify-center items-center gap-4 py-8 mx-auto h-screen bg-gray-100">
-      <h1 class="text-2xl font-bold  mb-6 text-center">Bem-vindo ao Sistema Benvenuto</h1>
-      <label className={`input input-bordered flex items-center gap-2 ${authError ? "border-2 border-red-500" : ""}`}>
+      <h1 class="text-2xl font-bold  mb-6 text-center">
+        Bem-vindo ao Sistema Benvenuto
+      </h1>
+      <label
+        className={`input input-bordered flex items-center gap-2 ${
+          authError ? "border-2 border-red-500" : ""
+        }`}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -41,7 +53,11 @@ export default function LoginPage() {
             setUserData({ ...userData, email: e.target.value })}
         />
       </label>
-      <label className={`input input-bordered flex items-center gap-2 ${authError ? "border-2 border-red-500" : ""}`}>
+      <label
+        className={`input input-bordered flex items-center gap-2 ${
+          authError ? "border-2 border-red-500" : ""
+        }`}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -68,7 +84,7 @@ export default function LoginPage() {
       )}
       <div className="flex gap-4 mt-6">
         <button className="btn btn-success" onClick={submitHandler}>
-          Login
+          Entrar
         </button>
         <a href="/register">
           <button className="btn btn-success">

@@ -49,7 +49,7 @@ export default function Home({
           <button
             class="px-4 py-2 bg-red-500 text-white rounded-lg text-2xl hover:bg-red-600 w-full"
           >
-            Logout
+            Sair
           </button>
         </a>
       </div>

@@ -1,14 +1,7 @@
 import { Handlers, STATUS_CODE } from "$fresh/server.ts";
 import { Redis } from "@upstash/redis";
 import * as bcrypt from "bcrypt";
-//import { redis } from "../../../utils/DBConnection.ts"; // Import Redis client
-
-interface User {
-  company: string;
-  branch: string;
-  email: string;
-  password: string;
-}
+import { User } from "site/types/user.ts";
 
 export const handler: Handlers = {
   async POST(req, _) {

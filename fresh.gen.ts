@@ -7,12 +7,14 @@ import * as $_middleware from "./routes/_middleware.ts";
 import * as $api_auth_login from "./routes/api/auth/login.ts";
 import * as $api_auth_logout from "./routes/api/auth/logout.ts";
 import * as $api_auth_register from "./routes/api/auth/register.ts";
+import * as $api_auth_user_info from "./routes/api/auth/user_info.ts";
 import * as $login_index from "./routes/login/index.tsx";
 import * as $register_index from "./routes/register/index.tsx";
 import * as $MapEditor from "./islands/MapEditor.tsx";
 import * as $MapManagement from "./islands/MapManagement.tsx";
 import * as $auth_LoginPage from "./islands/auth/LoginPage.tsx";
 import * as $auth_RegisterPage from "./islands/auth/RegisterPage.tsx";
+import * as $auth_UserInfoInitializer from "./islands/auth/UserInfoInitializer.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -22,6 +24,7 @@ const manifest = {
     "./routes/api/auth/login.ts": $api_auth_login,
     "./routes/api/auth/logout.ts": $api_auth_logout,
     "./routes/api/auth/register.ts": $api_auth_register,
+    "./routes/api/auth/user_info.ts": $api_auth_user_info,
     "./routes/login/index.tsx": $login_index,
     "./routes/register/index.tsx": $register_index,
   },
@@ -30,6 +33,7 @@ const manifest = {
     "./islands/MapManagement.tsx": $MapManagement,
     "./islands/auth/LoginPage.tsx": $auth_LoginPage,
     "./islands/auth/RegisterPage.tsx": $auth_RegisterPage,
+    "./islands/auth/UserInfoInitializer.tsx": $auth_UserInfoInitializer,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

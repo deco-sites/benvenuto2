@@ -3,8 +3,7 @@ import { actors } from "@deco/actors/proxy";
 import type { ActorTable } from "../actors/ActorTable.ts";
 
 export interface Props {
-  empresa: string;
-  filial: string;
+  email: string;
   id: string;
 }
 
@@ -13,13 +12,12 @@ const action = async (
   _req: Request,
 ): Promise<TableMap> => {
   const {
-    empresa,
-    filial,
-    id,
+    email,
+    id
   } = props;
 
   const tableMaps = actors.proxy<ActorTable>("ActorTable").id(
-    `maps_${empresa}_${filial}_${id}`,
+    `maps_${email}_${id}`,
   );
 
   const tableMap = await tableMaps.getTableMap();

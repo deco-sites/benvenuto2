@@ -6,6 +6,7 @@ import SegmentTable from "../components/TableMap/Tables/SegmentTable.tsx";
 import TableMapTopBar from "../components/TableMap/ManagementTopBar.tsx";
 import { actors } from "@deco/actors/proxy";
 import type { ActorTable } from "../actors/ActorTable.ts";
+import { JwtUserPayload } from "site/types/user.ts";
 
 export interface Props {
   backgroundImage?: ImageWidget;
@@ -17,21 +18,39 @@ export default function Editor({
   const [tableMapUpdate, setTableMapUpdate] = useState<TableMap>({
     tables: [],
   });
+  const [actorKey, setActorKey] = useState<JwtUserPayload | null>(null);
 
-  const actorKey = {
-    empresa: "couve",
-    filial: "teste",
-    id: "1",
-  };
+  let tableMapsActor: ActorTable | null = null;
 
-  const tableMaps = actors.proxy<ActorTable>("ActorTable").id(
-    `maps_${actorKey.empresa}_${actorKey.filial}_${actorKey.id}`,
-  );
+  if (actorKey) {
+    console.log("Actorkey:", actorKey);
+    console.log(`maps_${actorKey.email}_1`);
+    console.log("Actor:", tableMapsActor);
+    tableMapsActor = actors
+      .proxy<ActorTable>("ActorTable")
+      .id(`maps_${actorKey.email}_1`);
+    console.log("Actor:", tableMapsActor);
+  }
 
   useEffect(() => {
+    const savedUserInfo = localStorage.getItem("userInfo");
+    console.log("localstorage info", savedUserInfo);
+    if (savedUserInfo) {
+      try {
+        const parsedUserInfo = JSON.parse(savedUserInfo) as JwtUserPayload;
+        setActorKey(parsedUserInfo);
+      } catch (error) {
+        console.error("Erro ao parsear informações do usuário:", error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!actorKey || !tableMapsActor) return;
+
     const fetchTableMap = async () => {
       try {
-        const tableMap = await tableMaps.getTableMap();
+        const tableMap = await tableMapsActor?.getTableMap();
         console.log("Get:", typeof tableMap, tableMap);
         setTableMapUpdate(tableMap);
       } catch (error) {
@@ -40,22 +59,25 @@ export default function Editor({
     };
 
     fetchTableMap();
-  }, []);
+  }, [actorKey]);
 
   useEffect(() => {
+    if (!actorKey || !tableMapsActor) return;
+
     console.log("Realiza evento");
     const watchTableMaps = async () => {
-      for await (const event of await tableMaps.watch()) {
+      for await (const event of await tableMapsActor!.watch()) {
         console.log("Evento:", event);
-        setTableMapUpdate(event); // Update count on new event
+        setTableMapUpdate(event);
       }
     };
     watchTableMaps();
-  }, []);
+  }, [actorKey]);
 
   const fetchData = async (tableMap: TableMap) => {
+    if (!actorKey || !tableMapsActor) return;
     console.log("save:", tableMap);
-    await tableMaps.saveTableMap(tableMap);
+    await tableMapsActor.saveTableMap(tableMap);
   };
 
   const updateOccupiedState = (tableId: string, newOccupiedState: boolean) => {

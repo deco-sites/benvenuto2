@@ -4,29 +4,29 @@ import * as bcrypt from "bcrypt";
 import { create } from "jwt";
 import { setCookie } from "std/http/cookie.ts";
 //import { redis } from "../../../utils/DBConnection.ts"; // Import Redis client
+import { jwtKey } from "site/utils/jwtkey.ts";
+import { JwtUserPayload, User } from "site/types/user.ts";
 
-interface User {
-  _id: string;
-  company: string;
-  branch: string;
-  email: string;
-  password: string;
-}
+let payload: JwtUserPayload = {
+  email: "",
+  company: "",
+  branch: "",
+  iat: 0,
+  exp: 0,
+};
+
 async function generateJwtToken(user: User) {
   const iat = Math.floor(Date.now() / 1000);
   const exp = iat + 30 * 24 * 60 * 60; // 30 days
-  const payload = {
-    id: user._id,
+  payload = {
     email: user.email,
+    company: user.company,
+    branch: user.branch,
     iat,
     exp,
   };
 
-  const key = await crypto.subtle.generateKey(
-    { name: "HMAC", hash: "SHA-512" },
-    true,
-    ["sign", "verify"],
-  );
+  const key = jwtKey.value;
 
   const jwt = await create({ alg: "HS512", typ: "JWT" }, { payload }, key);
   return jwt;
@@ -88,7 +88,7 @@ export const handler: Handlers = {
       return new Response(
         JSON.stringify({
           message: "Login successfully",
-          token: token,
+          payload: payload,
         }),
         {
           status: 200,

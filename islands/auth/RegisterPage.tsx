@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import axiod from "axiod";
 
-
 export default function RegisterPage() {
   const [userData, setUserData] = useState({
     company: "",
@@ -11,6 +10,7 @@ export default function RegisterPage() {
   });
 
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [authError, setAuthError] = useState(false);
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,9 +19,9 @@ export default function RegisterPage() {
 
   const submitHandler = async () => {
     if (!isValidEmail(userData.email)) {
-        setIsEmailValid(false);
-        return;
-      }
+      setIsEmailValid(false);
+      return;
+    }
     setIsEmailValid(true);
     try {
       const response = await axiod.post("/api/auth/register", userData);
@@ -31,14 +31,21 @@ export default function RegisterPage() {
         window.location.href = "/login";
       }
     } catch (error) {
+      if (error.response.status === 403) {
+        setAuthError(true);
+      }
       console.error(error);
     }
   };
 
   return (
     <div class="flex flex-col justify-center items-center gap-4 py-8 mx-auto h-screen bg-gray-100">
-        <h1 class="text-2xl font-bold mb-1 text-center">Cadastro</h1>
-      <label className={`input input-bordered flex items-center gap-2 ${!isEmailValid ? "border-2 border-red-500" : ""}`}>
+      <h1 class="text-2xl font-bold mb-1 text-center">Cadastro</h1>
+      <label
+        className={`input input-bordered flex items-center gap-2 ${
+          (!isEmailValid || authError) ? "border-2 border-red-500" : ""
+        }`}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -60,7 +67,14 @@ export default function RegisterPage() {
         />
       </label>
       {!isEmailValid && (
-        <p className="text-red-500 text-sm">Por favor, insira um email válido.</p>
+        <p className="text-red-500 text-sm">
+          Por favor, insira um email válido.
+        </p>
+      )}
+      {authError && (
+        <p className="text-red-500 text-sm">
+          Email já em uso.
+        </p>
       )}
       <label className="input input-bordered flex items-center gap-2">
         <svg
