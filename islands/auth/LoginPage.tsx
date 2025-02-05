@@ -1,5 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
-import axiod from "axiod";
+import { invoke } from "site/runtime.ts";
+
 export default function LoginPage() {
   const [userData, setUserData] = useState({
     email: "",
@@ -13,10 +14,23 @@ export default function LoginPage() {
 
   const submitHandler = async () => {
     try {
-      const response = await axiod.post("/api/auth/login", userData);
-      if (response.status === 200) {
-        localStorage.setItem("userInfo", JSON.stringify(response.data.payload));
-        console.log(JSON.stringify(response.data.payload));
+      setAuthError(false);
+      const response = await invoke.site.actions.auth.actionLogin(
+        { userProvided: userData },
+      );
+
+      console.log("Response:", response);
+
+      if (response.error) {
+        console.error(
+          "Server reported an error:",
+          response.error,
+          "status:",
+          response.status,
+        );
+        setAuthError(true);
+      } else if (response.status === 200) {
+        localStorage.setItem("userInfo", JSON.stringify(response.payload));
         window.location.href = "/";
       }
     } catch (error) {

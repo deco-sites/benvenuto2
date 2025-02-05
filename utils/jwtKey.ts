@@ -5,5 +5,5 @@ export const jwtKey = signal<CryptoKey>(
     { name: "HMAC", hash: "SHA-512" },
     true,
     ["sign", "verify"],
-  )
+  ),
 );

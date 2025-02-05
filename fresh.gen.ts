@@ -15,7 +15,7 @@ import * as $MapManagement from "./islands/MapManagement.tsx";
 import * as $auth_LoginPage from "./islands/auth/LoginPage.tsx";
 import * as $auth_RegisterPage from "./islands/auth/RegisterPage.tsx";
 import * as $auth_UserInfoInitializer from "./islands/auth/UserInfoInitializer.tsx";
-import { type Manifest } from "$fresh/server.ts";
+import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {

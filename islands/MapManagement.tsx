@@ -8,6 +8,12 @@ import { actors } from "@deco/actors/proxy";
 import type { ActorTable } from "../actors/ActorTable.ts";
 import { JwtUserPayload } from "site/types/user.ts";
 
+export interface IActorTable {
+  saveTableMap(newTable: TableMap): Promise<void>;
+  getTableMap(): Promise<TableMap>;
+  watch(): Promise<AsyncIterableIterator<TableMap>>;
+}
+console.log("Actorkey1");
 export interface Props {
   backgroundImage?: ImageWidget;
 }
@@ -20,15 +26,15 @@ export default function Editor({
   });
   const [actorKey, setActorKey] = useState<JwtUserPayload | null>(null);
 
-  let tableMapsActor: ActorTable | null = null;
-
+  let tableMapsActor: IActorTable | null = null;
+  console.log("Actorkey2");
   if (actorKey) {
     console.log("Actorkey:", actorKey);
     console.log(`maps_${actorKey.email}_1`);
     console.log("Actor:", tableMapsActor);
-    tableMapsActor = actors
-      .proxy<ActorTable>("ActorTable")
-      .id(`maps_${actorKey.email}_1`);
+    tableMapsActor = actors.proxy<ActorTable>("ActorTable").id(
+      `maps_${actorKey.email}_1`,
+    );
     console.log("Actor:", tableMapsActor);
   }
 
@@ -52,7 +58,9 @@ export default function Editor({
       try {
         const tableMap = await tableMapsActor?.getTableMap();
         console.log("Get:", typeof tableMap, tableMap);
-        setTableMapUpdate(tableMap);
+        if (tableMap) {
+          setTableMapUpdate(tableMap);
+        }
       } catch (error) {
         console.error("Erro ao buscar o mapa de tabelas:", error);
       }

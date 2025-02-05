@@ -5,6 +5,11 @@ export interface User {
   password: string;
 }
 
+export interface UserLogin {
+  email: string;
+  password: string;
+}
+
 export interface JwtUserPayload {
   company: string;
   branch: string;

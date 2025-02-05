@@ -8,6 +8,10 @@ import * as $$$$$$$$$2 from "./actions/actionGetMapFromRedis.ts";
 import * as $$$$$$$$$3 from "./actions/actionSetMapToActor.ts";
 import * as $$$$$$$$$4 from "./actions/actionSetMapToKV.ts";
 import * as $$$$$$$$$5 from "./actions/actionSetMapToRedis.ts";
+import * as $$$$$$$$$6 from "./actions/auth/actionGetUserInfo.ts";
+import * as $$$$$$$$$7 from "./actions/auth/actionLogin.ts";
+import * as $$$$$$$$$8 from "./actions/auth/actionLogout.ts";
+import * as $$$$$$$$$9 from "./actions/auth/actionRegister.ts";
 import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
 import * as $$$$$$$$$$$1 from "./apps/site.ts";
 import * as $$$0 from "./loaders/loaderGetMapFromActors.ts";
@@ -43,6 +47,10 @@ const manifest = {
     "site/actions/actionSetMapToActor.ts": $$$$$$$$$3,
     "site/actions/actionSetMapToKV.ts": $$$$$$$$$4,
     "site/actions/actionSetMapToRedis.ts": $$$$$$$$$5,
+    "site/actions/auth/actionGetUserInfo.ts": $$$$$$$$$6,
+    "site/actions/auth/actionLogin.ts": $$$$$$$$$7,
+    "site/actions/auth/actionLogout.ts": $$$$$$$$$8,
+    "site/actions/auth/actionRegister.ts": $$$$$$$$$9,
   },
   "apps": {
     "site/apps/decohub.ts": $$$$$$$$$$$0,

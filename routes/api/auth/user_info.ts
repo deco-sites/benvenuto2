@@ -1,7 +1,7 @@
 import { Handlers, STATUS_CODE } from "$fresh/server.ts";
 import { getCookies } from "std/http/cookie.ts";
 import { verify } from "jwt";
-import { jwtKey } from "site/utils/jwtkey.ts";
+import { jwtKey } from "site/utils/jwtKey.ts";
 import { JwtUserPayload } from "site/types/user.ts";
 
 const key = jwtKey.value;

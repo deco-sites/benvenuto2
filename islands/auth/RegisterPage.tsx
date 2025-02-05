@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import axiod from "axiod";
+import { invoke } from "site/runtime.ts";
 
 export default function RegisterPage() {
   const [userData, setUserData] = useState({
@@ -18,23 +18,37 @@ export default function RegisterPage() {
   };
 
   const submitHandler = async () => {
+    setIsEmailValid(true);
     if (!isValidEmail(userData.email)) {
       setIsEmailValid(false);
       return;
     }
-    setIsEmailValid(true);
     try {
-      const response = await axiod.post("/api/auth/register", userData);
+      const response = await invoke.site.actions.auth.actionRegister(
+        { userProvided: userData },
+      );
+      
+      console.log("Response:", response);
 
-      if (response.status === 201) {
+      if (response.error) {
+        console.error(
+          "Server reported an error:",
+          response.error,
+          "status:",
+          response.status,
+        );
+        if (response.status === 403) {
+          setAuthError(true);
+        }
+      } else if (response.status === 201) {
         console.log("Registration successful");
         window.location.href = "/login";
       }
     } catch (error) {
-      if (error.response.status === 403) {
+      console.error(error);
+      if (error.status === 403) {
         setAuthError(true);
       }
-      console.error(error);
     }
   };
 

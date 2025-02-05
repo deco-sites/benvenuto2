@@ -23,6 +23,7 @@ const action = async (
   );
   const result = await tableMaps.saveTableMap(JSON.parse(mapJSON));
   console.log(result);
+  console.log("map:", JSON.parse(mapJSON));
 
   return;
 };

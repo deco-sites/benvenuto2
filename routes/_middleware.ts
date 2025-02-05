@@ -1,7 +1,7 @@
 import { deleteCookie, getCookies } from "std/http/cookie.ts";
 import { verify } from "jwt";
 import { FreshContext } from "$fresh/server.ts";
-import { jwtKey } from "site/utils/jwtkey.ts"; // Adjust the path if needed
+import { jwtKey } from "site/utils/jwtKey.ts";
 
 export async function handler(req: Request, ctx: FreshContext) {
   const cookieName = "auth";

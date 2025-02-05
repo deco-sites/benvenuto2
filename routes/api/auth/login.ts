@@ -3,9 +3,9 @@ import { Redis } from "@upstash/redis";
 import * as bcrypt from "bcrypt";
 import { create } from "jwt";
 import { setCookie } from "std/http/cookie.ts";
-//import { redis } from "../../../utils/DBConnection.ts"; // Import Redis client
-import { jwtKey } from "site/utils/jwtkey.ts";
+import { jwtKey } from "site/utils/jwtKey.ts";
 import { JwtUserPayload, User } from "site/types/user.ts";
+//import { redis } from "../../../utils/DBConnection.ts"; // Import Redis client
 
 let payload: JwtUserPayload = {
   email: "",

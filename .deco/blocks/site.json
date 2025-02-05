@@ -20,7 +20,7 @@
       "__resolveType": "website/loaders/secret.ts",
       "name": "UPSTASH_REDIS_REST_TOKEN"
     },
-    "url": "https://lucky-starfish-59488.upstash.io"
+    "url": "https://brief-possum-49468.upstash.io"
   },
   "firstByteThresholdMS": false,
   "abTesting": {
