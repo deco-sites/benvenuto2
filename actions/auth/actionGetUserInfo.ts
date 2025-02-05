@@ -17,7 +17,6 @@ const action = async (
     const payload = await verify(token, key);
     const userInfo = payload as unknown as JwtUserPayload;
 
-    // Respond with user info
     return new Response(
       JSON.stringify(userInfo),
       {
