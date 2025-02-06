@@ -18,7 +18,7 @@
   "upstashRedisAuth": {
     "token": {
       "__resolveType": "website/loaders/secret.ts",
-      "name": "UPSTASH_REDIS_REST_TOKEN",
+      "name": "UPSTASH_REDIS_REST_TOKE",
       "encrypted": "9b16de6fd12648dd5fed0f0762037fe0e95518e58e2beef2e13726ef6666ae91d3983e5f5473176f6321d212b7e77f1631db078ed03ac047138e782ba408f6b6"
     },
     "url": "https://brief-possum-49468.upstash.io"
