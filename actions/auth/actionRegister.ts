@@ -16,8 +16,8 @@ const action = async (
 ): Promise<FetchResponse> => {
   try {
     const redis = new Redis({
-      url: ctx.upstashRedis.url,
-      token: ctx?.upstashRedis?.token?.get() ?? undefined,
+      url: ctx.upstashRedisAuth.url,
+      token: ctx?.upstashRedisAuth?.token?.get() ?? undefined,
     });
 
     // Check if the username already exists in Redis
