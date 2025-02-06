@@ -45,7 +45,9 @@ const action = async (
 ): Promise<FetchResponse> => {
   try {
     const user = props.userProvided;
-    console.log(user);
+    console.log("actionlogin:", user);
+    console.log("actionlogin url:", ctx.upstashRedis.url);
+    console.log("actionlogin token:", ctx?.upstashRedis?.token?.get());
     const redis = new Redis({
       url: ctx.upstashRedis.url,
       token: ctx?.upstashRedis?.token?.get() ?? undefined,
@@ -103,6 +105,7 @@ const action = async (
 
     return {
       error: "Internal server error",
+      message: error,
       status: STATUS_CODE.InternalServerError,
     };
   }
