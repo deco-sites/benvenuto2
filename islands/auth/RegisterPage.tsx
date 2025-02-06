@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import { invoke } from "site/runtime.ts";
 
 export default function RegisterPage() {
@@ -11,6 +11,10 @@ export default function RegisterPage() {
 
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [authError, setAuthError] = useState(false);
+
+  useEffect(() => {
+    localStorage.removeItem("userInfo");
+  }, []);
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,7 +31,7 @@ export default function RegisterPage() {
       const response = await invoke.site.actions.auth.actionRegister(
         { userProvided: userData },
       );
-      
+
       console.log("Response:", response);
 
       if (response.error) {

@@ -5,7 +5,7 @@ import manifest, { Manifest } from "../manifest.gen.ts";
 type WebsiteApp = ReturnType<typeof website>;
 
 export interface Props extends WebsiteProps {
-  upstashRedisAuth: {
+  upstashRedis: {
     url: string;
     token: Secret;
   };

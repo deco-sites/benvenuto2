@@ -15,7 +15,7 @@
   },
   "redis": {},
   "__resolveType": "site/apps/site.ts",
-  "upstashRedisAuth": {
+  "upstashRedis": {
     "token": {
       "__resolveType": "website/loaders/secret.ts",
       "name": "UPSTASH_REDIS_REST_TOKE",

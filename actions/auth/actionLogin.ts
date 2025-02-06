@@ -46,12 +46,12 @@ const action = async (
   try {
     const user = props.userProvided;
     console.log("actionlogin:", user);
-    console.log("actionlogin url:", ctx.upstashRedisAuth.url);
-    console.log("actionlogin token:", ctx?.upstashRedisAuth?.token?.get());
+    console.log("actionlogin url:", ctx.upstashRedis.url);
+    console.log("actionlogin token:", ctx?.upstashRedis?.token?.get());
    
     const redis = new Redis({
-      url: ctx.upstashRedisAuth.url,
-      token: ctx?.upstashRedisAuth?.token?.get() ?? undefined,
+      url: ctx.upstashRedis.url,
+      token: ctx?.upstashRedis?.token?.get() ?? undefined,
     });
 
     // Check if the username already exists in Redis
