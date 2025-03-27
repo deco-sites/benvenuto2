@@ -1,7 +1,8 @@
-import { ActorState } from "@deco/actors";
+import { Actor, ActorState } from "@deco/actors";
 import { WatchTarget } from "@deco/actors/watch";
 import { TableMap } from "../static/MockedTableObject.tsx";
 
+@Actor()
 export class ActorTable {
     private tableMap: TableMap;
     private watchTarget = new WatchTarget<TableMap>();
