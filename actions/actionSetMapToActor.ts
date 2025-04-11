@@ -1,6 +1,6 @@
-// import { GzipStream } from "https://deno.land/x/compress@v0.4.4/mod.ts";
+//import { GzipStream } from "https://deno.land/x/compress@v0.4.4/mod.ts";
 import { actors } from "@deco/actors/proxy";
-import type { ActorTable } from "../actors/ActorTable.ts";
+import { ActorTable } from "../actors/ActorTable.ts";
 
 export interface Props {
   email: string;
@@ -14,9 +14,8 @@ const action = async (
 ): Promise<void> => {
   try {
     const { email, id, mapJSON } = props;
-
-    const tableMaps = actors.proxy<ActorTable>("ActorTable").id(
-      `maps_${email}_${id}`,
+    const tableMaps = actors.stub(ActorTable).id(
+      `maps_${email}_${id}`
     );
 
     const parsedMap = JSON.parse(mapJSON); // Tenta fazer o parse do JSON
@@ -30,4 +29,3 @@ const action = async (
 };
 
 export default action;
-
