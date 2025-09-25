@@ -8,7 +8,7 @@ import type { AppContext } from "site/apps/site.ts";
 
 const UPSTASH_REDIS_REST_URL = Deno.env.get("UPSTASH_REDIS_REST_URL");
 const UPSTASH_REDIS_REST_TOKEN = Deno.env.get("UPSTASH_REDIS_REST_TOKE");
-const UPSTASH_f_TOKEN = Deno.env.get("JWT_PRIVATE_KEY");
+const JWT_PRIVATE_KEY = Deno.env.get("JWT_PRIVATE_KEY");
 
 function isValidJSON(str: string) {
   try {
@@ -84,11 +84,13 @@ export const handler: Handlers<unknown, AppContext> = {
   async GET(_req, ctx) {
     const cookies = getCookies(_req.headers);
     const token = cookies.auth;
-    console.log("JWT_PRIVATE_KEY: ", UPSTASH_f_TOKEN);
+    console.log("UPSTASH_REDIS_REST_URL: ", UPSTASH_REDIS_REST_URL);
+    console.log("UPSTASH_REDIS_REST_TOKEN: ", UPSTASH_REDIS_REST_TOKEN);
+    console.log("JWT_PRIVATE_KEY: ", JWT_PRIVATE_KEY);
     console.log("token: ", token);
     console.log("cookie: ", cookies);
 
-    const key = await getJwtCryptoKey(UPSTASH_f_TOKEN);
+    const key = await getJwtCryptoKey(JWT_PRIVATE_KEY);
 
     if (!token) {
       return new Response("Missing auth cookie", { status: 401 });
