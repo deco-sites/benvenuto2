@@ -52,16 +52,12 @@ async function subscribe(channel: string, callback: (message: string) => void) {
   while (true) {
     const { value, done } = await reader.read();
 
-    //console.log("Read chunk:", value);
-
     if (done) {
       console.log("Stream done.");
       break;
     }
 
     const data = decoder.decode(value);
-
-    //console.log("Decoded data:", data, "\n");
 
     if (!data.startsWith("data: subscribe,")) {
       if (data.startsWith(`data: message,${channel},`)) {

@@ -1,7 +1,6 @@
 export async function getJwtCryptoKey(
   secret: string | null | undefined,
 ): Promise<CryptoKey> {
-  //const secretString = await ctx?.jwtKey?.get();
   console.log("getJwtCryptoKey scret string:", secret);
   if (!secret) {
     throw new Error("jwtKey missing from context");
