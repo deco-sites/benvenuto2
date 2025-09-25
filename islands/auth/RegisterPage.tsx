@@ -1,7 +1,7 @@
 import { useState, useEffect } from "preact/hooks";
 import { invoke } from "site/runtime.ts";
 
-export default function RegisterPage() {
+export default function RegisterPageIsland() {
   const [userData, setUserData] = useState({
     company: "",
     branch: "",

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import { invoke } from "site/runtime.ts";
 
-export default function LoginPage() {
+export default function LoginPageIsland() {
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -18,7 +18,6 @@ export default function LoginPage() {
       const response = await invoke.site.actions.auth.actionLogin(
         { userProvided: userData },
       );
-
       console.log("Response:", response);
 
       if (response.error) {
@@ -34,6 +33,7 @@ export default function LoginPage() {
         window.location.href = "/";
       }
     } catch (error) {
+      console.log("errorrrr:", error);
       console.error(error);
       setAuthError(true);
     }

@@ -35,5 +35,12 @@
   },
   "flavor": {
     "framework": "fresh"
+  },
+  "whilelistURLs": [],
+  "whitelistPatterns": [],
+  "jwtKey": {
+    "__resolveType": "website/loaders/secret.ts",
+    "name": "JWT_PRIVATE_KEY",
+    "encrypted": "d561c0e0cbe5781291a092812110490cdf2b55c8cf6c1bba9d7247a1d76bd777f6975e994b753384826ba2315eada95312ba239c995c0a83fa0f83f583ff9180d434102c3e68192c535cda8c6a13a95f29b4553bf9ff0724afa8a07dded1e1f5"
   }
 }

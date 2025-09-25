@@ -3,8 +3,9 @@ import { Redis } from "@upstash/redis";
 import * as bcrypt from "bcrypt";
 import { create } from "jwt";
 import { setCookie } from "std/http/cookie.ts";
-import { jwtKey } from "site/utils/jwtKey.ts";
+import { getJwtCryptoKey } from "site/utils/jwtKey.ts";
 import { JwtUserPayload, User } from "site/types/user.ts";
+import { AppContext } from "site/apps/site.ts";
 //import { redis } from "../../../utils/DBConnection.ts"; // Import Redis client
 
 let payload: JwtUserPayload = {
@@ -15,9 +16,9 @@ let payload: JwtUserPayload = {
   exp: 0,
 };
 
-async function generateJwtToken(user: User) {
+async function generateJwtToken(user: User, ctx: AppContext) {
   const iat = Math.floor(Date.now() / 1000);
-  const exp = iat + 30 * 24 * 60 * 60; // 30 days
+  const exp = iat + 90 * 24 * 60 * 60; // 90 days
   payload = {
     email: user.email,
     company: user.company,
@@ -25,15 +26,14 @@ async function generateJwtToken(user: User) {
     iat,
     exp,
   };
-
-  const key = jwtKey.value;
+  const key = await getJwtCryptoKey("");
 
   const jwt = await create({ alg: "HS512", typ: "JWT" }, { payload }, key);
   return jwt;
 }
 
-export const handler: Handlers = {
-  async POST(req, _) {
+export const handler: Handlers<unknown, AppContext> = {
+  async POST(req, ctx) {
     try {
       const user = await req.json() as User;
 
@@ -41,7 +41,6 @@ export const handler: Handlers = {
         url: Deno.env.get("UPSTASH_REDIS_REST_URL")!,
         token: Deno.env.get("UPSTASH_REDIS_REST_TOKEN")!,
       });
-
       // Check if the username already exists in Redis
       const existingUser = await redis.get(user.email) as User;
       if (!existingUser) {
@@ -69,7 +68,7 @@ export const handler: Handlers = {
         );
       }
 
-      const token = await generateJwtToken(existingUser);
+      const token = await generateJwtToken(existingUser, ctx.state);
       const headers = new Headers();
       const url = new URL(req.url);
       setCookie(headers, {

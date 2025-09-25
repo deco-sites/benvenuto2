@@ -1,19 +1,21 @@
 import { Handlers, STATUS_CODE } from "$fresh/server.ts";
 import { getCookies } from "std/http/cookie.ts";
 import { verify } from "jwt";
-import { jwtKey } from "site/utils/jwtKey.ts";
+import { getJwtCryptoKey } from "site/utils/jwtKey.ts";
 import { JwtUserPayload } from "site/types/user.ts";
+import type { AppContext } from "site/apps/site.ts";
 
-const key = jwtKey.value;
-
-export const handler: Handlers = {
-  async GET(req, _) {
+export const handler: Handlers<unknown, AppContext> = {
+  async GET(req) {
     const cookies = getCookies(req.headers);
     const token = cookies["auth"];
+    console.log("route user_info key:", Deno.env.get("JWT_PRIVATE_KEY"));
+    const jwtKey = Deno.env.get("JWT_PRIVATE_KEY");
+    const jwtCryptoKey = await getJwtCryptoKey(jwtKey);
 
     try {
       // Verify the JWT
-      const payload = await verify(token, key);
+      const payload = await verify(token, jwtCryptoKey);
       const userInfo = payload as unknown as JwtUserPayload;
 
       // Respond with user info

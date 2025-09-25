@@ -1,28 +1,26 @@
 import { TableMap } from "site/static/MockedTableObject.tsx";
 import { Redis } from "@upstash/redis";
+import { AppContext } from "site/apps/site.ts";
 
 export interface Props {
-  empresa: string;
-  filial: string;
   id: string;
 }
 
 const action = async (
   props: Props,
   _req: Request,
+  ctx: AppContext,
 ): Promise<TableMap> => {
   const {
-    empresa,
-    filial,
     id,
   } = props;
 
   const redis = new Redis({
-    url: Deno.env.get("UPSTASH_REDIS_REST_URL")!,
-    token: Deno.env.get("UPSTASH_REDIS_REST_TOKEN")!,
+    url: ctx.upstashRedis.url,
+    token: ctx?.upstashRedis?.token?.get() ?? undefined,
   });
 
-  const key = `maps_${empresa}_${filial}_${id}`;
+  const key = `maps_${id}`;
 
   const entry = await redis.get(key);
 

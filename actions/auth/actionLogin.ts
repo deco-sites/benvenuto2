@@ -1,9 +1,9 @@
 import { STATUS_CODE } from "$fresh/server.ts";
 import { Redis } from "@upstash/redis";
 import * as bcrypt from "bcrypt";
-import { create } from "jwt";
+import { create, getNumericDate } from "jwt";
 import { setCookie } from "std/http/cookie.ts";
-import { jwtKey } from "site/utils/jwtKey.ts";
+import { getJwtCryptoKey } from "site/utils/jwtKey.ts";
 import { JwtUserPayload, User, UserLogin } from "site/types/user.ts";
 import type { AppContext } from "site/apps/site.ts";
 import type { FetchResponse } from "site/types/FetchResponse.ts";
@@ -13,18 +13,12 @@ export interface Props {
   userProvided: UserLogin;
 }
 
-let payload: JwtUserPayload = {
-  email: "",
-  company: "",
-  branch: "",
-  iat: 0,
-  exp: 0,
-};
+async function generateJwtToken(user: User, ctx: AppContext) {
+  const key = await getJwtCryptoKey(ctx?.jwtKey?.get());
 
-async function generateJwtToken(user: User) {
-  const iat = Math.floor(Date.now() / 1000);
-  const exp = iat + 30 * 24 * 60 * 60; // 30 days
-  payload = {
+  const iat = getNumericDate(0);
+  const exp = getNumericDate(60 * 60 * 24 * 180); // 180 dias
+  const payload: JwtUserPayload = {
     email: user.email,
     company: user.company,
     branch: user.branch,
@@ -32,9 +26,9 @@ async function generateJwtToken(user: User) {
     exp,
   };
 
-  const key = jwtKey.value;
-
-  const jwt = await create({ alg: "HS512", typ: "JWT" }, { payload }, key);
+  console.log("login cryptokey", key);
+  const jwt = await create({ alg: "HS512", typ: "JWT" }, payload, key);
+  console.log("login jwt", jwt);
   return jwt;
 }
 
@@ -45,10 +39,11 @@ const action = async (
 ): Promise<FetchResponse> => {
   try {
     const user = props.userProvided;
-    console.log("actionlogin:", user);
+    console.log("actionlogin user:", user);
     console.log("actionlogin url:", ctx.upstashRedis.url);
     console.log("actionlogin token:", ctx?.upstashRedis?.token?.get());
-   
+    console.log("Jwt secret string login:", ctx?.jwtKey?.get());
+
     const redis = new Redis({
       url: ctx.upstashRedis.url,
       token: ctx?.upstashRedis?.token?.get() ?? undefined,
@@ -65,7 +60,7 @@ const action = async (
       };
     }
 
-    const isValidPassword = await bcrypt.compareSync(
+    const isValidPassword = bcrypt.compareSync(
       user.password,
       existingUser.password,
     );
@@ -78,26 +73,22 @@ const action = async (
       };
     }
 
-    const token = await generateJwtToken(existingUser);
+    const token = await generateJwtToken(existingUser, ctx);
     const url = new URL(_req.url);
     setCookie(ctx.response.headers, {
       name: "auth",
       value: token,
-      maxAge: 30 * 24 * 60 * 60, // 30 Days
+      maxAge: 365 * 24 * 60 * 60, // 365 Days
       sameSite: "Lax",
       domain: url.hostname,
       path: "/",
       secure: true,
       httpOnly: true,
     });
-
-    ctx.response.headers.set("Location", "/");
-    ctx.response.headers.set("Content-Type", "application/json");
+    console.log("cookie");
     ctx.response.status = STATUS_CODE.OK;
-
     return {
       message: "Login successfully",
-      payload: payload,
       status: ctx.response.status,
     };
   } catch (error) {

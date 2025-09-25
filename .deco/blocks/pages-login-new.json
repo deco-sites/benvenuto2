@@ -1,0 +1,10 @@
+{
+  "name": "Login",
+  "path": "/login",
+  "sections": [
+    {
+      "__resolveType": "site/sections/auth/LoginPage.tsx"
+    }
+  ],
+  "__resolveType": "website/pages/Page.tsx"
+}

@@ -1,20 +1,25 @@
 import { STATUS_CODE } from "$fresh/server.ts";
 import { getCookies } from "std/http/cookie.ts";
 import { verify } from "jwt";
-import { jwtKey } from "site/utils/jwtKey.ts";
+import { getJwtCryptoKey } from "site/utils/jwtKey.ts";
 import { JwtUserPayload } from "site/types/user.ts";
+import type { AppContext } from "site/apps/site.ts";
 
-const key = jwtKey.value;
+export interface Props {}
 
 const action = async (
+  _props: Props,
   _req: Request,
+  ctx: AppContext,
 ): Promise<Response> => {
   const cookies = getCookies(_req.headers);
   const token = cookies["auth"];
 
   try {
     // Verify the JWT
-    const payload = await verify(token, key);
+    const jwtKey = await ctx?.jwtKey?.get();
+    const jwtCryptoKey = await getJwtCryptoKey(jwtKey);
+    const payload = await verify(token, jwtCryptoKey);
     const userInfo = payload as unknown as JwtUserPayload;
 
     return new Response(

@@ -1,3 +1,5 @@
+import type { Payload } from "jwt";
+
 export interface User {
   company: string;
   branch: string;
@@ -10,10 +12,10 @@ export interface UserLogin {
   password: string;
 }
 
-export interface JwtUserPayload {
+export interface JwtUserPayload extends Payload {
+  email: string;
   company: string;
   branch: string;
-  email: string;
   iat: number;
   exp: number;
 }

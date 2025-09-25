@@ -1,9 +1,19 @@
-import { signal } from "@preact/signals";
+export async function getJwtCryptoKey(
+  secret: string | null | undefined,
+): Promise<CryptoKey> {
+  //const secretString = await ctx?.jwtKey?.get();
+  console.log("getJwtCryptoKey scret string:", secret);
+  if (!secret) {
+    throw new Error("jwtKey missing from context");
+  }
 
-export const jwtKey = signal<CryptoKey>(
-  await crypto.subtle.generateKey(
+  const secretBytes = new TextEncoder().encode(secret);
+
+  return await crypto.subtle.importKey(
+    "raw",
+    secretBytes,
     { name: "HMAC", hash: "SHA-512" },
-    true,
+    false,
     ["sign", "verify"],
-  ),
-);
+  );
+}

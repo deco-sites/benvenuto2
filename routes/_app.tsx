@@ -17,7 +17,7 @@ function App(props: AppProps) {
       {/* Include Icons and manifest */}
       <GlobalTags />
 
-      <UserInfoInitializer />
+      {/*<UserInfoInitializer />*/}
 
       {/* Rest of Preact tree */}
       <props.Component />

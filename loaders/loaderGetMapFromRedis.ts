@@ -14,7 +14,7 @@ export default async function loader(
     token: Deno.env.get("UPSTASH_REDIS_REST_TOKEN")!,
   });
 
-  const key = `maps_couve_teste_${id}`;
+  const key = `maps_${id}`;
 
   const entry = await redis.get(key);
 

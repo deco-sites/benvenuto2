@@ -1,6 +1,6 @@
 import { TableMap } from "../static/MockedTableObject.tsx";
 import { actors } from "@deco/actors/proxy";
-import type { ActorTable } from "../actors/ActorTable.ts";
+import type { ActorTable } from "../actors/ActorTable.txt";
 
 export interface Props {
   empresa: string;

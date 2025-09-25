@@ -9,7 +9,9 @@ export interface Props extends WebsiteProps {
     url: string;
     token: Secret;
   };
+  jwtKey: Secret;
 }
+
 export default function Site(state: Props): App<Manifest, Props, [
   WebsiteApp,
 ]> {

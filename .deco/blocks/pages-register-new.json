@@ -1,11 +1,11 @@
 {
-  "name": "Home",
-  "path": "/",
+  "name": "Register",
+  "path": "/register",
   "sections": [
     {
       "__resolveType": "website/sections/Rendering/Lazy.tsx",
       "section": {
-        "__resolveType": "site/sections/Home.tsx"
+        "__resolveType": "site/sections/auth/RegisterPage.tsx"
       }
     }
   ],

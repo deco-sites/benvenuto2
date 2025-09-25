@@ -4,73 +4,45 @@ import GenericTable from "../components/TableMap/Tables/GenericTable.tsx";
 import type { ImageWidget } from "apps/admin/widgets.ts";
 import SegmentTable from "../components/TableMap/Tables/SegmentTable.tsx";
 import TableMapTopBar from "../components/TableMap/ManagementTopBar.tsx";
-import { actors } from "@deco/actors/proxy";
-import type { ActorTable } from "../actors/ActorTable.ts";
 import { JwtUserPayload } from "site/types/user.ts";
+import { invoke } from "site/runtime.ts";
 
-export interface IActorTable {
-  saveTableMap(newTable: TableMap): Promise<void>;
-  getTableMap(): Promise<TableMap>;
-  watch(): Promise<AsyncIterableIterator<TableMap>>;
-}
-console.log("Actorkey1");
 export interface Props {
   backgroundImage?: ImageWidget;
+  jwtPayload: JwtUserPayload;
 }
 
-export default function Editor({
+export default function MapManagementIsland({
   backgroundImage = "",
+  jwtPayload,
 }: Props) {
   const [tableMapUpdate, setTableMapUpdate] = useState<TableMap>({
     tables: [],
   });
-  const [actorKey, setActorKey] = useState<JwtUserPayload | null>(null);
 
-  let tableMapsActor: IActorTable | null = null;
-  console.log("Actorkey2");
-  if (actorKey) {
-    console.log("Actorkey:", actorKey);
-    console.log(`maps_${actorKey.email}_1`);
-    console.log("Actor:", tableMapsActor);
-    tableMapsActor = actors.proxy<ActorTable>("ActorTable").id(
-      `maps_${actorKey.email}_1`,
-    );
-    console.log("Actor:", tableMapsActor);
-  }
+  const [userInfo, setUserInfo] = useState<JwtUserPayload>(jwtPayload);
 
   useEffect(() => {
-    const savedUserInfo = localStorage.getItem("userInfo");
-    console.log("localstorage info", savedUserInfo);
-    if (savedUserInfo) {
+    console.log("Requisita mapa do redis");
+    if (!userInfo) return;
+    const fetchGetData = async () => {
       try {
-        const parsedUserInfo = JSON.parse(savedUserInfo) as JwtUserPayload;
-        setActorKey(parsedUserInfo);
-      } catch (error) {
-        console.error("Erro ao parsear informações do usuário:", error);
-      }
-    }
-  }, []);
+        const redisTableMap: TableMap = await invoke.site.actions
+          .actionGetMapFromRedis({
+            id: userInfo?.email,
+          });
 
-  useEffect(() => {
-    if (!actorKey || !tableMapsActor) return;
-
-    const fetchTableMap = async () => {
-      try {
-        const tableMap = await tableMapsActor?.getTableMap();
-        console.log("Get:", typeof tableMap, tableMap);
-        if (tableMap) {
-          setTableMapUpdate(tableMap);
-        }
+        setTableMapUpdate({ tables: redisTableMap.tables });
       } catch (error) {
-        console.error("Erro ao buscar o mapa de tabelas:", error);
+        console.error("Erro ao buscar o mapa de mesas:", error);
       }
     };
 
-    fetchTableMap();
-  }, [actorKey]);
+    fetchGetData();
+  }, [userInfo]);
 
-  useEffect(() => {
-    if (!actorKey || !tableMapsActor) return;
+  /*useEffect(() => {
+    if (!userInfo || !tableMapsActor) return;
 
     console.log("Realiza evento");
     const watchTableMaps = async () => {
@@ -80,12 +52,46 @@ export default function Editor({
       }
     };
     watchTableMaps();
-  }, [actorKey]);
+  }, [userInfo]);*/
+
+  useEffect(() => {
+    if (!userInfo?.email) return;
+    console.log("Realiza evento");
+
+    const eventSource = new EventSource(
+      `/sse/tablesredis?email=${encodeURIComponent(userInfo.email)}`,
+    );
+
+    eventSource.onopen = () => console.log("SSE connection established.");
+
+    eventSource.onmessage = (event) => {
+      try {
+        console.log("Evento table atualizada1: " + event.data);
+        const data = JSON.parse(event.data);
+        console.log("Evento table stringfy: " + JSON.stringify(data));
+        setTableMapUpdate(data);
+      } catch (error) {
+        console.error("Error SSE data:", error);
+      }
+    };
+
+    eventSource.onerror = (err) => {
+      console.error("SSE Connection Error:", err);
+    };
+
+    return () => {
+      console.log("Closing SSE connection.");
+      eventSource.close();
+    };
+  }, [userInfo]);
 
   const fetchData = async (tableMap: TableMap) => {
-    if (!actorKey || !tableMapsActor) return;
+    if (!userInfo) return;
     console.log("save:", tableMap);
-    await tableMapsActor.saveTableMap(tableMap);
+    await invoke.site.actions.actionSetMapToRedis({
+      id: userInfo?.email,
+      mapJSON: JSON.stringify(tableMap),
+    });
   };
 
   const updateOccupiedState = (tableId: string, newOccupiedState: boolean) => {

@@ -6,10 +6,9 @@ import DraggableGenericTable from "../components/Editor/Tables/DraggableGenericT
 import DraggableSegmentTable from "../components/Editor/Tables/DraggableSegmentTable.tsx";
 import EditorSidebar from "../components/Editor/EditorSidebar.tsx";
 import EditorTopBar from "../components/Editor/EditorTopBar.tsx";
-
+import { invoke } from "site/runtime.ts";
 import { v1 } from "https://deno.land/std@0.223.0/uuid/mod.ts";
-import { actors } from "@deco/actors/proxy";
-import type { ActorTable } from "../actors/ActorTable.ts";
+import { JwtUserPayload } from "site/types/user.ts";
 
 export type PositionXY = {
   x: number;
@@ -18,10 +17,12 @@ export type PositionXY = {
 
 export interface Props {
   backgroundImage?: ImageWidget;
+  jwtPayload: JwtUserPayload;
 }
 
-export default function Editor({
+export default function MapEditorIsland({
   backgroundImage = "",
+  jwtPayload,
 }: Props) {
   const [tableMapSaved, setTableMapSaved] = useState<TableMap>({ tables: [] });
   const [draggedItem, setDraggedItem] = useState<Table | null>(null);
@@ -31,30 +32,45 @@ export default function Editor({
   const containerRef = useRef<HTMLDivElement>(null);
   const [sideBar, setSideBar] = useState(true);
   const [sideBarItemModel, setSideBarItemModel] = useState<string>("");
+  const [userInfo, setUserInfo] = useState<JwtUserPayload>(jwtPayload);
 
+  /*
   const actorKey = {
     empresa: "couve",
     filial: "teste",
     id: "1",
-  };
-
-  const tableMaps = actors.proxy<ActorTable>("ActorTable").id(
-    `maps_${actorKey.empresa}_${actorKey.filial}_${actorKey.id}`,
-  );
-
+  };*/
+  /*
   useEffect(() => {
-    console.log("Requisita mapa do banco");
+    const savedUserInfo = localStorage.getItem("userInfo");
+    console.log("localstorage info", savedUserInfo);
+    if (savedUserInfo) {
+      try {
+        const parsedUserInfo = JSON.parse(savedUserInfo) as JwtUserPayload;
+        setUserInfo(parsedUserInfo);
+      } catch (error) {
+        console.error("Erro ao parsear informações do usuário:", error);
+      }
+    }
+  }, []);
+  */
+  useEffect(() => {
+    console.log("Requisita mapa do redis");
+    if (!userInfo) return;
     const fetchGetData = async () => {
       try {
-        const tableMap = await tableMaps.getTableMap();
-        setTableMapSaved({ tables: tableMap.tables });
+        const data: TableMap = await invoke.site.actions.actionGetMapFromRedis({
+          id: userInfo?.email,
+        });
+
+        setTableMapSaved({ tables: data.tables });
       } catch (error) {
-        console.error("Erro ao requisitar o mapa de mesas:", error);
+        console.error("Erro ao obter os dados:", error);
       }
     };
 
-    fetchGetData();
-  }, []);
+    fetchGetData(); //Buscar os dados do mapa
+  }, [userInfo]);
 
   useEffect(() => {
     if (draggedItem && moveUpDraggedTable) {
@@ -71,7 +87,10 @@ export default function Editor({
   };
 
   const fetchSetData = async (tableMap: TableMap) => {
-    await tableMaps.saveTableMap(tableMap);
+    await invoke.site.actions.actionSetMapToRedis({
+      id: userInfo?.email,
+      mapJSON: JSON.stringify(tableMap),
+    });
   };
 
   const HandleSaveNewMap = () => {

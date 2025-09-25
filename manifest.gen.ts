@@ -2,55 +2,55 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $$$$$$$$$0 from "./actions/actionGetMapFromActor.ts";
-import * as $$$$$$$$$1 from "./actions/actionGetMapFromKV.ts";
-import * as $$$$$$$$$2 from "./actions/actionGetMapFromRedis.ts";
-import * as $$$$$$$$$3 from "./actions/actionSetMapToActor.ts";
-import * as $$$$$$$$$4 from "./actions/actionSetMapToKV.ts";
-import * as $$$$$$$$$5 from "./actions/actionSetMapToRedis.ts";
-import * as $$$$$$$$$6 from "./actions/auth/actionGetUserInfo.ts";
-import * as $$$$$$$$$7 from "./actions/auth/actionLogin.ts";
-import * as $$$$$$$$$8 from "./actions/auth/actionLogout.ts";
-import * as $$$$$$$$$9 from "./actions/auth/actionRegister.ts";
+import * as $$$$$$$$$0 from "./actions/actionGetMapFromKV.ts";
+import * as $$$$$$$$$1 from "./actions/actionGetMapFromRedis.ts";
+import * as $$$$$$$$$2 from "./actions/actionSetMapToKV.ts";
+import * as $$$$$$$$$3 from "./actions/actionSetMapToRedis.ts";
+import * as $$$$$$$$$4 from "./actions/auth/actionGetUserInfo.ts";
+import * as $$$$$$$$$5 from "./actions/auth/actionLogin.ts";
+import * as $$$$$$$$$6 from "./actions/auth/actionLogout.ts";
+import * as $$$$$$$$$7 from "./actions/auth/actionRegister.ts";
 import * as $$$$$$$$$$$0 from "./apps/decohub.ts";
 import * as $$$$$$$$$$$1 from "./apps/site.ts";
-import * as $$$0 from "./loaders/loaderGetMapFromActors.ts";
-import * as $$$1 from "./loaders/loaderGetMapFromKV.ts";
-import * as $$$2 from "./loaders/loaderGetMapFromRedis.ts";
+import * as $$$0 from "./loaders/loaderGetMapFromKV.ts";
+import * as $$$1 from "./loaders/loaderGetMapFromRedis.ts";
+import * as $$$$$$8 from "./sections/auth/LoginPage.tsx";
+import * as $$$$$$9 from "./sections/auth/RegisterPage.tsx";
 import * as $$$$$$0 from "./sections/Footer.tsx";
 import * as $$$$$$1 from "./sections/Hero.tsx";
 import * as $$$$$$2 from "./sections/Home.tsx";
 import * as $$$$$$3 from "./sections/MapEditor.tsx";
 import * as $$$$$$4 from "./sections/MapManagement.tsx";
 import * as $$$$$$5 from "./sections/ParagraphList.tsx";
-import * as $$$$$$6 from "./sections/Theme/Theme.tsx";
+import * as $$$$$$6 from "./sections/RegisterSection.tsx";
+import * as $$$$$$7 from "./sections/Theme/Theme.tsx";
 
 const manifest = {
   "loaders": {
-    "site/loaders/loaderGetMapFromActors.ts": $$$0,
-    "site/loaders/loaderGetMapFromKV.ts": $$$1,
-    "site/loaders/loaderGetMapFromRedis.ts": $$$2,
+    "site/loaders/loaderGetMapFromKV.ts": $$$0,
+    "site/loaders/loaderGetMapFromRedis.ts": $$$1,
   },
   "sections": {
+    "site/sections/auth/LoginPage.tsx": $$$$$$8,
+    "site/sections/auth/RegisterPage.tsx": $$$$$$9,
     "site/sections/Footer.tsx": $$$$$$0,
     "site/sections/Hero.tsx": $$$$$$1,
     "site/sections/Home.tsx": $$$$$$2,
     "site/sections/MapEditor.tsx": $$$$$$3,
     "site/sections/MapManagement.tsx": $$$$$$4,
     "site/sections/ParagraphList.tsx": $$$$$$5,
-    "site/sections/Theme/Theme.tsx": $$$$$$6,
+    "site/sections/RegisterSection.tsx": $$$$$$6,
+    "site/sections/Theme/Theme.tsx": $$$$$$7,
   },
   "actions": {
-    "site/actions/actionGetMapFromActor.ts": $$$$$$$$$0,
-    "site/actions/actionGetMapFromKV.ts": $$$$$$$$$1,
-    "site/actions/actionGetMapFromRedis.ts": $$$$$$$$$2,
-    "site/actions/actionSetMapToActor.ts": $$$$$$$$$3,
-    "site/actions/actionSetMapToKV.ts": $$$$$$$$$4,
-    "site/actions/actionSetMapToRedis.ts": $$$$$$$$$5,
-    "site/actions/auth/actionGetUserInfo.ts": $$$$$$$$$6,
-    "site/actions/auth/actionLogin.ts": $$$$$$$$$7,
-    "site/actions/auth/actionLogout.ts": $$$$$$$$$8,
-    "site/actions/auth/actionRegister.ts": $$$$$$$$$9,
+    "site/actions/actionGetMapFromKV.ts": $$$$$$$$$0,
+    "site/actions/actionGetMapFromRedis.ts": $$$$$$$$$1,
+    "site/actions/actionSetMapToKV.ts": $$$$$$$$$2,
+    "site/actions/actionSetMapToRedis.ts": $$$$$$$$$3,
+    "site/actions/auth/actionGetUserInfo.ts": $$$$$$$$$4,
+    "site/actions/auth/actionLogin.ts": $$$$$$$$$5,
+    "site/actions/auth/actionLogout.ts": $$$$$$$$$6,
+    "site/actions/auth/actionRegister.ts": $$$$$$$$$7,
   },
   "apps": {
     "site/apps/decohub.ts": $$$$$$$$$$$0,

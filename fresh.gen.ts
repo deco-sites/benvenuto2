@@ -3,13 +3,11 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $_app from "./routes/_app.tsx";
-import * as $_middleware from "./routes/_middleware.ts";
 import * as $api_auth_login from "./routes/api/auth/login.ts";
 import * as $api_auth_logout from "./routes/api/auth/logout.ts";
 import * as $api_auth_register from "./routes/api/auth/register.ts";
 import * as $api_auth_user_info from "./routes/api/auth/user_info.ts";
-import * as $login_index from "./routes/login/index.tsx";
-import * as $register_index from "./routes/register/index.tsx";
+import * as $sse_tablesredis from "./routes/sse/tablesredis.ts";
 import * as $MapEditor from "./islands/MapEditor.tsx";
 import * as $MapManagement from "./islands/MapManagement.tsx";
 import * as $auth_LoginPage from "./islands/auth/LoginPage.tsx";
@@ -20,13 +18,11 @@ import type { Manifest } from "$fresh/server.ts";
 const manifest = {
   routes: {
     "./routes/_app.tsx": $_app,
-    "./routes/_middleware.ts": $_middleware,
     "./routes/api/auth/login.ts": $api_auth_login,
     "./routes/api/auth/logout.ts": $api_auth_logout,
     "./routes/api/auth/register.ts": $api_auth_register,
     "./routes/api/auth/user_info.ts": $api_auth_user_info,
-    "./routes/login/index.tsx": $login_index,
-    "./routes/register/index.tsx": $register_index,
+    "./routes/sse/tablesredis.ts": $sse_tablesredis,
   },
   islands: {
     "./islands/MapEditor.tsx": $MapEditor,
