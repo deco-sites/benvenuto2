@@ -7,7 +7,7 @@ import { JwtUserPayload } from "site/types/user.ts";
 import type { AppContext } from "site/apps/site.ts";
 
 const UPSTASH_REDIS_REST_URL = Deno.env.get("UPSTASH_REDIS_REST_URL");
-const UPSTASH_REDIS_REST_TOKEN = Deno.env.get("UPSTASH_REDIS_REST_TOKE");
+const UPSTASH_REDIS_REST_TOKEN = Deno.env.get("UPSTASH_REDIS_REST_TOKEN");
 const JWT_PRIVATE_KEY = Deno.env.get("JWT_PRIVATE_KEY");
 
 function isValidJSON(str: string) {
